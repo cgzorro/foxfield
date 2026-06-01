@@ -1,10 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Perennial Ordering Platform — Executive Demo</title>
+<title>ORDERFLOW — A Foxfield ordering &amp; operations platform</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Cinzel:wght@500;600&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -286,30 +289,203 @@ tr:hover td{background:color-mix(in srgb, var(--green-soft) 24%, var(--card-soli
 @media print{
   body{background:#fff;color:#000}
   .wrap{max-width:none;padding:0}
-  .nav,.toolbar,.filters,.footer,#themeToggle,#exportQrBtn,#refreshQrBtn{display:none !important}
+  .nav,.toolbar,.filters,.footer,#themeToggle,#exportQrBtn,#refreshQrBtn,.prodhead-actions,.brandbar{display:none !important}
   .card,.table-wrap,.schema-card pre,.mutedbox{box-shadow:none;background:#fff !important;border:1px solid #c9c9c9}
   .panel{display:block !important;page-break-inside:avoid}
   .hero{grid-template-columns:1fr}
+}
+
+/* ============================================================
+   FOXFIELD BRAND LAYER · "ORDERFLOW" skin
+   Appended overrides only — original rules + all JS untouched.
+   Mark left · product name leads · subtitle explains · clay accent.
+   ============================================================ */
+:root{
+  --bg:#f1ebdd; --bg2:#f6f1e6; --bg3:#eadfcd;
+  --card:rgba(255,253,247,.92); --card-solid:#fffdf7;
+  --ink:#221d15; --muted:#7c7060;
+  --line:#e6dcc8; --line-strong:#d3c4a8;
+  --green:#c2691f; --green-2:#dc8a3c; --green-soft:#f8ead6;
+  --amber:#a9781f; --amber-soft:#f6edd9;
+  --red:#b44c3c; --red-soft:#fbeee9;
+  --blue:#7c7263; --blue-soft:#efeae0;
+  --ok:#5d7d3a; --ok-soft:#eef3e2;
+  --field:#fffdf8; --fieldLine:#e0d5c0;
+  --chip:#fffaf2; --chipBorder:#ecdfca;
+  --shadow:0 12px 30px rgba(34,29,21,.07);
+  --shadow-strong:0 20px 44px rgba(34,29,21,.12);
+  --radius:16px; --radius-sm:12px;
+}
+body[data-theme="dark"]{
+  --bg:#160f08; --bg2:#1d140b; --bg3:#251b10;
+  --card:rgba(33,25,16,.94); --card-solid:#211910;
+  --ink:#f3ebde; --muted:#b7a98f;
+  --line:#3a2d1c; --line-strong:#54422a;
+  --green:#e88c3a; --green-2:#f6a85d; --green-soft:rgba(232,140,58,.16);
+  --amber:#e0b36a; --amber-soft:rgba(224,179,106,.16);
+  --red:#ef9b84; --red-soft:rgba(239,155,132,.16);
+  --blue:#a99c86; --blue-soft:rgba(169,156,134,.16);
+  --ok:#9cc06f; --ok-soft:rgba(156,192,111,.16);
+  --field:#1a130b; --fieldLine:#3a2d1c;
+  --chip:#241a10; --chipBorder:#54422a;
+  --shadow:0 18px 40px rgba(0,0,0,.42); --shadow-strong:0 26px 56px rgba(0,0,0,.55);
+}
+body{
+  font-family:"Hanken Grotesk",system-ui,-apple-system,Segoe UI,sans-serif;
+  background:
+    radial-gradient(120% 80% at 50% -10%, #f7f2e8 0%, transparent 55%),
+    linear-gradient(180deg,#ece4d3 0%, #e2d8c4 100%);
+  background-attachment:fixed;
+}
+body[data-theme="dark"]{
+  background:
+    radial-gradient(130% 90% at 50% -12%, #241a12 0%, transparent 58%),
+    linear-gradient(180deg,#15100a 0%, #100c07 62%, #0b0805 100%);
+  background-attachment:fixed;
+}
+h1,h2,h3{font-family:"Archivo",sans-serif}
+.hero h1,.panel-head h2{font-family:"Archivo",sans-serif;font-weight:800;letter-spacing:-.02em}
+.metric .v{font-family:"Archivo",sans-serif;font-weight:800;letter-spacing:-.02em}
+.schema-card pre{font-family:"Spline Sans Mono",monospace}
+.qr-url{font-family:"Spline Sans Mono",monospace}
+button{font-weight:700}
+.badge{font-weight:700;box-shadow:none}
+
+/* maker brand bar */
+.brandbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:4px 6px 16px;flex-wrap:wrap}
+.maker{display:flex;align-items:center;gap:12px}
+.maker .hexmark{width:30px;height:30px;color:var(--ink)}
+.maker-word{font-family:"Cinzel",serif;font-weight:600;font-size:18px;letter-spacing:.22em;color:var(--ink)}
+.maker-tag{font-family:"Cinzel",serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);padding-left:6px;border-left:1px solid var(--line)}
+.maker-product{font-size:10.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+/* product header lockup */
+.prodhead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+.prodhead-id{display:flex;align-items:center;gap:16px}
+.prodhead .hexmark{width:60px;height:60px;color:var(--ink);flex:0 0 auto}
+.wordmark{margin:0;font-family:"Archivo",sans-serif;font-weight:800;font-size:40px;line-height:1;letter-spacing:.005em;color:var(--ink)}
+.prodhead-sub{margin-top:7px;font-size:14px;font-weight:700;letter-spacing:.01em;color:var(--green)}
+.prodhead-actions{display:flex;gap:8px}
+.iconbtn{width:42px;height:42px;display:grid;place-items:center;border-radius:11px;
+  border:1px solid var(--line);background:color-mix(in srgb,var(--card-solid) 82%,transparent);
+  color:var(--ink);box-shadow:none;padding:0}
+.iconbtn:hover{border-color:var(--green);color:var(--green);filter:none}
+.iconbtn svg{width:18px;height:18px}
+.hexmark{display:inline-block;background-color:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20467%20432%22%20fill%3D%22%23000%22%20role%3D%22img%22%20aria-label%3D%22Foxfield%20fox%20mark%22%3E%20%3Crect%20x%3D%2216.0%22%20y%3D%2216.0%22%20width%3D%22435.0%22%20height%3D%22405.0%22%20rx%3D%226%22%20ry%3D%226%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%2220%22/%3E%20%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M440.67%20410.83C371.53%20411.31%2094.94%20411.17%2025.83%20410.67C-43.28%20410.17%2022.50%20408.33%2026.00%20407.83C29.50%20407.33%2043.03%20412.31%2046.83%20407.67C50.64%20403.03%2047.67%20389.28%2048.83%20380.00C50.00%20370.72%2051.50%20361.89%2053.83%20352.00C56.17%20342.11%2059.50%20330.39%2062.83%20320.67C66.17%20310.94%2067.61%20306.33%2073.83%20293.67C80.06%20281.00%2087.00%20265.78%20100.17%20244.67C113.33%20223.56%20143.06%20182.39%20152.83%20167.00C162.61%20151.61%20156.50%20160.22%20158.83%20152.33C161.17%20144.44%20163.83%20129.44%20166.83%20119.67C169.83%20109.89%20172.83%20102.00%20176.83%2093.67C180.83%2085.33%20185.36%2077.36%20190.83%2069.67C196.31%2061.97%20204.36%2049.64%20209.67%2047.50C214.97%2045.36%20217.81%2052.42%20222.67%2056.83C227.53%2061.25%20232.00%2064.83%20238.83%2074.00C245.67%2083.17%20257.42%20105.47%20263.67%20111.83C269.92%20118.19%20271.72%20114.50%20276.33%20112.17C280.94%20109.83%20285.22%20102.89%20291.33%2097.83C297.44%2092.78%20305.72%2086.50%20313.00%2081.83C320.28%2077.17%20328.58%2072.58%20335.00%2069.83C341.42%2067.08%20349.36%2060.97%20351.50%2065.33C353.64%2069.69%20350.61%2084.28%20347.83%2096.00C345.06%20107.72%20337.39%20126.56%20334.83%20135.67C332.28%20144.78%20330.83%20144.17%20332.50%20150.67C334.17%20157.17%20342.50%20166.33%20344.83%20174.67C347.17%20183.00%20345.67%20194.89%20346.50%20200.67C347.33%20206.44%20346.53%20205.03%20349.83%20209.33C353.14%20213.64%20359.36%20220.69%20366.33%20226.50C373.31%20232.31%20386.97%20240.47%20391.67%20244.17C396.36%20247.86%20394.53%20246.42%20394.50%20248.67C394.47%20250.92%20393.11%20254.67%20391.50%20257.67C389.89%20260.67%20387.53%20263.69%20384.83%20266.67C382.14%20269.64%20378.69%20273.03%20375.33%20275.50C371.97%20277.97%20370.28%20279.94%20364.67%20281.50C359.06%20283.06%20351.89%20284.94%20341.67%20284.83C331.44%20284.72%20312.83%20280.22%20303.33%20280.83C293.83%20281.44%20289.42%20285.53%20284.67%20288.50C279.92%20291.47%20277.47%20295.03%20274.83%20298.67C272.19%20302.31%20270.33%20305.94%20268.83%20310.33C267.33%20314.72%20266.14%20319.81%20265.83%20325.00C265.53%20330.19%20268.00%20341.39%20267.00%20341.50C266.00%20341.61%20261.03%20331.31%20259.83%20325.67C258.64%20320.03%20258.83%20313.33%20259.83%20307.67C260.83%20302.00%20263.06%20296.61%20265.83%20291.67C268.61%20286.72%20278.75%20280.14%20276.50%20278.00C274.25%20275.86%20256.25%20278.97%20252.33%20278.83C248.42%20278.69%20251.00%20278.44%20253.00%20277.17C255.00%20275.89%20260.67%20272.56%20264.33%20271.17C268.00%20269.78%20268.83%20269.06%20275.00%20268.83C281.17%20268.61%20290.89%20268.78%20301.33%20269.83C311.78%20270.89%20328.11%20274.50%20337.67%20275.17C347.22%20275.83%20353.67%20274.56%20358.67%20273.83C363.67%20273.11%20364.81%20272.31%20367.67%20270.83C370.53%20269.36%20375.47%20268.03%20375.83%20265.00C376.19%20261.97%20375.58%20256.19%20369.83%20252.67C364.08%20249.14%20354.86%20249.31%20341.33%20243.83C327.81%20238.36%20301.61%20225.00%20288.67%20219.83C275.72%20214.67%20273.44%20214.00%20263.67%20212.83C253.89%20211.67%20237.78%20212.33%20230.00%20212.83C222.22%20213.33%20222.00%20214.00%20217.00%20215.83C212.00%20217.67%20205.19%20220.47%20200.00%20223.83C194.81%20227.19%20190.36%20231.03%20185.83%20236.00C181.31%20240.97%20176.00%20248.50%20172.83%20253.67C169.67%20258.83%20168.61%20261.39%20166.83%20267.00C165.06%20272.61%20158.19%20287.19%20162.17%20287.33C166.14%20287.47%20181.89%20272.17%20190.67%20267.83C199.44%20263.50%20212.97%20258.53%20214.83%20261.33C216.69%20264.14%20205.00%20276.33%20201.83%20284.67C198.67%20293.00%20196.50%20302.56%20195.83%20311.33C195.17%20320.11%20195.33%20327.94%20197.83%20337.33C200.33%20346.72%20204.92%20358.58%20210.83%20367.67C216.75%20376.75%20224.75%20385.14%20233.33%20391.83C241.92%20398.53%20227.78%20405.17%20262.33%20407.83C296.89%20410.50%20410.94%20407.33%20440.67%20407.83C470.39%20408.33%20509.81%20410.36%20440.67%20410.83Z%20M203.17%20162.33C206.33%20160.72%20216.92%20152.86%20217.83%20148.00C218.75%20143.14%20210.69%20134.97%20208.67%20133.17C206.64%20131.36%20206.42%20136.75%20205.67%20137.17C204.92%20137.58%20204.97%20138.25%20204.17%20135.67C203.36%20133.08%20201.22%20127.89%20200.83%20121.67C200.44%20115.44%20200.58%20105.58%20201.83%2098.33C203.08%2091.08%20205.83%2079.11%20208.33%2078.17C210.83%2077.22%20213.97%2086.58%20216.83%2092.67C219.69%2098.75%20223.86%20109.81%20225.50%20114.67C227.14%20119.53%20227.72%20120.94%20226.67%20121.83C225.61%20122.72%20219.53%20118.42%20219.17%20120.00C218.81%20121.58%20221.69%20128.31%20224.50%20131.33C227.31%20134.36%20231.22%20138.11%20236.00%20138.17C240.78%20138.22%20251.03%20135.58%20253.17%20131.67C255.31%20127.75%20251.39%20120.94%20248.83%20114.67C246.28%20108.39%20242.00%20100.44%20237.83%2094.00C233.67%2087.56%20228.42%2080.97%20223.83%2076.00C219.25%2071.03%20213.17%2065.72%20210.33%2064.17C207.50%2062.61%20208.58%2063.86%20206.83%2066.67C205.08%2069.47%20202.33%2073.22%20199.83%2081.00C197.33%2088.78%20192.83%20102.83%20191.83%20113.33C190.83%20123.83%20192.67%20136.61%20193.83%20144.00C195.00%20151.39%20197.28%20154.61%20198.83%20157.67C200.39%20160.72%20200.00%20163.94%20203.17%20162.33Z%20M324.83%20140.33C330.03%20132.58%20342.83%2088.50%20342.67%2081.83C342.50%2075.17%20328.97%2093.53%20323.83%20100.33C318.69%20107.14%20313.89%20118.00%20311.83%20122.67C309.78%20127.33%20309.33%20125.39%20311.50%20128.33C313.67%20131.28%20319.64%20148.08%20324.83%20140.33Z%20M293.17%20206.67C295.14%20206.19%20297.72%20204.78%20298.83%20203.00C299.94%20201.22%20300.36%20198.03%20299.83%20196.00C299.31%20193.97%20297.47%20191.86%20295.67%20190.83C293.86%20189.81%20290.97%20189.47%20289.00%20189.83C287.03%20190.19%20284.97%20191.42%20283.83%20193.00C282.69%20194.58%20281.64%20197.19%20282.17%20199.33C282.69%20201.47%20285.17%20204.61%20287.00%20205.83C288.83%20207.06%20291.19%20207.14%20293.17%20206.67Z%22/%3E%20%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20467%20432%22%20fill%3D%22%23000%22%20role%3D%22img%22%20aria-label%3D%22Foxfield%20fox%20mark%22%3E%20%3Crect%20x%3D%2216.0%22%20y%3D%2216.0%22%20width%3D%22435.0%22%20height%3D%22405.0%22%20rx%3D%226%22%20ry%3D%226%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%2220%22/%3E%20%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M440.67%20410.83C371.53%20411.31%2094.94%20411.17%2025.83%20410.67C-43.28%20410.17%2022.50%20408.33%2026.00%20407.83C29.50%20407.33%2043.03%20412.31%2046.83%20407.67C50.64%20403.03%2047.67%20389.28%2048.83%20380.00C50.00%20370.72%2051.50%20361.89%2053.83%20352.00C56.17%20342.11%2059.50%20330.39%2062.83%20320.67C66.17%20310.94%2067.61%20306.33%2073.83%20293.67C80.06%20281.00%2087.00%20265.78%20100.17%20244.67C113.33%20223.56%20143.06%20182.39%20152.83%20167.00C162.61%20151.61%20156.50%20160.22%20158.83%20152.33C161.17%20144.44%20163.83%20129.44%20166.83%20119.67C169.83%20109.89%20172.83%20102.00%20176.83%2093.67C180.83%2085.33%20185.36%2077.36%20190.83%2069.67C196.31%2061.97%20204.36%2049.64%20209.67%2047.50C214.97%2045.36%20217.81%2052.42%20222.67%2056.83C227.53%2061.25%20232.00%2064.83%20238.83%2074.00C245.67%2083.17%20257.42%20105.47%20263.67%20111.83C269.92%20118.19%20271.72%20114.50%20276.33%20112.17C280.94%20109.83%20285.22%20102.89%20291.33%2097.83C297.44%2092.78%20305.72%2086.50%20313.00%2081.83C320.28%2077.17%20328.58%2072.58%20335.00%2069.83C341.42%2067.08%20349.36%2060.97%20351.50%2065.33C353.64%2069.69%20350.61%2084.28%20347.83%2096.00C345.06%20107.72%20337.39%20126.56%20334.83%20135.67C332.28%20144.78%20330.83%20144.17%20332.50%20150.67C334.17%20157.17%20342.50%20166.33%20344.83%20174.67C347.17%20183.00%20345.67%20194.89%20346.50%20200.67C347.33%20206.44%20346.53%20205.03%20349.83%20209.33C353.14%20213.64%20359.36%20220.69%20366.33%20226.50C373.31%20232.31%20386.97%20240.47%20391.67%20244.17C396.36%20247.86%20394.53%20246.42%20394.50%20248.67C394.47%20250.92%20393.11%20254.67%20391.50%20257.67C389.89%20260.67%20387.53%20263.69%20384.83%20266.67C382.14%20269.64%20378.69%20273.03%20375.33%20275.50C371.97%20277.97%20370.28%20279.94%20364.67%20281.50C359.06%20283.06%20351.89%20284.94%20341.67%20284.83C331.44%20284.72%20312.83%20280.22%20303.33%20280.83C293.83%20281.44%20289.42%20285.53%20284.67%20288.50C279.92%20291.47%20277.47%20295.03%20274.83%20298.67C272.19%20302.31%20270.33%20305.94%20268.83%20310.33C267.33%20314.72%20266.14%20319.81%20265.83%20325.00C265.53%20330.19%20268.00%20341.39%20267.00%20341.50C266.00%20341.61%20261.03%20331.31%20259.83%20325.67C258.64%20320.03%20258.83%20313.33%20259.83%20307.67C260.83%20302.00%20263.06%20296.61%20265.83%20291.67C268.61%20286.72%20278.75%20280.14%20276.50%20278.00C274.25%20275.86%20256.25%20278.97%20252.33%20278.83C248.42%20278.69%20251.00%20278.44%20253.00%20277.17C255.00%20275.89%20260.67%20272.56%20264.33%20271.17C268.00%20269.78%20268.83%20269.06%20275.00%20268.83C281.17%20268.61%20290.89%20268.78%20301.33%20269.83C311.78%20270.89%20328.11%20274.50%20337.67%20275.17C347.22%20275.83%20353.67%20274.56%20358.67%20273.83C363.67%20273.11%20364.81%20272.31%20367.67%20270.83C370.53%20269.36%20375.47%20268.03%20375.83%20265.00C376.19%20261.97%20375.58%20256.19%20369.83%20252.67C364.08%20249.14%20354.86%20249.31%20341.33%20243.83C327.81%20238.36%20301.61%20225.00%20288.67%20219.83C275.72%20214.67%20273.44%20214.00%20263.67%20212.83C253.89%20211.67%20237.78%20212.33%20230.00%20212.83C222.22%20213.33%20222.00%20214.00%20217.00%20215.83C212.00%20217.67%20205.19%20220.47%20200.00%20223.83C194.81%20227.19%20190.36%20231.03%20185.83%20236.00C181.31%20240.97%20176.00%20248.50%20172.83%20253.67C169.67%20258.83%20168.61%20261.39%20166.83%20267.00C165.06%20272.61%20158.19%20287.19%20162.17%20287.33C166.14%20287.47%20181.89%20272.17%20190.67%20267.83C199.44%20263.50%20212.97%20258.53%20214.83%20261.33C216.69%20264.14%20205.00%20276.33%20201.83%20284.67C198.67%20293.00%20196.50%20302.56%20195.83%20311.33C195.17%20320.11%20195.33%20327.94%20197.83%20337.33C200.33%20346.72%20204.92%20358.58%20210.83%20367.67C216.75%20376.75%20224.75%20385.14%20233.33%20391.83C241.92%20398.53%20227.78%20405.17%20262.33%20407.83C296.89%20410.50%20410.94%20407.33%20440.67%20407.83C470.39%20408.33%20509.81%20410.36%20440.67%20410.83Z%20M203.17%20162.33C206.33%20160.72%20216.92%20152.86%20217.83%20148.00C218.75%20143.14%20210.69%20134.97%20208.67%20133.17C206.64%20131.36%20206.42%20136.75%20205.67%20137.17C204.92%20137.58%20204.97%20138.25%20204.17%20135.67C203.36%20133.08%20201.22%20127.89%20200.83%20121.67C200.44%20115.44%20200.58%20105.58%20201.83%2098.33C203.08%2091.08%20205.83%2079.11%20208.33%2078.17C210.83%2077.22%20213.97%2086.58%20216.83%2092.67C219.69%2098.75%20223.86%20109.81%20225.50%20114.67C227.14%20119.53%20227.72%20120.94%20226.67%20121.83C225.61%20122.72%20219.53%20118.42%20219.17%20120.00C218.81%20121.58%20221.69%20128.31%20224.50%20131.33C227.31%20134.36%20231.22%20138.11%20236.00%20138.17C240.78%20138.22%20251.03%20135.58%20253.17%20131.67C255.31%20127.75%20251.39%20120.94%20248.83%20114.67C246.28%20108.39%20242.00%20100.44%20237.83%2094.00C233.67%2087.56%20228.42%2080.97%20223.83%2076.00C219.25%2071.03%20213.17%2065.72%20210.33%2064.17C207.50%2062.61%20208.58%2063.86%20206.83%2066.67C205.08%2069.47%20202.33%2073.22%20199.83%2081.00C197.33%2088.78%20192.83%20102.83%20191.83%20113.33C190.83%20123.83%20192.67%20136.61%20193.83%20144.00C195.00%20151.39%20197.28%20154.61%20198.83%20157.67C200.39%20160.72%20200.00%20163.94%20203.17%20162.33Z%20M324.83%20140.33C330.03%20132.58%20342.83%2088.50%20342.67%2081.83C342.50%2075.17%20328.97%2093.53%20323.83%20100.33C318.69%20107.14%20313.89%20118.00%20311.83%20122.67C309.78%20127.33%20309.33%20125.39%20311.50%20128.33C313.67%20131.28%20319.64%20148.08%20324.83%20140.33Z%20M293.17%20206.67C295.14%20206.19%20297.72%20204.78%20298.83%20203.00C299.94%20201.22%20300.36%20198.03%20299.83%20196.00C299.31%20193.97%20297.47%20191.86%20295.67%20190.83C293.86%20189.81%20290.97%20189.47%20289.00%20189.83C287.03%20190.19%20284.97%20191.42%20283.83%20193.00C282.69%20194.58%20281.64%20197.19%20282.17%20199.33C282.69%20201.47%20285.17%20204.61%20287.00%20205.83C288.83%20207.06%20291.19%20207.14%20293.17%20206.67Z%22/%3E%20%3C/svg%3E") center/contain no-repeat}
+
+/* nav -> clean tab strip with accent underline */
+.nav{border-radius:14px;padding:6px}
+.nav button{background:transparent;border:1px solid transparent;color:var(--muted);font-weight:700;border-radius:9px}
+.nav button:hover{color:var(--ink);background:color-mix(in srgb,var(--green-soft) 55%,transparent);filter:none}
+.nav button.active{background:var(--green-soft);color:var(--green);border-color:transparent;box-shadow:inset 0 -2px 0 var(--green)}
+
+/* status pills -> outlined, Foxfield family */
+.chip{border:1px solid transparent;font-weight:800;padding:5px 10px}
+.high,.ok{background:var(--ok-soft);color:var(--ok);border-color:color-mix(in srgb,var(--ok) 34%,transparent)}
+.medium,.warn{background:var(--amber-soft);color:var(--amber);border-color:color-mix(in srgb,var(--amber) 34%,transparent)}
+.low,.bad{background:var(--red-soft);color:var(--red);border-color:color-mix(in srgb,var(--red) 34%,transparent)}
+.pending{background:var(--blue-soft);color:var(--blue);border-color:color-mix(in srgb,var(--blue) 34%,transparent)}
+
+/* tidy metrics + primary */
+.metric::before{width:3px;background:var(--green);opacity:1}
+.btn-primary{background:linear-gradient(180deg,var(--green-2),var(--green));
+  box-shadow:0 8px 18px color-mix(in srgb,var(--green) 26%,transparent),inset 0 1px 0 rgba(255,255,255,.18)}
+body[data-theme="dark"] .btn-primary{color:#1c1206}
+input[type=text],input[type=number],input[type=week],select,textarea{border-radius:10px}
+
+/* footer maker lockup */
+.footer{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+  text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--muted);padding:24px 0 14px}
+.footer .hexmark{width:22px;height:22px;color:#d8cfbf}
+.foot-word{font-family:"Cinzel",serif;letter-spacing:.2em;color:var(--ink);font-weight:600}
+.footer .sep{opacity:.45}
+@media (max-width:720px){.wordmark{font-size:30px}.prodhead{flex-direction:column}.prodhead-actions{align-self:flex-start}}
+
+/* --- iteration: exact mark · dark dirt base · calmer surface --- */
+:root{--card-solid:#fdf9f0; --card:rgba(253,249,240,.98);}
+.hero-main{background:var(--card-solid)}
+.hero-main::after{display:none}
+.footer{color:#a89c87}
+.foot-word{color:#e7ddcb}
+.footer .sep{color:#9c8f7a}
+
+/* --- iteration: restore FOXFIELD maker + true light mode --- */
+.prodhead-maker{font-family:"Cinzel",serif;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:9px}
+.prodhead-maker b{color:var(--green);font-weight:600;letter-spacing:.26em}
+.footer{color:var(--muted)}
+.foot-word{color:var(--ink)}
+.footer .sep{color:var(--muted)}
+.footer .hexmark{color:var(--ink)}
+
+/* --- iteration: refined mark + elegant FOXFIELD wordmark --- */
+.prodhead-maker{font-family:"Cinzel",serif;font-weight:600;font-size:15px;letter-spacing:.30em;color:var(--ink);margin-bottom:9px;line-height:1}
+
+/* --- stacked centered lockup: Mark / FOXFIELD / PRODUCT --- */
+.prodhead{flex-direction:column !important;align-items:center !important;text-align:center !important;gap:10px}
+.prodhead-id.fox-lockup{display:flex;flex-direction:column;align-items:center;gap:7px}
+.prodhead-id.fox-lockup .hexmark{width:74px !important;height:74px !important;color:var(--ink);margin-bottom:2px}
+.prodhead-id.fox-lockup .prodhead-maker{font-family:"Cinzel",serif;font-weight:600;font-size:19px;letter-spacing:.34em;color:var(--ink);margin:0;padding-left:.34em}
+.prodhead-id.fox-lockup .wordmark{margin:2px 0 0;letter-spacing:.01em}
+.prodhead-id.fox-lockup .prodhead-sub{margin-top:3px;letter-spacing:.04em}
+.prodhead-actions{align-self:center !important}
+
+/* --- compact left lockup + nav controls (EN/ES + moon-sun) --- */
+.prodhead{flex-direction:row !important;align-items:center !important;text-align:left !important;gap:16px !important}
+.prodhead-id.fox-lockup{flex-direction:row !important;align-items:center !important;gap:14px !important;text-align:left}
+.prodhead-id.fox-lockup .hexmark{width:48px !important;height:48px !important;margin:0 !important}
+.fox-textstack{display:flex;flex-direction:column;line-height:1.05}
+.prodhead-id.fox-lockup .prodhead-maker{font-size:11px !important;letter-spacing:.28em !important;color:var(--muted) !important;padding-left:0 !important;margin:0}
+.prodhead-id.fox-lockup .wordmark{font-size:26px !important;margin:0 !important}
+.prodhead-id.fox-lockup .prodhead-sub{margin-top:2px !important;letter-spacing:.04em}
+.prodhead-actions{align-self:auto !important;margin-left:auto;display:flex;gap:8px;align-items:center}
+.prodhead-actions .theme-toggle{width:42px !important;height:42px !important;padding:0 !important;display:grid;place-items:center;border-radius:11px !important;font-size:17px;line-height:1;background:color-mix(in srgb,var(--card-solid) 82%,transparent) !important;border:1px solid var(--line) !important;color:var(--ink) !important;box-shadow:none !important}
+.prodhead-actions .theme-toggle span{display:none !important}
+.lang-toggle{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.lang-toggle b{padding:0 10px;height:42px;display:grid;place-items:center;font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--muted);background:color-mix(in srgb,var(--card-solid) 82%,transparent);cursor:pointer}
+.lang-toggle b.on{background:var(--green);color:#fff}
+body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
+@media (max-width:720px){
+  .prodhead{flex-direction:column !important;align-items:flex-start !important;gap:12px !important;flex-wrap:wrap}
+  .prodhead-id.fox-lockup{flex:1 1 100%}
+  .prodhead-id.fox-lockup .hexmark{width:42px !important;height:42px !important}
+  .prodhead-id.fox-lockup .wordmark{font-size:22px !important}
+  .prodhead-actions{width:100% !important;margin-left:0 !important;justify-content:flex-start !important;flex-wrap:wrap}
 }
 </style>
 
 </head>
 <body>
 <div class="wrap">
+
   <section class="hero">
     <div class="card hero-main">
-      <h1>Perennial Ordering Platform</h1>
-      <div class="subtle">An executive-ready perennial ordering prototype built on top of your current demo flow, expanded to reflect common wholesale grower workflows: availability intake, SKU crosswalk, multi-location allocation, manager review, vendor packet, QR-ready intake, and receiving exceptions.</div>
+      <div class="prodhead">
+        <div class="prodhead-id fox-lockup">
+          <span class="hexmark fox-mark" aria-hidden="true"></span>
+          <div class="fox-textstack">
+            <div class="prodhead-maker">FOXFIELD</div>
+            <h1 class="wordmark">ORDERFLOW</h1>
+            <div class="prodhead-sub" data-i18n="of-sub">Ordering + operations platform</div>
+          </div>
+        </div>
+        <div class="prodhead-actions">
+          <span class="lang-toggle"><b id="langEn" class="on">EN</b><b id="langEs">ES</b></span>
+          <button class="btn-secondary theme-toggle" id="themeToggle" type="button" aria-pressed="false">🌙 <span>Dark mode</span></button>
+          <button class="iconbtn" type="button" aria-label="Search" onclick="var s=document.getElementById('availabilitySearch');s.scrollIntoView({behavior:'smooth',block:'center'});s.focus();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></button>
+          <button class="iconbtn" type="button" aria-label="Print" onclick="window.print()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 3 18 3 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
+          <button class="iconbtn" type="button" aria-label="Sections" onclick="document.querySelector('.nav').scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        </div>
+      </div>
+      <div class="subtle">A white-label-ready ordering platform built on top of the existing perennial demo flow, expanded to reflect common wholesale grower workflows: availability intake, SKU crosswalk, multi-location allocation, manager review, vendor packet, QR-ready intake, and receiving exceptions.</div>
       <div class="badges">
         <span class="badge">Availability → Crosswalk → Allocation → Receiving</span>
         <span class="badge">3 retail locations</span>
         <span class="badge">SKU translation backbone</span>
         <span class="badge">Exception-ready receiving</span>
-        <span class="badge">Single-file GitHub-ready</span>
-        <span class="badge">Foxfield Studio</span>
+        <span class="badge">White-label · single-file</span>
       </div>
       <div class="hero-note">
-        This version is designed to show what the <strong>next layer</strong> could look like without replacing the current system of record. It keeps the practical sheet-driven perennial workflow buyers already understand, then wraps it in a cleaner operating model: normalized status, location splits, vendor packet output, QR-ready intake, and a future-facing schema that can grow into real farm SKU crosswalks.
+        Built to show what the <strong>next layer</strong> looks like without replacing the current system of record. It keeps the practical, sheet-driven perennial workflow buyers already understand, then wraps it in a cleaner operating model — normalized status, location splits, vendor-packet output, QR-ready intake, and a future-facing schema that can grow into real farm SKU crosswalks.
       </div>
     </div>
     <aside class="card meta">
@@ -335,7 +511,6 @@ tr:hover td{background:color-mix(in srgb, var(--green-soft) 24%, var(--card-soli
         <textarea id="draftNotes">Executive demo build: strongest page-1 intake rows carried forward from the current Suburban Farm draft, expanded with market-standard schema fields, location allocation, and receiving exceptions.</textarea>
       </div>
       <div class="toolbar">
-        <button class="btn-secondary theme-toggle" id="themeToggle" type="button" aria-pressed="false">🌙 <span>Dark mode</span></button>
         <button class="btn-primary" id="saveBtn" type="button">Save browser draft</button>
         <button class="btn-secondary" id="exportJsonBtn" type="button">Export JSON</button>
         <button class="btn-secondary" id="exportCsvBtn" type="button">Export approved CSV</button>
@@ -356,19 +531,19 @@ tr:hover td{background:color-mix(in srgb, var(--green-soft) 24%, var(--card-soli
   </section>
 
   <div class="nav">
-    <button class="active" data-panel="availabilityPanel">1. Availability intake</button>
-    <button data-panel="crosswalkPanel">2. SKU crosswalk</button>
-    <button data-panel="allocationPanel">3. Store allocation</button>
-    <button data-panel="reviewPanel">4. Manager review</button>
-    <button data-panel="packetPanel">5. Vendor packet</button>
-    <button data-panel="receivingPanel">6. Receiving</button>
-    <button data-panel="schemaPanel">7. Schema + standards</button>
+    <button class="active" data-panel="availabilityPanel" data-i18n="nav-availabilityPanel">1. Availability intake</button>
+    <button data-panel="crosswalkPanel" data-i18n="nav-crosswalkPanel">2. SKU crosswalk</button>
+    <button data-panel="allocationPanel" data-i18n="nav-allocationPanel">3. Store allocation</button>
+    <button data-panel="reviewPanel" data-i18n="nav-reviewPanel">4. Manager review</button>
+    <button data-panel="packetPanel" data-i18n="nav-packetPanel">5. Vendor packet</button>
+    <button data-panel="receivingPanel" data-i18n="nav-receivingPanel">6. Receiving</button>
+    <button data-panel="schemaPanel" data-i18n="nav-schemaPanel">7. Schema + standards</button>
   </div>
 
   <section class="card panel active" id="availabilityPanel">
     <div class="panel-head">
       <div>
-        <h2>Availability intake</h2>
+        <h2 data-i18n="h-avail">Availability intake</h2>
         <div class="panel-note">This is the digital intake queue for requested plant lines. It keeps the sheet-style workflow familiar, but already carries the extra fields needed for scale: vendor SKU, retail SKU, internal display name, active state, and location eligibility.</div>
       </div>
     </div>
@@ -397,7 +572,7 @@ tr:hover td{background:color-mix(in srgb, var(--green-soft) 24%, var(--card-soli
   <section class="card panel" id="crosswalkPanel">
     <div class="panel-head">
       <div>
-        <h2>SKU crosswalk</h2>
+        <h2 data-i18n="h-cross">SKU crosswalk</h2>
         <div class="panel-note">This is the core translation layer: vendor SKU to retail SKU to internal display name, plus size, color, active state, and location eligibility. This is the backbone that lets the ordering module eventually feed the public finder and kiosk.</div>
       </div>
     </div>
@@ -416,7 +591,7 @@ tr:hover td{background:color-mix(in srgb, var(--green-soft) 24%, var(--card-soli
   <section class="card panel" id="allocationPanel">
     <div class="panel-head">
       <div>
-        <h2>Multi-location allocation</h2>
+        <h2 data-i18n="h-alloc">Multi-location allocation</h2>
         <div class="panel-note">Every approved line can split across Overland Park, Martin City, and Lenexa. This makes the ordering layer relevant to a three-location nursery group instead of a single-store buyer tool.</div>
       </div>
     </div>
@@ -435,7 +610,7 @@ tr:hover td{background:color-mix(in srgb, var(--green-soft) 24%, var(--card-soli
   <section class="card panel" id="reviewPanel">
     <div class="panel-head">
       <div>
-        <h2>Manager review</h2>
+        <h2 data-i18n="h-review">Manager review</h2>
         <div class="panel-note">This is where requested quantity becomes approved quantity, exceptions are flagged, and rows with weak mapping or allocation issues are caught before they go to the vendor packet.</div>
       </div>
     </div>
@@ -454,7 +629,7 @@ tr:hover td{background:color-mix(in srgb, var(--green-soft) 24%, var(--card-soli
   <section class="card panel" id="packetPanel">
     <div class="panel-head">
       <div>
-        <h2>Vendor packet preview</h2>
+        <h2 data-i18n="h-packet">Vendor packet preview</h2>
         <div class="panel-note">Only approved lines appear here. The packet is structured to be realistic: vendor-facing quantities, store allocation notes, substitution guidance, and summary counts.</div>
       </div>
     </div>
@@ -499,7 +674,7 @@ tr:hover td{background:color-mix(in srgb, var(--green-soft) 24%, var(--card-soli
   <section class="card panel" id="receivingPanel">
     <div class="panel-head">
       <div>
-        <h2>Receiving + exceptions</h2>
+        <h2 data-i18n="h-recv">Receiving + exceptions</h2>
         <div class="panel-note">This is where the operational value becomes obvious. Short ships, substitutions, damage, wrong size, wrong color, and partial fills are tied back to each order line instead of living in markup or memory.</div>
       </div>
     </div>
@@ -518,7 +693,7 @@ tr:hover td{background:color-mix(in srgb, var(--green-soft) 24%, var(--card-soli
   <section class="card panel" id="schemaPanel">
     <div class="panel-head">
       <div>
-        <h2>Schema + market-standard model</h2>
+        <h2 data-i18n="h-schema">Schema + market-standard model</h2>
         <div class="panel-note">This demo is shaped to match the common pattern used by wholesale nursery availability and ordering systems: catalog master, availability snapshot, SKU crosswalk, order lines, and receiving exceptions.</div>
       </div>
     </div>
@@ -587,7 +762,14 @@ tr:hover td{background:color-mix(in srgb, var(--green-soft) 24%, var(--card-soli
     </div>
   </section>
 
-  <div class="footer">C.G. FOX • Foxfield Studio • Perennial Ordering Platform • Executive-ready prototype</div>
+  <div class="footer">
+    <span class="hexmark"></span>
+    <span class="foot-word">FOXFIELD</span>
+    <span class="sep">•</span>
+    <span>Brandable nursery workflow · Sample ordering data</span>
+    <span class="sep">•</span>
+    <span>© Foxfield</span>
+  </div>
 </div>
 
 <script>
@@ -1192,6 +1374,43 @@ initEvents();
 applyTheme(preferredTheme());
 loadState();
 renderAll();
+</script>
+<script>
+(function(){
+  var K='orderflow-lang';
+  var D={
+    'of-sub':['Ordering + operations platform','Plataforma de pedidos y operaciones'],
+    'nav-availabilityPanel':['1. Availability intake','1. Entrada de disponibilidad'],
+    'nav-crosswalkPanel':['2. SKU crosswalk','2. Equivalencias de SKU'],
+    'nav-allocationPanel':['3. Store allocation','3. Asignación por tienda'],
+    'nav-reviewPanel':['4. Manager review','4. Revisión del gerente'],
+    'nav-packetPanel':['5. Vendor packet','5. Paquete de proveedor'],
+    'nav-receivingPanel':['6. Receiving','6. Recepción'],
+    'nav-schemaPanel':['7. Schema + standards','7. Esquema y estándares'],
+    'h-avail':['Availability intake','Entrada de disponibilidad'],
+    'h-cross':['SKU crosswalk','Equivalencias de SKU'],
+    'h-alloc':['Multi-location allocation','Asignación multitienda'],
+    'h-review':['Manager review','Revisión del gerente'],
+    'h-packet':['Vendor packet preview','Vista previa del paquete de proveedor'],
+    'h-recv':['Receiving + exceptions','Recepción y excepciones'],
+    'h-schema':['Schema + market-standard model','Esquema y modelo estándar del mercado']
+  };
+  function apply(l){
+    document.documentElement.setAttribute('lang',l);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var p=D[el.getAttribute('data-i18n')]; if(p) el.textContent=p[l==='es'?1:0];
+    });
+    var en=document.getElementById('langEn'),es=document.getElementById('langEs');
+    if(en)en.classList.toggle('on',l==='en');
+    if(es)es.classList.toggle('on',l==='es');
+    try{localStorage.setItem(K,l);}catch(e){}
+  }
+  var saved='en';try{var s=localStorage.getItem(K);if(s==='es'||s==='en')saved=s;}catch(e){}
+  var en=document.getElementById('langEn'),es=document.getElementById('langEs');
+  if(en)en.addEventListener('click',function(){apply('en');});
+  if(es)es.addEventListener('click',function(){apply('es');});
+  apply(saved);
+})();
 </script>
 </body>
 </html>
