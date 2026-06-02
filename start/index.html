@@ -39,9 +39,11 @@ body{
 
 /* ---------- top bar ---------- */
 .topbar{display:flex;align-items:center;gap:14px;margin-bottom:clamp(22px,4vh,42px)}
-.brand{display:flex;align-items:center;gap:12px}
-.mark{width:52px;height:52px;color:var(--ink);flex:0 0 auto}
+.brand{display:flex;align-items:center;gap:13px}
+.mark{width:60px;height:60px;color:var(--ink);flex:0 0 auto}
 .brand-word{font-family:"Cinzel",serif;font-weight:600;font-size:16px;letter-spacing:.34em;padding-left:.34em;color:var(--ink)}
+.brand-stack{display:flex;flex-direction:column;line-height:1.1}
+.brand-sub{font-family:"Spline Sans Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--of);margin-top:6px;padding-left:.34em}
 .controls{margin-left:auto;display:flex;gap:8px;align-items:center}
 .lang{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .lang b{padding:0 11px;height:40px;display:grid;place-items:center;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--muted);background:transparent;cursor:pointer;transition:.15s}
@@ -113,7 +115,10 @@ html[data-theme="light"] .tg::before{content:"\1F319"}
   <header class="topbar reveal d1">
     <div class="brand">
       <svg class="mark" aria-hidden="true"><use href="#foxmark"/></svg>
-      <span class="brand-word">FOXFIELD</span>
+      <span class="brand-stack">
+        <span class="brand-word">FOXFIELD</span>
+        <span class="brand-sub" data-i18n="eyebrow">Nursery software studio</span>
+      </span>
     </div>
     <div class="controls">
       <span class="lang" role="group" aria-label="Language">
@@ -124,7 +129,6 @@ html[data-theme="light"] .tg::before{content:"\1F319"}
   </header>
 
   <section class="hero">
-    <div class="eyebrow reveal d2" data-i18n="eyebrow">Nursery software studio</div>
     <h1 class="reveal d2" data-i18n="headline">Brandable nursery software, <span class="accent">built on the floor.</span></h1>
     <p class="reveal d3" data-i18n="sub">Foxfield builds white-label discovery, ordering, and advisory tools for garden centers — and for the platforms that serve them. Three working demos below, on sample data.</p>
   </section>
