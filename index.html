@@ -169,11 +169,11 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
 .foot-main{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;width:100%;max-width:980px}
 .foot-word{font-family:"Cinzel",serif;letter-spacing:.23em;color:var(--ink);font-weight:600;font-size:13px}
 .foot-note{font-family:"Spline Sans Mono",monospace;font-size:12px;letter-spacing:.065em;color:var(--muted)}
-.foot-contact{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;width:100%}
+.foot-contact{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;width:100%;position:relative}
 .contact-link,.contact-button{height:38px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.025);color:var(--muted);display:inline-flex;align-items:center;gap:8px;padding:0 12px;text-decoration:none;font:700 12px/1 "Hanken Grotesk",system-ui,sans-serif;letter-spacing:.02em;cursor:pointer;transition:.16s}
 .contact-link:hover,.contact-button:hover{border-color:var(--of);color:var(--ink);background:rgba(232,140,58,.08)}
 .contact-icon{width:18px;height:18px;border:1px solid color-mix(in srgb,var(--of) 55%,var(--line));border-radius:999px;color:var(--of);display:grid;place-items:center;font-size:10px;font-weight:800;line-height:1}
-.copy-status{font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.06em;color:var(--wf);min-width:82px;opacity:0;transition:.16s}
+.copy-status{font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.06em;color:var(--wf);opacity:0;transition:.16s;position:absolute;left:50%;top:100%;margin-top:6px;transform:translateX(-50%);white-space:nowrap;pointer-events:none}
 .copy-status.show{opacity:1}
 @media(max-width:720px){
   .loop{grid-template-columns:1fr 1fr}
