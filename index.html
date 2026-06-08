@@ -211,13 +211,14 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
 .founder::before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,var(--wf),var(--of),var(--pc));opacity:.88}
 .founder>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:clamp(16px,2.6vw,30px);align-items:center}
 .founder>summary::-webkit-details-marker{display:none}
-.founder-media{flex:0 1 380px;min-width:0;display:grid;aspect-ratio:2/1;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
-.founder-media img{grid-area:1/1;width:100%;height:100%;object-fit:cover;transition:opacity .4s ease}
-.founder-media .m-shut{object-position:65% 45%}
-.founder-media .m-open{object-position:50% 30%;opacity:0}
-.founder[open] .founder-media .m-shut{opacity:0}
-.founder[open] .founder-media .m-open{opacity:1}
-.founder-text{flex:1.4 1 320px;min-width:0}
+.founder-media{min-width:0;display:grid;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.founder-media img{grid-area:1/1;width:100%;height:auto;display:block}
+.founder-media .m-open{display:none}
+.founder[open] .founder-media .m-shut{display:none}
+.founder[open] .founder-media .m-open{display:block}
+.founder-text{min-width:0}
+@media(min-width:721px){.founder>summary{flex-wrap:nowrap}.founder-media{flex:0 0 38%}.founder-text{flex:1 1 auto}}
+@media(max-width:720px){.founder-media{flex:1 1 100%}.founder-text{flex:1 1 100%}}
 .founder-kicker{font-family:"Spline Sans Mono",monospace;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--of);margin-bottom:10px}
 .founder-h{font-family:"Archivo",sans-serif;font-size:clamp(1.2rem,1.95vw,1.55rem);line-height:1.1;letter-spacing:-.012em;color:var(--ink);max-width:28ch;margin:0}
 .founder-toggle{display:inline-flex;align-items:center;gap:10px;margin-top:16px;font-family:"Spline Sans Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--of)}
@@ -316,7 +317,7 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
     <div class="founder-text">
       <div class="founder-kicker">Who’s behind it</div>
       <h2 class="founder-h">I spent a career in ag-tech.<br>Foxfield, I built from the floor up.</h2>
-      <span class="founder-toggle"><span class="pm" aria-hidden="true">+</span><span class="s-shut">Meet the founder</span><span class="s-open">Hide the story</span></span>
+      <span class="founder-toggle"><span class="pm" aria-hidden="true">+</span><span class="s-shut">Read the story</span><span class="s-open">Hide the story</span></span>
     </div>
   </summary>
   <div class="founder-story"><p>I co-founded SeediQ (acquired by CDMS), turned around Greenbook, did enterprise sales for CropTrak in the Organic and Non-GMO market, was the GTM architect for Breedr’s US launch, and led product development on the EPA’s Web-Distributed Labeling pilot. Then COVID scrambled the ag-tech world, and I landed somewhere I never planned to be: working a retail nursery floor. Four seasons in, I was standing inside the exact problems I’d spent a career building software to solve — the customer question no one on staff could answer, the paper availability sheet that didn’t match what was received, the plant data that lived in three places and agreed in none. So I started building again. <span class="ink">Foxfield isn’t ag-tech guessing at the nursery business. It’s built from inside it — by someone who’s worked both sides.</span></p></div>
