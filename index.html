@@ -536,7 +536,9 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
           setFormStatus('Thanks — I’ll follow up directly.');
           interestForm.reset();
         }).catch(function(){
-          copyText(buildInquiryText(fd),function(){setFormStatus('Could not send yet — inquiry copied. Email it to hello@foxfield.studio.');});
+          var inquiry=buildInquiryText(fd);
+          var mailto='mailto:hello@foxfield.studio?subject='+encodeURIComponent('Foxfield.studio — new inquiry')+'&body='+encodeURIComponent(inquiry);
+          copyText(inquiry,function(){ if(formStatus){ formStatus.innerHTML='Couldn’t send automatically — your note is copied. <a href="'+mailto+'" style="color:inherit;text-decoration:underline">Email it to hello@foxfield.studio →</a>'; } });
         }).finally(function(){ if(submit){ submit.disabled=false; submit.textContent=root.getAttribute('lang')==='es'?'Iniciar conversación →':'Start the conversation →'; } });
       }else{
         copyText(buildInquiryText(fd),function(){
