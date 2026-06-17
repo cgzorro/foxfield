@@ -476,26 +476,26 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
           <button class="iconbtn" type="button" aria-label="Sections" onclick="document.querySelector('.nav').scrollIntoView({behavior:'smooth'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
         </div>
       </div>
-      <div class="subtle">A white-label-ready ordering platform built on top of the existing perennial demo flow, expanded to reflect common wholesale grower workflows: availability intake, SKU crosswalk, multi-location allocation, manager review, vendor packet, QR-ready intake, and receiving exceptions.</div>
+      <div class="subtle" data-i18n="hero-desc">A white-label-ready ordering platform built on top of the existing perennial demo flow, expanded to reflect common wholesale grower workflows: availability intake, SKU crosswalk, multi-location allocation, manager review, vendor packet, QR-ready intake, and receiving exceptions.</div>
       <div class="badges">
-        <span class="badge">Availability → Crosswalk → Allocation → Receiving</span>
-        <span class="badge">3 retail locations</span>
-        <span class="badge">SKU translation backbone</span>
-        <span class="badge">Exception-ready receiving</span>
-        <span class="badge">White-label · single-file</span>
+        <span class="badge" data-i18n="badge-flow">Availability → Crosswalk → Allocation → Receiving</span>
+        <span class="badge" data-i18n="badge-3loc">3 retail locations</span>
+        <span class="badge" data-i18n="badge-sku">SKU translation backbone</span>
+        <span class="badge" data-i18n="badge-exc">Exception-ready receiving</span>
+        <span class="badge" data-i18n="badge-wl">White-label · single-file</span>
       </div>
-      <div class="hero-note">
+      <div class="hero-note" data-i18n-html="hero-note">
         Built to show what the <strong>next layer</strong> looks like without replacing the current system of record. It keeps the practical, sheet-driven perennial workflow buyers already understand, then wraps it in a cleaner operating model — normalized status, location splits, vendor-packet output, QR-ready intake, and a future-facing schema that can grow into real farm SKU crosswalks.
       </div>
     </div>
     <aside class="card meta">
       <div class="meta-grid">
-        <div class="field"><label>Order ID</label><input id="orderId" type="text" value="FTN-2026-0031" /></div>
-        <div class="field"><label>Requested ship week</label><input id="shipWeek" type="week" value="2026-W16" /></div>
-        <div class="field"><label>Organization</label><input id="orgName" type="text" value="Suburban Lawn & Garden" /></div>
-        <div class="field"><label>Vendor</label><input id="vendorName" type="text" value="Suburban Farm" /></div>
-        <div class="field"><label>Buyer</label><input id="buyerName" type="text" value="Chris Fox" /></div>
-        <div class="field"><label>Draft status</label>
+        <div class="field"><label data-i18n="f-orderid">Order ID</label><input id="orderId" type="text" value="ORD-2026-0031" /></div>
+        <div class="field"><label data-i18n="f-shipweek">Requested ship week</label><input id="shipWeek" type="week" value="2026-W16" /></div>
+        <div class="field"><label data-i18n="f-org">Organization</label><input id="orgName" type="text" value="Cedarwood Garden Center" /></div>
+        <div class="field"><label data-i18n="f-vendor">Vendor</label><input id="vendorName" type="text" value="Hillcrest Growers" /></div>
+        <div class="field"><label data-i18n="f-buyer">Buyer</label><input id="buyerName" type="text" value="Jordan Reed" /></div>
+        <div class="field"><label data-i18n="f-draftstatus">Draft status</label>
           <select id="draftStatus">
             <option>Intake in progress</option>
             <option selected>Manager review ready</option>
@@ -507,27 +507,27 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
         </div>
       </div>
       <div class="field">
-        <label>Internal notes</label>
-        <textarea id="draftNotes">Executive demo build: strongest page-1 intake rows carried forward from the current Suburban Farm draft, expanded with market-standard schema fields, location allocation, and receiving exceptions.</textarea>
+        <label data-i18n="f-notes">Internal notes</label>
+        <textarea id="draftNotes">Executive demo build: strongest page-1 intake rows carried forward from the current Hillcrest Growers draft, expanded with market-standard schema fields, location allocation, and receiving exceptions.</textarea>
       </div>
       <div class="toolbar">
-        <button class="btn-primary" id="saveBtn" type="button">Save browser draft</button>
-        <button class="btn-secondary" id="exportJsonBtn" type="button">Export JSON</button>
-        <button class="btn-secondary" id="exportCsvBtn" type="button">Export approved CSV</button>
-        <button class="btn-secondary" id="exportQrBtn" type="button">Export QR</button>
-        <button class="btn-secondary" id="printPacketBtn" type="button">Print packet</button>
-        <button class="btn-danger" id="resetBtn" type="button">Reset seed data</button>
+        <button class="btn-primary" id="saveBtn" type="button" data-i18n="btn-save">Save browser draft</button>
+        <button class="btn-secondary" id="exportJsonBtn" type="button" data-i18n="btn-json">Export JSON</button>
+        <button class="btn-secondary" id="exportCsvBtn" type="button" data-i18n="btn-csv">Export approved CSV</button>
+        <button class="btn-secondary" id="exportQrBtn" type="button" data-i18n="btn-qr">Export QR</button>
+        <button class="btn-secondary" id="printPacketBtn" type="button" data-i18n="btn-print">Print packet</button>
+        <button class="btn-danger" id="resetBtn" type="button" data-i18n="btn-reset">Reset seed data</button>
       </div>
     </aside>
   </section>
 
   <section class="summary">
-    <div class="card metric"><div class="k">Requested lines</div><div class="v" id="metricLines">0</div><div class="s">rows with requested qty above zero</div></div>
-    <div class="card metric"><div class="k">Requested units</div><div class="v" id="metricUnits">0</div><div class="s">buyer draft demand</div></div>
-    <div class="card metric"><div class="k">Approved units</div><div class="v" id="metricApproved">0</div><div class="s">manager approved total</div></div>
-    <div class="card metric"><div class="k">Mapped rows</div><div class="v" id="metricMapped">0</div><div class="s">crosswalk progress</div></div>
-    <div class="card metric"><div class="k">Allocated units</div><div class="v" id="metricAllocated">0</div><div class="s">split across 3 stores</div></div>
-    <div class="card metric"><div class="k">Receiving watchlist</div><div class="v" id="metricExceptions">0</div><div class="s">exceptions + short ships</div></div>
+    <div class="card metric"><div class="k" data-i18n="m-lines">Requested lines</div><div class="v" id="metricLines">0</div><div class="s" data-i18n="m-lines-s">rows with requested qty above zero</div></div>
+    <div class="card metric"><div class="k" data-i18n="m-units">Requested units</div><div class="v" id="metricUnits">0</div><div class="s" data-i18n="m-units-s">buyer draft demand</div></div>
+    <div class="card metric"><div class="k" data-i18n="m-approved">Approved units</div><div class="v" id="metricApproved">0</div><div class="s" data-i18n="m-approved-s">manager approved total</div></div>
+    <div class="card metric"><div class="k" data-i18n="m-mapped">Mapped rows</div><div class="v" id="metricMapped">0</div><div class="s" data-i18n="m-mapped-s">crosswalk progress</div></div>
+    <div class="card metric"><div class="k" data-i18n="m-alloc">Allocated units</div><div class="v" id="metricAllocated">0</div><div class="s" data-i18n="m-alloc-s">split across 3 stores</div></div>
+    <div class="card metric"><div class="k" data-i18n="m-exc">Receiving watchlist</div><div class="v" id="metricExceptions">0</div><div class="s" data-i18n="m-exc-s">exceptions + short ships</div></div>
   </section>
 
   <div class="nav">
@@ -544,7 +544,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
     <div class="panel-head">
       <div>
         <h2 data-i18n="h-avail">Availability intake</h2>
-        <div class="panel-note">This is the digital intake queue for requested plant lines. It keeps the sheet-style workflow familiar, but already carries the extra fields needed for scale: vendor SKU, retail SKU, internal display name, active state, and location eligibility.</div>
+        <div class="panel-note" data-i18n="note-avail">This is the digital intake queue for requested plant lines. It keeps the sheet-style workflow familiar, but already carries the extra fields needed for scale: vendor SKU, retail SKU, internal display name, active state, and location eligibility.</div>
       </div>
     </div>
     <div class="filters">
@@ -553,15 +553,15 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
       <select id="availabilityStatus"></select>
       <select id="availabilityConfidence"></select>
       <select id="availabilityView">
-        <option value="requested">Requested only</option>
-        <option value="all">Show all rows</option>
+        <option value="requested" data-i18n="view-req">Requested only</option>
+        <option value="all" data-i18n="view-all">Show all rows</option>
       </select>
     </div>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Group</th><th>Plant</th><th>Size</th><th>Farm avail</th><th>Req</th><th>Status</th><th>Confidence</th><th>Vendor SKU</th><th>Notes</th>
+            <th data-i18n="th-group">Group</th><th data-i18n="th-plant">Plant</th><th data-i18n="th-size">Size</th><th data-i18n="th-farmavail">Farm avail</th><th data-i18n="th-req">Req</th><th data-i18n="th-status">Status</th><th data-i18n="th-confidence">Confidence</th><th data-i18n="th-vendorsku">Vendor SKU</th><th data-i18n="th-notes">Notes</th>
           </tr>
         </thead>
         <tbody id="availabilityBody"></tbody>
@@ -573,14 +573,14 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
     <div class="panel-head">
       <div>
         <h2 data-i18n="h-cross">SKU crosswalk</h2>
-        <div class="panel-note">This is the core translation layer: vendor SKU to retail SKU to internal display name, plus size, color, active state, and location eligibility. This is the backbone that lets the ordering module eventually feed the public finder and kiosk.</div>
+        <div class="panel-note" data-i18n="note-cross">This is the core translation layer: vendor SKU to retail SKU to internal display name, plus size, color, active state, and location eligibility. This is the backbone that lets the ordering module eventually feed the public finder and kiosk.</div>
       </div>
     </div>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Plant</th><th>Vendor SKU</th><th>Retail SKU</th><th>Internal display name</th><th>Size</th><th>Color</th><th>Active</th><th>Eligible locations</th>
+            <th data-i18n="th-plant">Plant</th><th data-i18n="th-vendorsku">Vendor SKU</th><th data-i18n="th-retailsku">Retail SKU</th><th data-i18n="th-internalname">Internal display name</th><th data-i18n="th-size">Size</th><th data-i18n="th-color">Color</th><th data-i18n="th-active">Active</th><th data-i18n="th-eliglocs">Eligible locations</th>
           </tr>
         </thead>
         <tbody id="crosswalkBody"></tbody>
@@ -592,14 +592,14 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
     <div class="panel-head">
       <div>
         <h2 data-i18n="h-alloc">Multi-location allocation</h2>
-        <div class="panel-note">Every approved line can split across Overland Park, Martin City, and Lenexa. This makes the ordering layer relevant to a three-location nursery group instead of a single-store buyer tool.</div>
+        <div class="panel-note" data-i18n="note-alloc">Every approved line can split across Northgate, Midtown, and Westside. This makes the ordering layer relevant to a three-location nursery group instead of a single-store buyer tool.</div>
       </div>
     </div>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Plant</th><th>Approved</th><th><div class="alloc-labels"><span>OP</span><span>MC</span><span>Lenexa</span></div></th><th>Allocated</th><th>Remaining</th><th>Eligibility</th>
+            <th data-i18n="th-plant">Plant</th><th data-i18n="th-approved">Approved</th><th><div class="alloc-labels"><span>NG</span><span>MT</span><span>Westside</span></div></th><th data-i18n="th-allocated">Allocated</th><th data-i18n="th-remaining">Remaining</th><th data-i18n="th-eligibility">Eligibility</th>
           </tr>
         </thead>
         <tbody id="allocationBody"></tbody>
@@ -611,14 +611,14 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
     <div class="panel-head">
       <div>
         <h2 data-i18n="h-review">Manager review</h2>
-        <div class="panel-note">This is where requested quantity becomes approved quantity, exceptions are flagged, and rows with weak mapping or allocation issues are caught before they go to the vendor packet.</div>
+        <div class="panel-note" data-i18n="note-review">This is where requested quantity becomes approved quantity, exceptions are flagged, and rows with weak mapping or allocation issues are caught before they go to the vendor packet.</div>
       </div>
     </div>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Plant</th><th>Requested</th><th>Approved</th><th>Decision</th><th>Mapping</th><th>Allocation</th><th>Buyer notes</th>
+            <th data-i18n="th-plant">Plant</th><th data-i18n="th-requested">Requested</th><th data-i18n="th-approved">Approved</th><th data-i18n="th-decision">Decision</th><th data-i18n="th-mapping">Mapping</th><th data-i18n="th-allocation">Allocation</th><th data-i18n="th-buyernotes">Buyer notes</th>
           </tr>
         </thead>
         <tbody id="reviewBody"></tbody>
@@ -630,7 +630,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
     <div class="panel-head">
       <div>
         <h2 data-i18n="h-packet">Vendor packet preview</h2>
-        <div class="panel-note">Only approved lines appear here. The packet is structured to be realistic: vendor-facing quantities, store allocation notes, substitution guidance, and summary counts.</div>
+        <div class="panel-note" data-i18n="note-packet">Only approved lines appear here. The packet is structured to be realistic: vendor-facing quantities, store allocation notes, substitution guidance, and summary counts.</div>
       </div>
     </div>
     <div class="grid-2">
@@ -638,7 +638,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
         <table>
           <thead>
             <tr>
-              <th>Plant</th><th>Approved</th><th>Size</th><th>Vendor SKU</th><th>Retail SKU</th><th>Store split</th>
+              <th data-i18n="th-plant">Plant</th><th data-i18n="th-approved">Approved</th><th data-i18n="th-size">Size</th><th data-i18n="th-vendorsku">Vendor SKU</th><th data-i18n="th-retailsku">Retail SKU</th><th data-i18n="th-storesplit">Store split</th>
             </tr>
           </thead>
           <tbody id="packetBody"></tbody>
@@ -648,13 +648,13 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
         <div class="mutedbox" id="packetSummary"></div>
         <div class="mutedbox qr-box" id="qrPanel">
           <div class="qr-head">
-            <strong>QR share + export</strong>
-            <button class="btn-secondary btn-small" id="refreshQrBtn" type="button">Refresh QR</button>
+            <strong data-i18n="qr-head">QR share + export</strong>
+            <button class="btn-secondary btn-small" id="refreshQrBtn" type="button" data-i18n="btn-refreshqr">Refresh QR</button>
           </div>
           <div class="qr-grid">
             <div class="qr-preview"><img id="qrPreview" alt="QR code preview" /></div>
             <div class="stack" style="gap:10px">
-              <span class="small">Use this for a phone-friendly handoff. The QR points to the current live page when available, or falls back to a compact order summary.</span>
+              <span class="small" data-i18n="qr-help">Use this for a phone-friendly handoff. The QR points to the current live page when available, or falls back to a compact order summary.</span>
               <div class="qr-url" id="qrValueLabel"></div>
             </div>
           </div>
@@ -664,8 +664,8 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
           <span class="small">A = Available · L = Limited · S = To Size / No Color · T = Tight Buds · C = Color Showing · B = Blooming</span>
         </div>
         <div class="mutedbox">
-          <strong>Why this matters</strong><br>
-          <span class="small">The same line can now carry buyer intent, crosswalk logic, store allocation, and receiving history — all without losing the familiarity of the original sheet-based workflow.</span>
+          <strong data-i18n="why-head">Why this matters</strong><br>
+          <span class="small" data-i18n="why-body">The same line can now carry buyer intent, crosswalk logic, store allocation, and receiving history — all without losing the familiarity of the original sheet-based workflow.</span>
         </div>
       </div>
     </div>
@@ -675,14 +675,14 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
     <div class="panel-head">
       <div>
         <h2 data-i18n="h-recv">Receiving + exceptions</h2>
-        <div class="panel-note">This is where the operational value becomes obvious. Short ships, substitutions, damage, wrong size, wrong color, and partial fills are tied back to each order line instead of living in markup or memory.</div>
+        <div class="panel-note" data-i18n="note-recv">This is where the operational value becomes obvious. Short ships, substitutions, damage, wrong size, wrong color, and partial fills are tied back to each order line instead of living in markup or memory.</div>
       </div>
     </div>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Plant</th><th>Approved</th><th>Received</th><th>Variance</th><th>Exception</th><th>Condition</th><th>Receiving notes</th>
+            <th data-i18n="th-plant">Plant</th><th data-i18n="th-approved">Approved</th><th data-i18n="th-received">Received</th><th data-i18n="th-variance">Variance</th><th data-i18n="th-exception">Exception</th><th data-i18n="th-condition">Condition</th><th data-i18n="th-recvnotes">Receiving notes</th>
           </tr>
         </thead>
         <tbody id="receivingBody"></tbody>
@@ -694,7 +694,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
     <div class="panel-head">
       <div>
         <h2 data-i18n="h-schema">Schema + market-standard model</h2>
-        <div class="panel-note">This demo is shaped to match the common pattern used by wholesale nursery availability and ordering systems: catalog master, availability snapshot, SKU crosswalk, order lines, and receiving exceptions.</div>
+        <div class="panel-note" data-i18n="note-schema">This demo is shaped to match the common pattern used by wholesale nursery availability and ordering systems: catalog master, availability snapshot, SKU crosswalk, order lines, and receiving exceptions.</div>
       </div>
     </div>
     <div class="legend-grid" style="margin-bottom:14px">
@@ -707,7 +707,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
     </div>
     <div class="schema-grid">
       <div class="card schema-card">
-        <h3>Vendor catalog item</h3>
+        <h3 data-i18n="sch-vendoritem">Vendor catalog item</h3>
 <pre>{
   vendor_name,
   vendor_sku,
@@ -721,7 +721,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
 }</pre>
       </div>
       <div class="card schema-card">
-        <h3>Availability snapshot</h3>
+        <h3 data-i18n="sch-availsnap">Availability snapshot</h3>
 <pre>{
   snapshot_date,
   vendor_name,
@@ -734,7 +734,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
 }</pre>
       </div>
       <div class="card schema-card">
-        <h3>SKU crosswalk</h3>
+        <h3 data-i18n="sch-crosswalk">SKU crosswalk</h3>
 <pre>{
   vendor_sku,
   retail_sku,
@@ -747,7 +747,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
 }</pre>
       </div>
       <div class="card schema-card">
-        <h3>Order + receiving</h3>
+        <h3 data-i18n="sch-order">Order + receiving</h3>
 <pre>{
   order_id,
   requested_qty,
@@ -768,18 +768,18 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
     <span class="sep">•</span>
     <span>Brandable nursery workflow · Sample ordering data</span>
     <span class="sep">•</span>
-    <span>© Foxfield</span>
+    <span>© 2026 Foxfield Studio</span>
   </div>
 </div>
 
 <script>
-const STORAGE_KEY = 'nursery-ordering-platform-demo-v3-state';
+const STORAGE_KEY = 'nursery-ordering-platform-demo-v4-state';
 const THEME_KEY = 'nursery-ordering-platform-demo-v3-theme';
 const LOCATION_KEYS = ['op','mc','lx'];
 const LOCATION_LABELS = {
-  op: 'Overland Park',
-  mc: 'Martin City',
-  lx: 'Lenexa'
+  op: 'Northgate',
+  mc: 'Midtown',
+  lx: 'Westside'
 };
 const STATUS_MAP = {
   A:'Available',
@@ -845,11 +845,11 @@ function seedRows(){
   return DEFAULT_ROWS.map((row, index) => {
     const alloc = splitQty(row.requested_qty);
     const vendorSku = `FARM-${slug(row.item_name).slice(0, 18)}-${String(index+1).padStart(3,'0')}`;
-    const retailSku = `SUB-${slug(row.item_name).slice(0, 10)}-${slug(row.size).slice(0,4) || 'BASE'}`;
+    const retailSku = `RTL-${slug(row.item_name).slice(0, 10)}-${slug(row.size).slice(0,4) || 'BASE'}`;
     return {
       line_id: row.line_id,
       source_date: '2026-03-20',
-      vendor: 'Suburban Farm',
+      vendor: 'Hillcrest Growers',
       order_source: 'Farm Availability Sheet',
       product_group: row.group,
       item_name: row.item_name,
@@ -916,13 +916,13 @@ function saveState(){
 }
 function resetState(){
   rows = seedRows();
-  els.orderId.value = 'FTN-2026-0031';
+  els.orderId.value = 'ORD-2026-0031';
   els.shipWeek.value = '2026-W16';
-  els.orgName.value = 'Suburban Lawn & Garden';
-  els.vendorName.value = 'Suburban Farm';
-  els.buyerName.value = 'Chris Fox';
+  els.orgName.value = 'Cedarwood Garden Center';
+  els.vendorName.value = 'Hillcrest Growers';
+  els.buyerName.value = 'Jordan Reed';
   els.draftStatus.value = 'Manager review ready';
-  els.draftNotes.value = 'Executive demo build: strongest page-1 intake rows carried forward from the current Suburban Farm draft, expanded with market-standard schema fields, location allocation, and receiving exceptions.';
+  els.draftNotes.value = 'Executive demo build: strongest page-1 intake rows carried forward from the current Hillcrest Growers draft, expanded with market-standard schema fields, location allocation, and receiving exceptions.';
   saveState();
   renderAll();
 }
@@ -931,11 +931,11 @@ function loadState(){
   if (stored && Array.isArray(stored.rows)) {
     rows = stored.rows;
     const meta = stored.meta || {};
-    els.orderId.value = meta.orderId || 'FTN-2026-0031';
+    els.orderId.value = meta.orderId || 'ORD-2026-0031';
     els.shipWeek.value = meta.shipWeek || '2026-W16';
-    els.orgName.value = meta.orgName || 'Suburban Lawn & Garden';
-    els.vendorName.value = meta.vendorName || 'Suburban Farm';
-    els.buyerName.value = meta.buyerName || 'Chris Fox';
+    els.orgName.value = meta.orgName || 'Cedarwood Garden Center';
+    els.vendorName.value = meta.vendorName || 'Hillcrest Growers';
+    els.buyerName.value = meta.buyerName || 'Jordan Reed';
     els.draftStatus.value = meta.draftStatus || 'Manager review ready';
     els.draftNotes.value = meta.draftNotes || '';
   } else {
@@ -1055,9 +1055,9 @@ function renderCrosswalk(){
         </select>
       </td>
       <td>
-        <label style="display:block"><input type="checkbox" data-line="${r.line_id}" data-loc="op" ${r.location_eligibility.includes('op')?'checked':''}/> OP</label>
-        <label style="display:block"><input type="checkbox" data-line="${r.line_id}" data-loc="mc" ${r.location_eligibility.includes('mc')?'checked':''}/> MC</label>
-        <label style="display:block"><input type="checkbox" data-line="${r.line_id}" data-loc="lx" ${r.location_eligibility.includes('lx')?'checked':''}/> Lenexa</label>
+        <label style="display:block"><input type="checkbox" data-line="${r.line_id}" data-loc="op" ${r.location_eligibility.includes('op')?'checked':''}/> NG</label>
+        <label style="display:block"><input type="checkbox" data-line="${r.line_id}" data-loc="mc" ${r.location_eligibility.includes('mc')?'checked':''}/> MT</label>
+        <label style="display:block"><input type="checkbox" data-line="${r.line_id}" data-loc="lx" ${r.location_eligibility.includes('lx')?'checked':''}/> Westside</label>
       </td>
     </tr>
   `).join('');
@@ -1161,7 +1161,7 @@ function renderPacket(){
       <td>${r.container_or_size}</td>
       <td>${r.vendor_sku || '—'}</td>
       <td>${r.retail_sku || '—'}</td>
-      <td>OP ${r.allocations.op || 0} · MC ${r.allocations.mc || 0} · LX ${r.allocations.lx || 0}</td>
+      <td>NG ${r.allocations.op || 0} · MT ${r.allocations.mc || 0} · WS ${r.allocations.lx || 0}</td>
     </tr>
   `).join('');
   const approvedUnits = data.reduce((sum,r)=>sum + Number(r.approved_qty || 0),0);
@@ -1393,12 +1393,99 @@ renderAll();
     'h-review':['Manager review','Revisión del gerente'],
     'h-packet':['Vendor packet preview','Vista previa del paquete de proveedor'],
     'h-recv':['Receiving + exceptions','Recepción y excepciones'],
-    'h-schema':['Schema + market-standard model','Esquema y modelo estándar del mercado']
+    'h-schema':['Schema + market-standard model','Esquema y modelo estándar del mercado'],
+    'hero-desc':['','Una plataforma de pedidos lista para marca blanca, construida sobre el flujo de demostración de perennes existente y ampliada para reflejar los flujos de trabajo habituales de los productores mayoristas: entrada de disponibilidad, equivalencias de SKU, asignación multitienda, revisión del gerente, paquete de proveedor, entrada lista para QR y excepciones de recepción.'],
+    'badge-flow':['','Disponibilidad → Equivalencias → Asignación → Recepción'],
+    'badge-3loc':['','3 tiendas minoristas'],
+    'badge-sku':['','Eje central de traducción de SKU'],
+    'badge-exc':['','Recepción lista para excepciones'],
+    'badge-wl':['','Marca blanca · archivo único'],
+    'hero-note':['','Creado para mostrar cómo se ve la <strong>siguiente capa</strong> sin reemplazar el sistema de registro actual. Conserva el flujo de trabajo práctico basado en hojas que los compradores de perennes ya conocen, y lo envuelve en un modelo operativo más limpio: estado normalizado, divisiones por tienda, salida de paquete de proveedor, entrada lista para QR y un esquema preparado para el futuro que puede crecer hacia equivalencias reales de SKU de finca.'],
+    'f-orderid':['','N.º de pedido'],
+    'f-shipweek':['','Semana de envío solicitada'],
+    'f-org':['','Organización'],
+    'f-vendor':['','Proveedor'],
+    'f-buyer':['','Comprador'],
+    'f-draftstatus':['','Estado del borrador'],
+    'f-notes':['','Notas internas'],
+    'btn-save':['','Guardar borrador en el navegador'],
+    'btn-json':['','Exportar JSON'],
+    'btn-csv':['','Exportar CSV aprobado'],
+    'btn-qr':['','Exportar QR'],
+    'btn-print':['','Imprimir paquete'],
+    'btn-reset':['','Restablecer datos de ejemplo'],
+    'm-lines':['','Líneas solicitadas'],
+    'm-lines-s':['','filas con cantidad solicitada mayor que cero'],
+    'm-units':['','Unidades solicitadas'],
+    'm-units-s':['','demanda del borrador del comprador'],
+    'm-approved':['','Unidades aprobadas'],
+    'm-approved-s':['','total aprobado por el gerente'],
+    'm-mapped':['','Filas mapeadas'],
+    'm-mapped-s':['','progreso de equivalencias'],
+    'm-alloc':['','Unidades asignadas'],
+    'm-alloc-s':['','distribuidas en 3 tiendas'],
+    'm-exc':['','Lista de control de recepción'],
+    'm-exc-s':['','excepciones y envíos incompletos'],
+    'view-req':['','Solo solicitadas'],
+    'view-all':['','Mostrar todas las filas'],
+    'note-avail':['','Esta es la cola de entrada digital para las líneas de plantas solicitadas. Mantiene familiar el flujo de trabajo estilo hoja, pero ya incluye los campos adicionales necesarios para escalar: SKU de proveedor, SKU minorista, nombre interno, estado activo y elegibilidad por tienda.'],
+    'note-cross':['','Esta es la capa central de traducción: de SKU de proveedor a SKU minorista a nombre interno, además de tamaño, color, estado activo y elegibilidad por tienda. Es el eje que permite que el módulo de pedidos alimente con el tiempo el buscador público y el quiosco.'],
+    'note-alloc':['','Cada línea aprobada puede dividirse entre Northgate, Midtown y Westside. Esto hace que la capa de pedidos sea relevante para un grupo de viveros de tres ubicaciones en lugar de una herramienta de compra de una sola tienda.'],
+    'note-review':['','Aquí la cantidad solicitada se convierte en cantidad aprobada, se marcan las excepciones y se detectan las filas con problemas de mapeo o asignación antes de que pasen al paquete de proveedor.'],
+    'note-packet':['','Aquí solo aparecen las líneas aprobadas. El paquete está estructurado para ser realista: cantidades para el proveedor, notas de asignación por tienda, guía de sustituciones y conteos de resumen.'],
+    'note-recv':['','Aquí el valor operativo se vuelve evidente. Envíos incompletos, sustituciones, daños, tamaño incorrecto, color incorrecto y entregas parciales se vinculan a cada línea de pedido en lugar de quedar en anotaciones o en la memoria.'],
+    'note-schema':['','Esta demostración sigue el patrón común de los sistemas mayoristas de disponibilidad y pedidos de viveros: catálogo maestro, instantánea de disponibilidad, equivalencias de SKU, líneas de pedido y excepciones de recepción.'],
+    'th-group':['','Grupo'],
+    'th-plant':['','Planta'],
+    'th-size':['','Tamaño'],
+    'th-farmavail':['','Disp. finca'],
+    'th-req':['','Sol.'],
+    'th-status':['','Estado'],
+    'th-confidence':['','Confianza'],
+    'th-vendorsku':['','SKU proveedor'],
+    'th-notes':['','Notas'],
+    'th-retailsku':['','SKU minorista'],
+    'th-internalname':['','Nombre interno'],
+    'th-color':['','Color'],
+    'th-active':['','Activo'],
+    'th-eliglocs':['','Tiendas elegibles'],
+    'th-approved':['','Aprobado'],
+    'th-allocated':['','Asignado'],
+    'th-remaining':['','Restante'],
+    'th-eligibility':['','Elegibilidad'],
+    'th-requested':['','Solicitado'],
+    'th-decision':['','Decisión'],
+    'th-mapping':['','Mapeo'],
+    'th-allocation':['','Asignación'],
+    'th-buyernotes':['','Notas del comprador'],
+    'th-storesplit':['','División por tienda'],
+    'th-received':['','Recibido'],
+    'th-variance':['','Variación'],
+    'th-exception':['','Excepción'],
+    'th-condition':['','Condición'],
+    'th-recvnotes':['','Notas de recepción'],
+    'sch-vendoritem':['','Artículo del catálogo del proveedor'],
+    'sch-availsnap':['','Instantánea de disponibilidad'],
+    'sch-crosswalk':['','Equivalencias de SKU'],
+    'sch-order':['','Pedido y recepción'],
+    'qr-head':['','Compartir y exportar QR'],
+    'btn-refreshqr':['','Actualizar QR'],
+    'qr-help':['','Úsalo para un traspaso compatible con el teléfono. El QR apunta a la página activa actual cuando está disponible, o usa un resumen compacto del pedido como alternativa.'],
+    'why-head':['','Por qué esto importa'],
+    'why-body':['','La misma línea ahora puede llevar la intención del comprador, la lógica de equivalencias, la asignación por tienda y el historial de recepción, todo sin perder la familiaridad del flujo de trabajo original basado en hojas.']
   };
   function apply(l){
+    var useEs=(l==='es');
     document.documentElement.setAttribute('lang',l);
     document.querySelectorAll('[data-i18n]').forEach(function(el){
-      var p=D[el.getAttribute('data-i18n')]; if(p) el.textContent=p[l==='es'?1:0];
+      if(el._enText==null) el._enText=el.textContent;
+      var p=D[el.getAttribute('data-i18n')];
+      el.textContent=(useEs&&p)?p[1]:el._enText;
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el){
+      if(el._enHtml==null) el._enHtml=el.innerHTML;
+      var p=D[el.getAttribute('data-i18n-html')];
+      el.innerHTML=(useEs&&p)?p[1]:el._enHtml;
     });
     var en=document.getElementById('langEn'),es=document.getElementById('langEs');
     if(en)en.classList.toggle('on',l==='en');
