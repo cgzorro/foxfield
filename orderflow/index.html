@@ -452,7 +452,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
   .prodhead-actions{width:100% !important;margin-left:0 !important;justify-content:flex-start !important;flex-wrap:wrap}
 }
 
-/* QR receive loop \u00b7 scan-to-receive + print-packet QR */
+/* QR receive loop · scan-to-receive + print-packet QR */
 .recv-actions{display:flex;gap:10px;margin:0 0 14px;flex-wrap:wrap}
 .recv-banner{padding:12px 14px;margin:0 0 14px;border-radius:var(--radius-sm);background:var(--ok-soft);border:1px solid var(--ok);color:var(--ink);font-size:14px;line-height:1.5}
 .recv-banner span[data-rb]{font-weight:800;color:var(--ok)}
@@ -475,6 +475,43 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
   .print-receive-qr img{width:170px;height:170px;display:block}
   .print-receive-cap{font-weight:700;margin-top:6px;font-size:12px;color:#000}
 }
+
+/* Receiving line cards · one-touch accept / short / none */
+.recv-list{display:flex;flex-direction:column;gap:10px}
+.recv-line{border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card-solid);padding:12px 14px}
+.recv-line.is-exc{border-color:var(--red);box-shadow:inset 3px 0 0 var(--red)}
+.recv-line-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.recv-line-name strong{font-weight:700}
+.recv-pill{flex:none;font-size:12px;font-weight:800;padding:5px 10px;border-radius:999px;white-space:nowrap;background:var(--ok-soft);color:var(--ok)}
+.recv-pill.bad{background:var(--red-soft);color:var(--red)}
+.recv-pill.warn{background:var(--amber-soft);color:var(--amber)}
+.recv-line-body{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:10px}
+.recv-amt{display:flex;flex-direction:column;gap:2px}
+.recv-amt-l{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.recv-amt b{font-size:18px}
+.recv-recv{width:84px}
+.recv-quick{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.recv-quick .rq{appearance:none;cursor:pointer;border:1px solid var(--line-strong);background:var(--chip);color:var(--ink);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:700;min-height:42px}
+.recv-quick .rq:hover{border-color:var(--green)}
+.recv-quick .rq.on{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.recv-line-exc{display:none;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.recv-line.is-exc .recv-line-exc{display:flex}
+.recv-exc-f{display:flex;flex-direction:column;gap:4px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.recv-exc-f select,.recv-exc-f input{font-size:14px;text-transform:none;letter-spacing:0}
+.recv-exc-notes{flex:1;min-width:160px}
+@media(max-width:560px){
+  .recv-quick{width:100%;margin-left:0}
+  .recv-quick .rq{flex:1}
+  .recv-line-exc{flex-direction:column}
+  .recv-exc-f{width:100%}
+}
+
+/* Order-screen QR tile (boardroom scan-to-verify) */
+.order-qr{display:flex;align-items:center;gap:14px;margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card-solid)}
+.order-qr img{width:112px;height:112px;flex:none;border-radius:10px;background:#fff;padding:6px;border:1px solid var(--line)}
+.order-qr-cap{display:flex;flex-direction:column;gap:4px}
+.order-qr-cap strong{font-weight:800;font-size:15px}
+@media print{ #packetPanel .panel-note{display:none !important} .order-qr{display:none !important} }
 </style>
 
 </head>
@@ -536,11 +573,17 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
       </div>
       <div class="toolbar">
         <button class="btn-primary" id="saveBtn" type="button" data-i18n="btn-save">Save browser draft</button>
-        <button class="btn-secondary" id="exportJsonBtn" type="button" data-i18n="btn-json">Export JSON</button>
         <button class="btn-secondary" id="exportCsvBtn" type="button" data-i18n="btn-csv">Export approved CSV</button>
         <button class="btn-secondary" id="exportQrBtn" type="button" data-i18n="btn-qr">Export QR</button>
         <button class="btn-secondary" id="printPacketBtn" type="button" data-i18n="btn-print">Print packet</button>
         <button class="btn-danger" id="resetBtn" type="button" data-i18n="btn-reset">Reset seed data</button>
+      </div>
+      <div class="order-qr">
+        <img id="orderQr" alt="Scan to view this order" />
+        <div class="order-qr-cap">
+          <strong data-i18n="oqr-head">Scan to view this order</strong>
+          <span class="small" data-i18n="oqr-sub">Open the live order on any phone — verify the lines and quantities, or hand it to the floor.</span>
+        </div>
       </div>
     </aside>
   </section>
@@ -651,12 +694,6 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
   </section>
 
   <section class="card panel" id="packetPanel">
-    <div class="panel-head">
-      <div>
-        <h2 data-i18n="h-packet">Vendor packet preview</h2>
-        <div class="panel-note" data-i18n="note-packet">Only approved lines appear here. The packet is structured to be realistic: vendor-facing quantities, store allocation notes, substitution guidance, and summary counts.</div>
-      </div>
-    </div>
     <div class="print-receive" aria-hidden="true">
       <div class="print-receive-meta">
         <div><span class="prl">Order</span><strong id="printOrderId"></strong></div>
@@ -665,7 +702,13 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
       </div>
       <div class="print-receive-qr">
         <img id="printQr" alt="Scan to receive" />
-        <div class="print-receive-cap">Scan to receive \u00b7 <span id="printOrderId2"></span></div>
+        <div class="print-receive-cap">Scan to receive · <span id="printOrderId2"></span></div>
+      </div>
+    </div>
+    <div class="panel-head">
+      <div>
+        <h2 data-i18n="h-packet">Vendor packet preview</h2>
+        <div class="panel-note" data-i18n="note-packet">Only approved lines appear here. The packet is structured to be realistic: vendor-facing quantities, store allocation notes, substitution guidance, and summary counts.</div>
       </div>
     </div>
     <div class="grid-2">
@@ -731,16 +774,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
         </div>
       </div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th data-i18n="th-plant">Plant</th><th data-i18n="th-approved">Approved</th><th data-i18n="th-received">Received</th><th data-i18n="th-variance">Variance</th><th data-i18n="th-exception">Exception</th><th data-i18n="th-condition">Condition</th><th data-i18n="th-recvnotes">Receiving notes</th>
-          </tr>
-        </thead>
-        <tbody id="receivingBody"></tbody>
-      </table>
-    </div>
+    <div id="receivingBody" class="recv-list"></div>
   </section>
 
   <section class="card panel" id="schemaPanel">
@@ -843,7 +877,7 @@ const STATUS_MAP = {
   B:'Blooming'
 };
 const EXCEPTION_TYPES = ['', 'Short ship', 'Substitution', 'Damaged', 'Wrong size', 'Wrong color', 'Partial fill'];
-const QR_ENDPOINT = 'https://api.qrserver.com/v1/create-qr-code/?size=720x720&margin=18&data=';
+const QR_ENDPOINT = 'https://api.qrserver.com/v1/create-qr-code/?size=720x720&margin=18&ecc=M&data=';
 const CONDITION_TYPES = ['Pending', 'Good', 'Monitor', 'Issue'];
 
 const DEFAULT_ROWS = [
@@ -1232,45 +1266,90 @@ function renderPacket(){
   `;
   renderQr();
 }
+function recvPill(row){
+  const exp = Number(row.approved_qty || 0), rec = Number(row.received_qty || 0), variance = rec - exp;
+  const inFull = variance === 0 && !row.exception_type;
+  let cls = 'ok', txt = 'In full';
+  if (!inFull){
+    if (rec === 0){ cls = 'bad'; txt = row.exception_type || 'None'; }
+    else if (variance < 0){ cls = 'bad'; txt = (row.exception_type || 'Short') + ' ' + variance; }
+    else if (variance > 0){ cls = 'warn'; txt = (row.exception_type || 'Over') + ' +' + variance; }
+    else { cls = 'warn'; txt = row.exception_type || 'Flagged'; }
+  }
+  return {inFull, cls, txt};
+}
+function refreshRecvLine(row){
+  const card = els.receivingBody.querySelector('.recv-line[data-id="' + row.line_id + '"]');
+  if (!card) return;
+  const st = recvPill(row);
+  card.classList.toggle('is-exc', !st.inFull);
+  const pill = card.querySelector('.recv-pill'); if (pill){ pill.className = 'recv-pill ' + st.cls; pill.textContent = st.txt; }
+  const inp = card.querySelector('input[data-field="received_qty"]'); if (inp && document.activeElement !== inp) inp.value = Number(row.received_qty || 0);
+  const ex = card.querySelector('select[data-field="exception_type"]'); if (ex && document.activeElement !== ex) ex.value = row.exception_type || '';
+  const co = card.querySelector('select[data-field="condition"]'); if (co && document.activeElement !== co) co.value = row.condition || 'Pending';
+  card.querySelectorAll('.rq').forEach(b=>b.classList.toggle('on', b.dataset.act === 'full' && st.inFull));
+}
 function renderReceiving(){
   const data = rows.filter(r=>Number(r.approved_qty || 0) > 0);
   els.receivingBody.innerHTML = data.map(r=>{
-    const variance = Number(r.received_qty || 0) - Number(r.approved_qty || 0);
-    const varianceClass = variance === 0 ? 'ok' : (variance < 0 ? 'bad' : 'warn');
+    const exp = Number(r.approved_qty || 0), rec = Number(r.received_qty || 0);
+    const st = recvPill(r);
+    const sub = [r.container_or_size || r.size, r.retail_sku].filter(Boolean).join(' \u00b7 ') || 'No retail SKU';
+    const notesVal = (r.receiving_notes || '').replace(/"/g, '&quot;');
     return `
-      <tr>
-        <td><strong>${r.item_name}</strong><div class="small">${r.retail_sku || 'No retail SKU'}</div></td>
-        <td>${r.approved_qty}</td>
-        <td><input class="inline-input" type="number" min="0" data-line="${r.line_id}" data-field="received_qty" value="${r.received_qty}" /></td>
-        <td><span class="chip ${varianceClass}">${variance}</span></td>
-        <td>
-          <select data-line="${r.line_id}" data-field="exception_type">
-            ${EXCEPTION_TYPES.map(t=>`<option ${r.exception_type===t?'selected':''}>${t}</option>`).join('')}
-          </select>
-        </td>
-        <td>
-          <select data-line="${r.line_id}" data-field="condition">
-            ${CONDITION_TYPES.map(t=>`<option ${r.condition===t?'selected':''}>${t}</option>`).join('')}
-          </select>
-        </td>
-        <td><input type="text" data-line="${r.line_id}" data-field="receiving_notes" value="${r.receiving_notes || ''}" /></td>
-      </tr>
-    `;
+      <div class="recv-line ${st.inFull ? '' : 'is-exc'}" data-id="${r.line_id}">
+        <div class="recv-line-head">
+          <div class="recv-line-name"><strong>${r.item_name}</strong><div class="small">${sub}</div></div>
+          <span class="recv-pill ${st.cls}">${st.txt}</span>
+        </div>
+        <div class="recv-line-body">
+          <div class="recv-amt"><span class="recv-amt-l">Approved</span><b>${exp}</b></div>
+          <div class="recv-amt"><span class="recv-amt-l">Received</span><input class="inline-input recv-recv" type="number" min="0" inputmode="numeric" data-line="${r.line_id}" data-field="received_qty" value="${rec}" /></div>
+          <div class="recv-quick">
+            <button type="button" class="rq ${st.inFull ? 'on' : ''}" data-act="full" data-line="${r.line_id}">In full</button>
+            <button type="button" class="rq" data-act="short" data-line="${r.line_id}">Short</button>
+            <button type="button" class="rq" data-act="none" data-line="${r.line_id}">None</button>
+          </div>
+        </div>
+        <div class="recv-line-exc">
+          <label class="recv-exc-f">Exception
+            <select data-line="${r.line_id}" data-field="exception_type">${EXCEPTION_TYPES.map(t=>`<option ${r.exception_type===t?'selected':''}>${t||'\u2014'}</option>`).join('')}</select>
+          </label>
+          <label class="recv-exc-f">Condition
+            <select data-line="${r.line_id}" data-field="condition">${CONDITION_TYPES.map(t=>`<option ${r.condition===t?'selected':''}>${t}</option>`).join('')}</select>
+          </label>
+          <label class="recv-exc-f recv-exc-notes">Notes
+            <input type="text" data-line="${r.line_id}" data-field="receiving_notes" value="${notesVal}" />
+          </label>
+        </div>
+      </div>`;
   }).join('');
+  els.receivingBody.querySelectorAll('.rq').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const row = rows.find(r=>r.line_id === btn.dataset.line); if (!row) return;
+      const exp = Number(row.approved_qty || 0), act = btn.dataset.act;
+      if (act === 'full'){ row.received_qty = exp; row.exception_type = ''; if (!row.condition || row.condition === 'Pending') row.condition = 'Good'; }
+      else if (act === 'none'){ row.received_qty = 0; row.exception_type = 'Short ship'; row.condition = 'Issue'; }
+      else if (act === 'short'){ if (!row.exception_type) row.exception_type = 'Short ship'; }
+      saveState(); renderMetrics(); refreshRecvLine(row);
+      if (act === 'short'){ const inp = els.receivingBody.querySelector('.recv-line[data-id="' + row.line_id + '"] input[data-field="received_qty"]'); if (inp){ inp.focus(); inp.select(); } }
+    });
+  });
   bindNumberInput('#receivingBody input[data-field="received_qty"]', e=>{
-    const row = rows.find(r=>r.line_id === e.target.dataset.line);
+    const row = rows.find(r=>r.line_id === e.target.dataset.line); if (!row) return;
     row.received_qty = Math.max(0, Number(e.target.value || 0));
-    saveState(); renderMetrics(); renderReceiving();
+    const exp = Number(row.approved_qty || 0);
+    if (row.received_qty === exp) row.exception_type = '';
+    else if (row.received_qty < exp && !row.exception_type) row.exception_type = 'Short ship';
+    saveState(); renderMetrics(); refreshRecvLine(row);
   });
   bindTextInput('#receivingBody input[data-field="receiving_notes"]', e=>{
-    const row = rows.find(r=>r.line_id === e.target.dataset.line);
-    row.receiving_notes = e.target.value;
-    saveState();
+    const row = rows.find(r=>r.line_id === e.target.dataset.line); if (row){ row.receiving_notes = e.target.value; saveState(); }
   });
   bindSelectInput('#receivingBody select[data-field]', e=>{
-    const row = rows.find(r=>r.line_id === e.target.dataset.line);
+    const row = rows.find(r=>r.line_id === e.target.dataset.line); if (!row) return;
     row[e.target.dataset.field] = e.target.value;
-    saveState(); renderMetrics();
+    saveState(); renderMetrics(); refreshRecvLine(row);
   });
 }
 function renderMetrics(){
@@ -1304,6 +1383,7 @@ function renderQr(){
   els.qrValueLabel.textContent = (els.orderId.value || 'Order') + ' \u00b7 scan to receive';
   const set = (id,v)=>{ const el = document.getElementById(id); if (el) el.textContent = v; };
   const pq = document.getElementById('printQr'); if (pq) pq.src = img;
+  const oq = document.getElementById('orderQr'); if (oq) oq.src = img;
   set('printOrderId', els.orderId.value || '');
   set('printOrderId2', els.orderId.value || '');
   set('printVendor', els.vendorName.value || '');
@@ -1379,7 +1459,7 @@ function buildReceiveManifest(){
     o: els.orderId.value || '',
     v: els.vendorName.value || '',
     w: els.shipWeek.value || '',
-    L: approved.map(r=>[r.line_id, Number(r.approved_qty || 0)])
+    L: approved.map(r=>[rows.indexOf(r), Number(r.approved_qty || 0)])
   };
 }
 function receiveBaseUrl(){
@@ -1402,13 +1482,14 @@ function applyReceiveManifest(manifest, freshPass){
   if (manifest.o) els.orderId.value = manifest.o;
   if (manifest.v) els.vendorName.value = manifest.v;
   if (manifest.w) els.shipWeek.value = manifest.w;
-  const expected = {};
-  manifest.L.forEach(pair=>{ if (Array.isArray(pair)) expected[pair[0]] = Number(pair[1]) || 0; });
   let matched = 0;
-  rows.forEach(r=>{
-    if (Object.prototype.hasOwnProperty.call(expected, r.line_id)){
-      r.approved_qty = expected[r.line_id];
-      if (freshPass){ r.received_qty = 0; r.exception_type = ''; r.condition = 'Pending'; r.receiving_notes = ''; }
+  manifest.L.forEach(pair=>{
+    if (!Array.isArray(pair)) return;
+    const key = pair[0], q = Number(pair[1]) || 0;
+    const r = (typeof key === 'number') ? rows[key] : rows.find(x=>x.line_id === key);
+    if (r){
+      r.approved_qty = q;
+      if (freshPass){ r.received_qty = r.approved_qty; r.exception_type = ''; r.condition = 'Good'; r.receiving_notes = ''; }
       matched++;
     }
   });
@@ -1564,7 +1645,7 @@ function initEvents(){
   });
   els.themeToggle.addEventListener('click', ()=>applyTheme(document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
   els.saveBtn.addEventListener('click', ()=>{ saveState(); alert('Draft saved in this browser.'); });
-  els.exportJsonBtn.addEventListener('click', exportJson);
+  if (els.exportJsonBtn) els.exportJsonBtn.addEventListener('click', exportJson);
   els.exportCsvBtn.addEventListener('click', exportCsv);
   els.exportQrBtn.addEventListener('click', exportQr);
   els.refreshQrBtn.addEventListener('click', renderQr);
@@ -1683,7 +1764,9 @@ loadReceiveFromUrl();
     'btn-scan':['','Escanear factura de la finca'],
     'btn-scansample':['','Cargar factura de ejemplo'],
     'rb-lead':['','Carrito recibido por QR'],
-    'rb-tail':['','líneas esperadas cargadas — toca una línea para marcar un problema de recepción.']
+    'rb-tail':['','líneas esperadas cargadas — toca una línea para marcar un problema de recepción.'],
+    'oqr-head':['','Escanear para ver este pedido'],
+    'oqr-sub':['','Abre el pedido en vivo en cualquier teléfono — verifica las líneas y cantidades, o pásalo al piso.']
   };
   function apply(l){
     var useEs=(l==='es');
