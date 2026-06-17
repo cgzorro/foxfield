@@ -508,7 +508,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
       </div>
       <div class="field">
         <label data-i18n="f-notes">Internal notes</label>
-        <textarea id="draftNotes">Executive demo build: strongest page-1 intake rows carried forward from the current Hillcrest Growers draft, expanded with market-standard schema fields, location allocation, and receiving exceptions.</textarea>
+        <textarea id="draftNotes">Spring perennial restock from Hillcrest Growers’ latest availability. Strongest rows pulled in for manager review — limited lines and three-store splits flagged before this goes to the vendor.</textarea>
       </div>
       <div class="toolbar">
         <button class="btn-primary" id="saveBtn" type="button" data-i18n="btn-save">Save browser draft</button>
@@ -922,7 +922,7 @@ function resetState(){
   els.vendorName.value = 'Hillcrest Growers';
   els.buyerName.value = 'Jordan Reed';
   els.draftStatus.value = 'Manager review ready';
-  els.draftNotes.value = 'Executive demo build: strongest page-1 intake rows carried forward from the current Hillcrest Growers draft, expanded with market-standard schema fields, location allocation, and receiving exceptions.';
+  els.draftNotes.value = 'Spring perennial restock from Hillcrest Growers’ latest availability. Strongest rows pulled in for manager review — limited lines and three-store splits flagged before this goes to the vendor.';
   saveState();
   renderAll();
 }
@@ -1365,7 +1365,7 @@ function initEvents(){
   els.refreshQrBtn.addEventListener('click', renderQr);
   els.printPacketBtn.addEventListener('click', ()=>window.print());
   els.resetBtn.addEventListener('click', ()=>{
-    if (confirm('Reset this demo back to the seeded v3 state?')) resetState();
+    if (confirm('Reset this demo back to the original seeded state?')) resetState();
   });
 }
 initEls();
