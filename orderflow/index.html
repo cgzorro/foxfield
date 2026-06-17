@@ -451,6 +451,30 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
   .prodhead-id.fox-lockup .wordmark{font-size:22px !important}
   .prodhead-actions{width:100% !important;margin-left:0 !important;justify-content:flex-start !important;flex-wrap:wrap}
 }
+
+/* QR receive loop \u00b7 scan-to-receive + print-packet QR */
+.recv-actions{display:flex;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+.recv-banner{padding:12px 14px;margin:0 0 14px;border-radius:var(--radius-sm);background:var(--ok-soft);border:1px solid var(--ok);color:var(--ink);font-size:14px;line-height:1.5}
+.recv-banner span[data-rb]{font-weight:800;color:var(--ok)}
+.scan-modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:18px}
+.scan-modal[hidden]{display:none}
+.scan-card{background:var(--card-solid);border:1px solid var(--line);border-radius:16px;max-width:420px;width:100%;padding:16px;box-shadow:var(--shadow-strong)}
+.scan-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.scan-card video{width:100%;border-radius:12px;background:#000;aspect-ratio:1/1;object-fit:cover}
+.scan-msg{font-size:13px;color:var(--muted);margin:10px 2px;line-height:1.5}
+.scan-alt{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.scan-file{font-size:13px;color:var(--green);cursor:pointer;text-decoration:underline}
+.print-receive{display:none}
+@media print{
+  #qrPanel{display:none !important}
+  .recv-actions,.recv-banner,.scan-modal{display:none !important}
+  .print-receive{display:flex !important;align-items:center;justify-content:space-between;gap:24px;border:1px solid #c9c9c9;border-radius:8px;padding:16px 20px;margin:0 0 16px}
+  .print-receive-meta div{margin:3px 0;font-size:13px;color:#000}
+  .print-receive-meta .prl{display:inline-block;min-width:84px;color:#555;text-transform:uppercase;font-size:10px;letter-spacing:.06em;margin-right:6px}
+  .print-receive-qr{text-align:center}
+  .print-receive-qr img{width:170px;height:170px;display:block}
+  .print-receive-cap{font-weight:700;margin-top:6px;font-size:12px;color:#000}
+}
 </style>
 
 </head>
@@ -633,6 +657,17 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
         <div class="panel-note" data-i18n="note-packet">Only approved lines appear here. The packet is structured to be realistic: vendor-facing quantities, store allocation notes, substitution guidance, and summary counts.</div>
       </div>
     </div>
+    <div class="print-receive" aria-hidden="true">
+      <div class="print-receive-meta">
+        <div><span class="prl">Order</span><strong id="printOrderId"></strong></div>
+        <div><span class="prl">Vendor</span><strong id="printVendor"></strong></div>
+        <div><span class="prl">Ship week</span><strong id="printWeek"></strong></div>
+      </div>
+      <div class="print-receive-qr">
+        <img id="printQr" alt="Scan to receive" />
+        <div class="print-receive-cap">Scan to receive \u00b7 <span id="printOrderId2"></span></div>
+      </div>
+    </div>
     <div class="grid-2">
       <div class="table-wrap">
         <table>
@@ -654,7 +689,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
           <div class="qr-grid">
             <div class="qr-preview"><img id="qrPreview" alt="QR code preview" /></div>
             <div class="stack" style="gap:10px">
-              <span class="small" data-i18n="qr-help">Use this for a phone-friendly handoff. The QR points to the current live page when available, or falls back to a compact order summary.</span>
+              <span class="small" data-i18n="qr-help">Print this on the vendor packet so it rides the cart back to receiving. Scanning it opens this order’s expected lines, ready to check in.</span>
               <div class="qr-url" id="qrValueLabel"></div>
             </div>
           </div>
@@ -676,6 +711,24 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
       <div>
         <h2 data-i18n="h-recv">Receiving + exceptions</h2>
         <div class="panel-note" data-i18n="note-recv">This is where the operational value becomes obvious. Short ships, substitutions, damage, wrong size, wrong color, and partial fills are tied back to each order line instead of living in markup or memory.</div>
+      </div>
+    </div>
+    <div class="recv-actions">
+      <button class="btn-primary" id="scanInvoiceBtn" type="button" data-i18n="btn-scan">Scan farm invoice</button>
+      <button class="btn-secondary" id="scanSampleBtn" type="button" data-i18n="btn-scansample">Load sample invoice</button>
+    </div>
+    <div class="recv-banner" id="receiveBanner" hidden>
+      <strong data-i18n="rb-lead">Cart received via QR</strong> — <span data-rb="order"></span> · <span data-rb="n"></span> <span data-i18n="rb-tail">expected lines loaded — tap a line to flag a receiving issue.</span>
+    </div>
+    <div class="scan-modal" id="scanModal" hidden>
+      <div class="scan-card">
+        <div class="scan-head"><strong>Scan farm invoice QR</strong><button class="iconbtn" id="scanClose" type="button" aria-label="Close">✕</button></div>
+        <video id="scanVideo" playsinline muted></video>
+        <div class="scan-msg" id="scanMsg">Point your camera at the QR on the cart.</div>
+        <div class="scan-alt">
+          <label class="scan-file">Upload a photo of the QR<input type="file" id="scanFile" accept="image/*" capture="environment" hidden></label>
+          <button class="btn-secondary btn-small" id="scanSample2" type="button">Use sample invoice</button>
+        </div>
       </div>
     </div>
     <div class="table-wrap">
@@ -1239,27 +1292,22 @@ function renderMetrics(){
 }
 
 function buildQrValue(){
-  const approved = rows.filter(r=>Number(r.approved_qty || 0) > 0 && r.manager_decision !== 'Hold');
-  const approvedUnits = approved.reduce((sum,r)=>sum + Number(r.approved_qty || 0),0);
-  const liveHref = typeof location !== 'undefined' && location.href && !location.href.startsWith('file:') ? location.href : '';
-  if (liveHref) return liveHref;
-  return JSON.stringify({
-    type:'Perennial Ordering Platform executive demo',
-    order_id: els.orderId.value,
-    vendor: els.vendorName.value,
-    ship_week: els.shipWeek.value,
-    approved_lines: approved.length,
-    approved_units: approvedUnits
-  });
+  return receiveBaseUrl() + '#recv=' + b64urlEncode(JSON.stringify(buildReceiveManifest()));
 }
 function qrImageUrl(){
   return QR_ENDPOINT + encodeURIComponent(buildQrValue());
 }
 function renderQr(){
   if(!els.qrPreview || !els.qrValueLabel) return;
-  const value = buildQrValue();
-  els.qrPreview.src = qrImageUrl();
-  els.qrValueLabel.textContent = value;
+  const img = qrImageUrl();
+  els.qrPreview.src = img;
+  els.qrValueLabel.textContent = (els.orderId.value || 'Order') + ' \u00b7 scan to receive';
+  const set = (id,v)=>{ const el = document.getElementById(id); if (el) el.textContent = v; };
+  const pq = document.getElementById('printQr'); if (pq) pq.src = img;
+  set('printOrderId', els.orderId.value || '');
+  set('printOrderId2', els.orderId.value || '');
+  set('printVendor', els.vendorName.value || '');
+  set('printWeek', els.shipWeek.value || '');
 }
 async function exportQr(){
   const url = qrImageUrl();
@@ -1313,6 +1361,163 @@ function downloadFile(name, content, type){
   const a = document.createElement('a');
   a.href = url; a.download = name; a.click();
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+
+/* ---- QR receive loop: stamp order -> scan off the cart -> load into receiving ---- */
+function b64urlEncode(str){
+  const b64 = btoa(unescape(encodeURIComponent(str)));
+  return b64.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function b64urlDecode(str){
+  str = String(str).replace(/-/g,'+').replace(/_/g,'/');
+  while (str.length % 4) str += '=';
+  return decodeURIComponent(escape(atob(str)));
+}
+function buildReceiveManifest(){
+  const approved = rows.filter(r=>Number(r.approved_qty || 0) > 0 && r.manager_decision !== 'Hold');
+  return {
+    o: els.orderId.value || '',
+    v: els.vendorName.value || '',
+    w: els.shipWeek.value || '',
+    L: approved.map(r=>[r.line_id, Number(r.approved_qty || 0)])
+  };
+}
+function receiveBaseUrl(){
+  return (typeof location !== 'undefined' && /^https?:$/.test(location.protocol))
+    ? location.origin + location.pathname
+    : 'https://foxfield.studio/orderflow/';
+}
+function activatePanel(id){
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(pn=>pn.classList.remove('active'));
+  const btn = document.querySelector('.nav button[data-panel="'+id+'"]');
+  const panel = document.getElementById(id);
+  if (btn) btn.classList.add('active');
+  if (panel) panel.classList.add('active');
+  if (id === 'packetPanel') renderPacket();
+  if (id === 'receivingPanel') renderReceiving();
+}
+function applyReceiveManifest(manifest, freshPass){
+  if (!manifest || !Array.isArray(manifest.L)) return 0;
+  if (manifest.o) els.orderId.value = manifest.o;
+  if (manifest.v) els.vendorName.value = manifest.v;
+  if (manifest.w) els.shipWeek.value = manifest.w;
+  const expected = {};
+  manifest.L.forEach(pair=>{ if (Array.isArray(pair)) expected[pair[0]] = Number(pair[1]) || 0; });
+  let matched = 0;
+  rows.forEach(r=>{
+    if (Object.prototype.hasOwnProperty.call(expected, r.line_id)){
+      r.approved_qty = expected[r.line_id];
+      if (freshPass){ r.received_qty = 0; r.exception_type = ''; r.condition = 'Pending'; r.receiving_notes = ''; }
+      matched++;
+    }
+  });
+  return matched;
+}
+function showReceiveBanner(manifest, n){
+  const el = document.getElementById('receiveBanner');
+  if (!el) return;
+  const o = el.querySelector('[data-rb="order"]'); if (o) o.textContent = (manifest && manifest.o) || els.orderId.value || '\u2014';
+  const c = el.querySelector('[data-rb="n"]'); if (c) c.textContent = n;
+  el.hidden = false;
+}
+function manifestFromValue(value){
+  try{
+    let h = String(value);
+    const i = h.indexOf('recv=');
+    if (i >= 0) h = h.slice(i + 5).split('&')[0];
+    return JSON.parse(b64urlDecode(h));
+  }catch(e){ return null; }
+}
+function receiveFromManifest(manifest){
+  const n = applyReceiveManifest(manifest, true);
+  if (!n) return false;
+  saveState();
+  renderAll();
+  activatePanel('receivingPanel');
+  showReceiveBanner(manifest, n);
+  return true;
+}
+function loadReceiveFromUrl(){
+  let manifest = null;
+  try{
+    const m = (location.hash || '').match(/[#&]recv=([^&]+)/);
+    if (m) manifest = JSON.parse(b64urlDecode(m[1]));
+  }catch(e){ manifest = null; }
+  if (!manifest) return false;
+  const ok = receiveFromManifest(manifest);
+  if (ok){ try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){} }
+  return ok;
+}
+function loadSampleInvoice(){
+  Scan.close();
+  receiveFromManifest(buildReceiveManifest());
+}
+const Scan = (function(){
+  let stream = null, raf = null, detector = null, video = null, running = false;
+  async function pickMode(){
+    if ('BarcodeDetector' in window){
+      try{
+        const fmts = await window.BarcodeDetector.getSupportedFormats();
+        if (fmts.indexOf('qr_code') !== -1){ detector = new window.BarcodeDetector({formats:['qr_code']}); return 'native'; }
+      }catch(e){}
+    }
+    return null;
+  }
+  async function open(){
+    const modal = document.getElementById('scanModal'); if (!modal) return;
+    const msg = document.getElementById('scanMsg');
+    modal.hidden = false;
+    video = document.getElementById('scanVideo');
+    const mode = await pickMode();
+    if (!mode){
+      if (msg) msg.textContent = 'In-app scanning isn\u2019t available in this browser. Point your phone camera at the cart QR \u2014 it opens this app on the receiving screen \u2014 or upload a photo or load the sample.';
+      return;
+    }
+    try{
+      stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+      video.srcObject = stream; await video.play();
+      if (msg) msg.textContent = 'Point your camera at the QR on the cart.';
+      running = true; tick();
+    }catch(e){
+      if (msg) msg.textContent = 'Camera unavailable. Upload a photo of the QR, or load the sample.';
+    }
+  }
+  async function tick(){
+    if (!running) return;
+    if (!video || video.readyState < 2){ raf = requestAnimationFrame(tick); return; }
+    let value = null;
+    try{ const codes = await detector.detect(video); if (codes && codes.length) value = codes[0].rawValue; }catch(e){}
+    if (value){ const mf = manifestFromValue(value); if (mf){ close(); receiveFromManifest(mf); return; } }
+    raf = requestAnimationFrame(tick);
+  }
+  function close(){
+    running = false;
+    if (raf){ cancelAnimationFrame(raf); raf = null; }
+    if (stream){ stream.getTracks().forEach(t=>t.stop()); stream = null; }
+    const modal = document.getElementById('scanModal'); if (modal) modal.hidden = true;
+  }
+  async function fromFile(file){
+    const msg = document.getElementById('scanMsg');
+    try{
+      const bmp = await createImageBitmap(file);
+      let value = null;
+      if ('BarcodeDetector' in window){
+        try{ const d = new window.BarcodeDetector({formats:['qr_code']}); const codes = await d.detect(bmp); if (codes && codes.length) value = codes[0].rawValue; }catch(e){}
+      }
+      if (value){ const mf = manifestFromValue(value); if (mf){ close(); receiveFromManifest(mf); return; } }
+      if (msg) msg.textContent = 'Couldn\u2019t read that image. Try a clearer photo, or load the sample.';
+    }catch(e){ if (msg) msg.textContent = 'Couldn\u2019t read that image. Try the sample instead.'; }
+  }
+  return {open, close, fromFile};
+})();
+function initScan(){
+  const on = (id, ev, fn)=>{ const el = document.getElementById(id); if (el) el.addEventListener(ev, fn); };
+  on('scanInvoiceBtn','click', ()=>Scan.open());
+  on('scanClose','click', ()=>Scan.close());
+  on('scanSampleBtn','click', loadSampleInvoice);
+  on('scanSample2','click', loadSampleInvoice);
+  on('scanFile','change', (e)=>{ const f = e.target.files && e.target.files[0]; if (f) Scan.fromFile(f); });
 }
 function applyTheme(theme){
   const next = theme === 'dark' ? 'dark' : 'light';
@@ -1371,9 +1576,11 @@ function initEvents(){
 initEls();
 renderNav();
 initEvents();
+initScan();
 applyTheme(preferredTheme());
 loadState();
 renderAll();
+loadReceiveFromUrl();
 </script>
 <script>
 (function(){
@@ -1470,9 +1677,13 @@ renderAll();
     'sch-order':['','Pedido y recepción'],
     'qr-head':['','Compartir y exportar QR'],
     'btn-refreshqr':['','Actualizar QR'],
-    'qr-help':['','Úsalo para un traspaso compatible con el teléfono. El QR apunta a la página activa actual cuando está disponible, o usa un resumen compacto del pedido como alternativa.'],
+    'qr-help':['','Imprímelo en el paquete del proveedor para que viaje con el carrito de vuelta a recepción. Al escanearlo se abren las líneas esperadas de este pedido, listas para registrar.'],
     'why-head':['','Por qué esto importa'],
-    'why-body':['','La misma línea ahora puede llevar la intención del comprador, la lógica de equivalencias, la asignación por tienda y el historial de recepción, todo sin perder la familiaridad del flujo de trabajo original basado en hojas.']
+    'why-body':['','La misma línea ahora puede llevar la intención del comprador, la lógica de equivalencias, la asignación por tienda y el historial de recepción, todo sin perder la familiaridad del flujo de trabajo original basado en hojas.'],
+    'btn-scan':['','Escanear factura de la finca'],
+    'btn-scansample':['','Cargar factura de ejemplo'],
+    'rb-lead':['','Carrito recibido por QR'],
+    'rb-tail':['','líneas esperadas cargadas — toca una línea para marcar un problema de recepción.']
   };
   function apply(l){
     var useEs=(l==='es');
