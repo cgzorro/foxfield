@@ -1,1 +1,566 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foxfield Studio — Suburban Lawn & Garden Signature-Client Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Archivo:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --soil:#15100a;
+    --soil-2:#1d1610;
+    --soil-3:#261d13;
+    --line:rgba(224,148,74,.16);
+    --line-soft:rgba(242,233,220,.10);
+    --ink:#f3ebdd;
+    --ink-2:#c3b29c;
+    --ink-3:#8c7c68;
+    --amber:#e0944a;
+    --amber-bright:#f0a85c;
+    --wayfinder:#86ab6b;   /* sage — browse/find */
+    --orderflow:#cd6b3e;   /* clay — receiving/flow */
+    --consultant:#62a8a0;  /* teal — advise */
+    --display:'Cinzel',serif;
+    --body:'Archivo',system-ui,sans-serif;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--soil);
+    color:var(--ink);
+    font-family:var(--body);
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+  }
+
+  /* ---------- deck shell ---------- */
+  .deck{position:fixed;inset:0}
+  .slide{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;justify-content:safe center;
+    padding:clamp(28px,6vw,96px);
+    opacity:0;visibility:hidden;
+    transform:translateY(14px);
+    transition:opacity .5s ease, transform .5s ease, visibility .5s;
+    overflow-y:auto;
+  }
+  .slide.active{opacity:1;visibility:visible;transform:none}
+  .slide-inner{max-width:1080px;width:100%;margin:0 auto}
+
+  @media (prefers-reduced-motion:reduce){
+    .slide{transition:opacity .2s ease}
+    .slide,.slide.active{transform:none}
+  }
+
+  /* ---------- shared type ---------- */
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--amber);
+    display:flex;align-items:center;gap:.7em;margin-bottom:1.4rem;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--amber);opacity:.7}
+  h1{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(2.3rem,6vw,4.6rem);line-height:1.02;overflow-wrap:break-word;text-wrap:balance;
+    letter-spacing:.005em;
+  }
+  h2{
+    font-family:var(--display);font-weight:600;
+    font-size:clamp(1.55rem,3.5vw,2.7rem);line-height:1.1;overflow-wrap:break-word;text-wrap:balance;
+    margin-bottom:1.5rem;
+  }
+  .lead{
+    font-size:clamp(1.05rem,1.7vw,1.35rem);
+    color:var(--ink-2);line-height:1.55;max-width:60ch;
+  }
+  p{line-height:1.6}
+  strong{color:var(--ink);font-weight:600}
+  .amber{color:var(--amber-bright)}
+
+  /* ---------- cover ---------- */
+  #s-cover .mark{
+    font-family:var(--mono);font-size:.78rem;letter-spacing:.34em;
+    text-transform:uppercase;color:var(--ink-3);margin-bottom:2.6rem;
+  }
+  #s-cover h1{margin-bottom:1.6rem}
+  #s-cover h1 .to{
+    display:block;font-family:var(--mono);font-weight:400;
+    font-size:clamp(.9rem,1.6vw,1.1rem);letter-spacing:.18em;
+    text-transform:uppercase;color:var(--amber);margin:1.3rem 0 .4rem;
+  }
+  #s-cover h1 .who{display:block;color:var(--ink)}
+  .cover-meta{
+    margin-top:3rem;display:flex;flex-wrap:wrap;gap:.6rem 2rem;
+    font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;
+    color:var(--ink-3);text-transform:uppercase;
+  }
+  .cover-meta b{color:var(--ink-2);font-weight:500}
+
+  /* ---------- generic blocks ---------- */
+  .stat-row{display:flex;flex-wrap:wrap;gap:clamp(1.5rem,4vw,4rem);margin-top:2.2rem}
+  .stat .n{font-family:var(--display);font-weight:700;font-size:clamp(2rem,4vw,3.2rem);line-height:1;color:var(--amber-bright)}
+  .stat .l{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-top:.6rem;max-width:22ch}
+
+  .creds{margin-top:1.2rem;display:grid;gap:.7rem;max-width:62ch}
+  .cred{display:flex;gap:1.2rem;align-items:baseline;padding-bottom:.7rem;border-bottom:1px solid var(--line-soft)}
+  .cred:last-child{border-bottom:0;padding-top:.55rem}
+  .cred .tag{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--amber);white-space:nowrap;min-width:9rem;text-transform:uppercase}
+  .cred .txt{color:var(--ink-2);font-size:.98rem;line-height:1.6}
+  .cred .txt b{color:var(--ink)}
+
+  /* product cards */
+  .suite{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-top:1.8rem}
+  .pc{border:1px solid var(--line-soft);border-radius:14px;padding:1.4rem 1.3rem;background:linear-gradient(180deg,var(--soil-2),var(--soil));position:relative;overflow:hidden}
+  .pc::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--pc-accent)}
+  .pc .pname{font-family:var(--display);font-weight:600;font-size:1.25rem;color:var(--pc-accent);margin-bottom:.5rem}
+  .pc .pwhat{color:var(--ink-2);font-size:.92rem;line-height:1.5}
+  .pc .ptag{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:1rem;display:block}
+  .pc .plink{display:inline-block;margin-top:.55rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--pc-accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s,opacity .2s;opacity:.92}
+  .pc .plink:hover,.pc .plink:focus-visible{border-bottom-color:var(--pc-accent);opacity:1}
+  .spine-note{margin-top:1.6rem;font-size:.98rem;color:var(--ink-2);max-width:66ch;line-height:1.6;border-left:2px solid var(--amber);padding-left:1.1rem}
+  .roi-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:2.6rem;margin-top:1.6rem;align-items:start}
+  .roi-left{display:flex;flex-direction:column;gap:1.3rem}
+  .roi-left .stat-row{margin-top:0;gap:clamp(1.2rem,3vw,2.6rem)}
+  .roi-grid .spine-note{margin-top:0;max-width:none}
+  .roi-calc{border-left:2px solid var(--orderflow);padding-left:1.3rem}
+  .calc-label{font-family:var(--mono);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--orderflow);margin-bottom:.8rem}
+  .calc-expr{font-family:var(--mono);font-size:.9rem;letter-spacing:.03em;color:var(--ink-3)}
+  .calc-num{font-family:var(--display);font-weight:700;font-size:2.1rem;line-height:1.04;color:var(--amber);margin-top:.2rem}
+  .calc-num.big{font-size:3rem;color:var(--amber-bright)}
+  .calc-cap{display:block;font-family:var(--mono);font-weight:400;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:.3rem}
+  .calc-mult{font-family:var(--mono);font-size:.82rem;letter-spacing:.04em;color:var(--ink-3);line-height:1.65;margin:.75rem 0}
+  .calc-foot{font-size:.88rem;font-style:italic;color:var(--ink-3);line-height:1.45;margin-top:.9rem;max-width:34ch}
+  @media(max-width:720px){.roi-grid{grid-template-columns:1fr;gap:1.7rem}.calc-num.big{font-size:2.6rem}.calc-num{font-size:1.9rem}}
+
+  /* two-column give/get */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.6rem}
+  .col{border:1px solid var(--line-soft);border-radius:14px;padding:1.5rem 1.4rem;background:var(--soil-2)}
+  .col h3{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:1.1rem}
+  .col.give h3{color:var(--wayfinder)}
+  .col.get h3{color:var(--amber)}
+  .col ul{list-style:none;display:grid;gap:.9rem}
+  .col li{position:relative;padding-left:1.25rem;font-size:.96rem;color:var(--ink-2);line-height:1.55}
+  .col li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.55}
+  .col.give li{color:var(--ink-2)}
+  .col li b{color:var(--ink)}
+
+  /* offer terms */
+  .terms{margin-top:1.6rem;display:grid;gap:0}
+  .term{display:grid;grid-template-columns:13rem 1fr;gap:1.4rem;padding:1rem 0;border-bottom:1px solid var(--line-soft);align-items:baseline}
+  .term:last-child{border-bottom:0}
+  .term .k{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--amber)}
+  .term .v{color:var(--ink);font-size:1.02rem;line-height:1.45}
+  .term .v small{display:block;color:var(--ink-3);font-size:.82rem;margin-top:.25rem;font-family:var(--body);letter-spacing:0;text-transform:none}
+  @media(max-width:640px){.term{grid-template-columns:1fr;gap:.3rem}}
+
+  /* slide 8 — capability ramp */
+  .ramp{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.6rem 0 1.3rem;align-items:end}
+  .step{display:flex;flex-direction:column;position:relative;border:1px solid var(--line-soft);border-radius:14px;background:linear-gradient(180deg,var(--soil-2),var(--soil));padding:1.3rem 1.25rem;overflow:hidden}
+  .step::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--st)}
+  .step.s1{min-height:206px}
+  .step.s2{min-height:230px}
+  .step.s3{min-height:254px}
+  .step .when{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.55rem}
+  .step .cap{font-family:var(--display);font-weight:600;font-size:1.22rem;color:var(--st);margin-bottom:.85rem;line-height:1.1}
+  .step .price{font-family:var(--display);font-weight:700;font-size:2rem;color:var(--ink);line-height:1}
+  .step .price small{display:block;font-family:var(--mono);font-weight:400;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:.35rem}
+  .step .std{font-family:var(--mono);font-size:.74rem;color:var(--ink-3);margin-top:.6rem}
+  .step .std s{opacity:.75}
+  .step .inc{font-size:.85rem;color:var(--ink-2);line-height:1.45;margin-top:auto;padding-top:.2rem}
+  .step .inc::before{content:"";display:block;width:100%;height:1px;background:var(--line-soft);margin:.9rem 0 .8rem}
+  .ramp-terms{display:grid;grid-template-columns:1fr 1fr;gap:.55rem 1.5rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:var(--ink-3)}
+  .ramp-terms span{white-space:nowrap}
+  .ramp-terms b{color:var(--ink-2);font-weight:500}
+  @media(max-width:720px){.ramp{grid-template-columns:1fr}.step.s1,.step.s2,.step.s3{min-height:0}.ramp-terms{grid-template-columns:1fr}}
+
+  /* timeline / season spine */
+  .phases{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:clamp(3rem,7vh,5.5rem);position:relative}
+  .phases::before{content:"";position:absolute;top:32px;left:6%;right:6%;height:2px;background:linear-gradient(90deg,var(--wayfinder),var(--orderflow),var(--consultant));opacity:.55}
+  .phase{padding:0 1.4rem;position:relative}
+  .phase .dot{width:18px;height:18px;border-radius:50%;background:var(--ph);margin:24px auto 1.9rem;box-shadow:0 0 0 6px var(--soil)}
+  .phase .season{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);text-align:center;display:block;margin-bottom:.8rem}
+  .phase .pt{font-family:var(--display);font-weight:600;font-size:clamp(1.45rem,2.4vw,2rem);color:var(--ph);text-align:center;margin-bottom:.95rem;line-height:1.15}
+  .phase .pd{font-size:1.04rem;color:var(--ink-2);text-align:center;line-height:1.65;max-width:27ch;margin:0 auto}
+  @media(max-width:720px){
+    .suite,.two,.phases{grid-template-columns:1fr}
+    .phases::before{display:none}
+    .phase{border-left:2px solid var(--ph);padding:0 0 2.5rem 1.5rem;text-align:left}
+    .phase .dot,.phase .season,.phase .pt,.phase .pd{text-align:left;margin-left:0}
+    .phase .dot{margin:0 0 1.1rem}
+    .phase .pd{max-width:none}
+  }
+
+  /* clean / IP slide */
+  .clean-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-top:1.6rem}
+  .clean{border:1px solid var(--line-soft);border-radius:14px;padding:1.4rem;background:var(--soil-2)}
+  .clean .ct{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:.7rem}
+  .clean p{font-size:.94rem;color:var(--ink-2);line-height:1.55}
+  @media(max-width:640px){.clean-grid{grid-template-columns:1fr}}
+
+  /* ask slide */
+  #s-ask{background:radial-gradient(120% 90% at 18% 12%,rgba(224,148,74,.10),transparent 55%)}
+  .ask-list{margin-top:1.8rem;display:grid;gap:1.1rem;max-width:60ch}
+  .ask{display:flex;gap:1.1rem;align-items:flex-start}
+  .ask .num{font-family:var(--display);font-weight:700;font-size:1.4rem;color:var(--amber);line-height:1;min-width:1.6rem}
+  .ask .at{font-size:1.05rem;color:var(--ink);line-height:1.5}
+  .ask .at small{display:block;color:var(--ink-2);font-size:.95rem;margin-top:.35rem;line-height:1.5}
+  .signature{max-width:60ch;margin-top:2.6rem;text-align:center}
+  .signoff{margin-top:.85rem;font-family:var(--mono);font-size:.8rem;letter-spacing:.1em;color:var(--ink-3)}
+  .signoff b{color:var(--ink-2);font-weight:500}
+  .foxmark{line-height:0;text-align:center}
+  .foxmark svg{height:52px;width:auto;display:inline-block}
+  .foxmark svg path{fill:var(--amber)}
+
+  /* ---------- chrome ---------- */
+  .topbar{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:18px clamp(20px,5vw,40px);z-index:20;pointer-events:none}
+  .brand{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3)}
+  .brand b{color:var(--amber);font-weight:500}
+  .progress{position:fixed;top:0;left:0;height:2px;background:var(--amber);z-index:30;transition:width .4s ease}
+  .nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:16px clamp(20px,5vw,40px);z-index:20}
+  .counter{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;color:var(--ink-3)}
+  .counter b{color:var(--ink)}
+  .arrows{display:flex;gap:8px}
+  .arrows button{
+    width:38px;height:38px;border-radius:9px;border:1px solid var(--line);
+    background:var(--soil-2);color:var(--ink-2);cursor:pointer;
+    font-size:1rem;display:grid;place-items:center;transition:.2s;
+    font-family:var(--body);
+  }
+  .arrows button:hover{border-color:var(--amber);color:var(--amber);background:var(--soil-3)}
+  .arrows button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .dots{display:flex;gap:7px}
+  .dots button{width:8px;height:8px;border-radius:50%;border:0;background:var(--line);cursor:pointer;padding:0;transition:.2s}
+  .dots button.on{background:var(--amber);transform:scale(1.25)}
+  .dots button:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+  .hint{position:fixed;bottom:62px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;color:var(--ink-3);opacity:.7;z-index:20;transition:opacity .5s}
+  .hint.hide{opacity:0}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="topbar">
+  <span class="brand"><b>Foxfield</b> Studio</span>
+  <span class="brand">Signature-Client Proposal</span>
+</div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 — COVER -->
+  <section class="slide active" id="s-cover">
+    <div class="slide-inner">
+      <div class="mark">Foxfield Studio LLC · Kansas</div>
+      <h1>
+        Software fit for the floor.
+        <span class="to">A signature-client proposal for</span>
+        <span class="who">Suburban Lawn & Garden</span>
+      </h1>
+      <div class="cover-meta">
+        <span>Prepared by <b>Christopher Fox</b></span>
+        <span>Summer <b>2026</b></span>
+        <span>Wayfinder · Orderflow · Plant Consultant</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 — WHO'S WALKING IN -->
+  <section class="slide" id="s-who">
+    <div class="slide-inner">
+      <div class="eyebrow">Who's walking in the door</div>
+      <h2>You know me from the perennials yard.<br>Here's the rest of it.</h2>
+      <p class="lead">I didn't build this as an associate with a side project. I built it as a founder who has shipped ag-tech before, and who spent four seasons on a nursery floor — where I found the same friction worth solving: paper docs, disconnected systems, and "we've always done it that way" perspectives.</p>
+      <div class="creds">
+        <div class="cred"><span class="tag">Founded</span><span class="txt"><b>SeediQ</b> — co-founder, acquired by CDMS.</span></div>
+        <div class="cred"><span class="tag">Turned around</span><span class="txt"><b>Greenbook</b> — rebuilt the product and the business.</span></div>
+        <div class="cred"><span class="tag">Sold</span><span class="txt">Enterprise sales for <b>CropTrak</b> in the Organic &amp; Non-GMO market.</span></div>
+        <div class="cred"><span class="tag">Launched</span><span class="txt">GTM architect for <b>Breedr's</b> US launch; led product on the EPA's web-labeling pilot.</span></div>
+        <div class="cred"><span class="tag">Then — the floors</span><span class="txt">Four seasons in Kansas City garden centers after COVID. The product thesis came straight off those floors.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 — THE GAP -->
+  <section class="slide" id="s-gap">
+    <div class="slide-inner">
+      <div class="eyebrow">Built on the floor</div>
+      <h2>The register is strong,<br>but blind to the floor.</h2>
+      <p class="lead">Your POS knows what sold. It doesn't help a customer find the right plant, and it doesn't catch the <strong>paper availability sheet that didn't match what actually came off the truck.</strong> That gap lives exactly where staff and customers are — and where every dominant system is weakest.</p>
+      <p class="lead" style="margin-top:1.3rem">Foxfield is built for that gap. Not the system of record — the layer on top of it.</p>
+    </div>
+  </section>
+
+  <!-- 4 — THE SUITE -->
+  <section class="slide" id="s-suite">
+    <div class="slide-inner">
+      <div class="eyebrow">What I built</div>
+      <h2>Three tools, one data spine</h2>
+      <div class="suite">
+        <div class="pc" style="--pc-accent:var(--wayfinder)">
+          <div class="pname">Wayfinder</div>
+          <div class="pwhat">Plant browser, store map, and customer kiosk. Search → select → go, without interrupting a consultative sale.</div>
+          <span class="ptag">Ship-ready · runs on your catalog export</span>
+          <a class="plink" href="https://foxfield.studio/wayfinder/" target="_blank" rel="noopener">Open Wayfinder live ↗</a>
+        </div>
+        <div class="pc" style="--pc-accent:var(--orderflow)">
+          <div class="pname">Orderflow</div>
+          <div class="pwhat">Farm-sheet intake → vendor-to-retail SKU crosswalk → multi-location allocation → approval → receiving you run by scanning the cart's QR and tapping only the misses.</div>
+          <span class="ptag">Co-develop · off-season</span>
+          <a class="plink" href="https://foxfield.studio/orderflow/" target="_blank" rel="noopener">Open Orderflow live ↗</a>
+        </div>
+        <div class="pc" style="--pc-accent:var(--consultant)">
+          <div class="pname">Plant Consultant</div>
+          <div class="pwhat">Bilingual plant planning — and a contractor channel where pros reserve and buy materials at Suburban.</div>
+          <span class="ptag">Phase 3 · spring</span>
+          <a class="plink" href="https://app.foxfield.studio/" target="_blank" rel="noopener">Open Plant Consultant live ↗</a>
+        </div>
+      </div>
+      <p class="spine-note">The quiet part that makes this defensible: <strong>Orderflow's receiving workflow generates the living catalog</strong> that powers Wayfinder and the Consultant. Digitize what comes off the truck once, and every other tool stays accurate for free. That's a data spine, not three apps.</p>
+    </div>
+  </section>
+
+  <!-- 5 — SITS ON TOP -->
+  <section class="slide" id="s-layer">
+    <div class="slide-inner">
+      <div class="eyebrow">No rip-and-replace</div>
+      <h2>Works alongside Epicor —<br>nothing replaced, nothing to integrate.</h2>
+      <p class="lead">Not a POS swap, not an IT project, not a 2027 problem. Wayfinder starts from an export of the catalog you already maintain and runs <strong style="color:var(--amber)">beside</strong> your systems — usable this season, with none of the integration risk.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="n">0</div><div class="l">to integrate or replace</div></div>
+        <div class="stat"><div class="n">This season</div><div class="l">Wayfinder live, not next year</div></div>
+        <div class="stat"><div class="n">1 → 3</div><div class="l">start with Wayfinder; the same data spine grows into all three apps</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 — ROI -->
+  <section class="slide" id="s-roi">
+    <div class="slide-inner">
+      <div class="eyebrow">The cost of the gap · one real Saturday</div>
+      <h2>Epicor says 64.<br>The bench says 8.</h2>
+      <p class="lead"><em>Nepeta</em> 'Cat's Pajamas' — a top-seller that flies off the bench in spring. The farm sheet promised 24. The system swears there are 64. There are 8, at <strong>$14.99</strong> each. A customer drove across town to buy 20, took the 8 that were actually there, and left disappointed enough not to come back.</p>
+      <div class="roi-grid">
+        <div class="roi-left">
+          <div class="stat-row">
+            <div class="stat"><div class="n" style="color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--orderflow);text-decoration-thickness:3px">64</div><div class="l">what Epicor claims is on hand</div></div>
+            <div class="stat"><div class="n" style="color:var(--amber-bright)">8</div><div class="l">what's actually on the bench</div></div>
+            <div class="stat"><div class="n" style="color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--orderflow);text-decoration-thickness:3px">24</div><div class="l">what the farm sheet promised</div></div>
+          </div>
+          <p class="spine-note">Epicor is the system of record; it just can't track the floor in real time between receiving, the bench, and the customer. That gap falls on the staff who take the blame, the customer who found eight, and the business that quietly loses a regular — and it's the exact gap <strong>Orderflow</strong> closes the moment the truck doesn't match the sheet — one motion at the dock: scan the cart's QR, confirm what's right, tap what came up short.</p>
+        </div>
+        <div class="roi-calc">
+          <div class="calc-label">The compounding cost</div>
+          <div class="calc-expr">56 phantom units × $14.99</div>
+          <div class="calc-num">≈ $839<span class="calc-cap">one plant · one Saturday</span></div>
+          <div class="calc-mult">× a miss a week<br>× a ~12-week spring peak</div>
+          <div class="calc-num big">≈ $10,000<span class="calc-cap">per store · per season</span></div>
+          <div class="calc-foot">Real dollars, compounding — exactly when the floor can least afford it.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 — WHY SUBURBAN FIRST -->
+  <section class="slide" id="s-first">
+    <div class="slide-inner">
+      <div class="eyebrow">The signature client</div>
+      <h2>Be the shop every other points to.</h2>
+      <p class="lead">Suburban goes first — not as a customer I sell to, but as the flagship the whole platform is proven on. First in gets founder terms no one after you can.</p>
+      <div class="two">
+        <div class="col give">
+          <h3>What you get</h3>
+          <ul>
+            <li>The <b>founder ladder, locked</b> — well under standard at every tier</li>
+            <li><b>Shaped around your floor</b> — every later client inherits your standard</li>
+            <li>A real market edge <b>before any competitor</b> has it</li>
+          </ul>
+        </div>
+        <div class="col get">
+          <h3>All I ask in return</h3>
+          <ul>
+            <li>Go live as the <b>founding deployment</b> — Lenexa first, your floor, your data</li>
+            <li><b>Reference and case-study rights</b> — on mutually agreed pilot results</li>
+            <li>A fair exclusivity window — <b>trade-area and time-boxed</b></li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:2rem;text-align:center;font-family:var(--display);font-weight:600;font-size:clamp(1.1rem,2.1vw,1.55rem);line-height:1.3;color:var(--ink)">Wayfinder live this season — and everything that follows, built on the shop that <span style="color:var(--amber-bright)">said yes first</span>.</p>
+    </div>
+  </section>
+
+  <!-- 8 — THE OFFER / CAPABILITY RAMP -->
+  <section class="slide" id="s-offer">
+    <div class="slide-inner">
+      <div class="eyebrow">Founder pricing · by capability</div>
+      <h2>You pay as the loop comes online.</h2>
+      <div class="ramp">
+        <div class="step s1" style="--st:var(--wayfinder)">
+          <span class="when">Now · this season</span>
+          <div class="cap">Wayfinder</div>
+          <div class="price">$250<small>/ month · founder</small></div>
+          <div class="std">standard <s>$400</s></div>
+          <div class="inc">Plant browser, kiosk &amp; finder — live at Lenexa.</div>
+        </div>
+        <div class="step s2" style="--st:var(--orderflow)">
+          <span class="when">Off-season · Orderflow pilot</span>
+          <div class="cap">+ Orderflow</div>
+          <div class="price">$425<small>/ month · founder</small></div>
+          <div class="std">standard <s>$700</s></div>
+          <div class="inc">Receiving &amp; variance — where the ROI lives, farm to floor.</div>
+        </div>
+        <div class="step s3" style="--st:var(--consultant)">
+          <span class="when">Operational · full loop</span>
+          <div class="cap">+ Plant Consultant</div>
+          <div class="price">$550<small>/ month · founder</small></div>
+          <div class="std">standard <s>$1,100</s></div>
+          <div class="inc">The closed loop — one data spine feeding all three.</div>
+        </div>
+      </div>
+      <div class="ramp-terms">
+        <span><b>Setup</b> — waived</span>
+        <span><b>Start</b> — Lenexa, one store; others scoped later</span>
+        <span><b>Founder rate</b> — limited-time, locked for the term</span>
+        <span><b>Exclusivity</b> — trade-area, time-boxed</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 — SEASON / TIMELINE -->
+  <section class="slide" id="s-season">
+    <div class="slide-inner">
+      <div class="eyebrow">The season is the plan</div>
+      <h2>Phased to the growing year</h2>
+      <div class="phases">
+        <div class="phase" style="--ph:var(--wayfinder)">
+          <span class="dot"></span>
+          <span class="season">Now · Summer '26</span>
+          <div class="pt">Wayfinder</div>
+          <div class="pd">Goes live at Lenexa this season. Immediate value, low lift, builds trust.</div>
+        </div>
+        <div class="phase" style="--ph:var(--orderflow)">
+          <span class="dot"></span>
+          <span class="season">Off-season · → Feb '27</span>
+          <div class="pt">Orderflow</div>
+          <div class="pd">Co-developed against your receiving workflow. Stable before spring, when it has to work.</div>
+        </div>
+        <div class="phase" style="--ph:var(--consultant)">
+          <span class="dot"></span>
+          <span class="season">Spring '27</span>
+          <div class="pt">Plant Consultant</div>
+          <div class="pd">A contractor procurement channel — pros secure and buy materials at Suburban, on the live catalog.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — KEEPING IT CLEAN -->
+  <section class="slide" id="s-clean">
+    <div class="slide-inner">
+      <div class="eyebrow">Keeping it clean</div>
+      <h2>Two hats, one clear line</h2>
+      <p class="lead">I work your floor and I run Foxfield. I'd rather say that plainly and put the line in writing than let either of us wonder where it sits.</p>
+      <div class="clean-grid">
+        <div class="clean">
+          <div class="ct">My day job comes first</div>
+          <p>The job you hired me for comes first — Foxfield doesn't pull against it, it makes that floor run better. And I'm not building any of it on your clock.</p>
+        </div>
+        <div class="clean">
+          <div class="ct">The software is Foxfield's</div>
+          <p>Foxfield Studio LLC owns the code, built on my own time and tools. Suburban gets a clean license to run it, with no claim on the code itself — which protects you as much as me.</p>
+        </div>
+        <div class="clean">
+          <div class="ct">Your data is yours</div>
+          <p>Your catalog, your receiving records, your customers — all yours, and they stay that way. The agreement names exactly what I can touch to run the service, and what I can't.</p>
+        </div>
+        <div class="clean">
+          <div class="ct">A real agreement</div>
+          <p>All of it in writing before a dollar moves — IP, data, pricing, exclusivity, and the employee/vendor line. Not a handshake; a signed agreement.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 — THE ASK -->
+  <section class="slide" id="s-ask">
+    <div class="slide-inner">
+      <div class="eyebrow">The ask</div>
+      <h2>What I'm asking for</h2>
+      <div class="ask-list">
+        <div class="ask"><span class="num">1</span><span class="at">Approval to run the Wayfinder pilot at Lenexa this season<small>A defined, season-end pilot — contained, low-lift, nothing to integrate. Your on-ramp to the founding deployment.</small></span></div>
+        <div class="ask"><span class="num">2</span><span class="at">Orderflow as the committed off-season build<small>The receiving and variance engine — where the ROI lives, farm to floor. Built through the winter, green-lit the moment the pilot hits the marks we set together.</small></span></div>
+        <div class="ask"><span class="num">3</span><span class="at">A short meeting or call to sign the agreement<small>It's already drafted — we walk the terms together and sign. IP, data, and the employee/vendor line clean before we start.</small></span></div>
+      </div>
+      <div class="signature">
+      <div class="foxmark"><svg viewBox="322.5 271.5 355.0 362.5" height="52" aria-hidden="true"><path fill-rule="evenodd" d="M 629.50,292.50 L 626.50,293.00 L 611.50,299.00 L 592.50,309.50 L 572.50,324.00 L 555.50,340.00 L 542.50,340.00 L 539.50,337.00 L 531.50,322.00 L 520.50,305.50 L 512.50,296.00 L 499.50,283.00 L 489.50,275.50 L 488.00,276.00 L 474.00,292.00 L 465.00,305.00 L 459.00,315.50 L 452.00,330.50 L 443.00,357.50 L 443.00,360.00 L 441.00,366.00 L 438.00,380.50 L 431.00,397.00 L 416.00,420.00 L 398.00,444.00 L 385.00,463.50 L 371.00,486.50 L 370.00,489.50 L 365.00,497.50 L 355.00,517.00 L 342.00,548.50 L 333.00,579.50 L 328.00,607.50 L 326.50,630.00 L 528.00,630.00 L 517.50,624.00 L 508.50,617.00 L 495.00,603.00 L 484.50,587.00 L 479.50,575.00 L 476.50,565.00 L 474.50,552.00 L 474.50,538.50 L 476.50,525.50 L 478.50,518.00 L 483.50,505.50 L 494.00,489.50 L 492.50,489.00 L 483.00,491.00 L 467.00,497.00 L 454.00,505.00 L 442.00,515.50 L 440.50,515.00 L 445.50,495.00 L 448.50,487.50 L 455.50,475.00 L 463.00,465.50 L 470.00,458.50 L 477.50,452.50 L 488.00,446.50 L 503.50,441.50 L 517.00,439.50 L 535.50,439.50 L 552.50,442.50 L 575.50,450.50 L 622.50,472.50 L 638.00,477.50 L 648.00,479.50 L 651.00,486.00 L 655.00,491.50 L 655.00,493.00 L 653.50,494.50 L 646.50,499.00 L 632.00,503.00 L 611.50,503.00 L 573.00,497.00 L 552.00,497.00 L 543.50,499.00 L 534.50,503.50 L 531.50,506.00 L 532.00,506.50 L 538.50,505.00 L 552.00,505.00 L 555.50,506.00 L 545.00,519.50 L 541.00,528.00 L 539.00,535.00 L 539.00,554.00 L 542.00,563.00 L 545.50,569.00 L 546.00,568.00 L 544.50,562.50 L 544.50,554.00 L 546.50,541.50 L 548.50,535.50 L 554.50,525.00 L 562.50,517.00 L 567.50,513.50 L 573.50,510.50 L 581.50,508.50 L 592.00,508.50 L 595.00,509.50 L 599.50,509.50 L 619.50,512.50 L 630.00,512.50 L 636.00,511.50 L 643.00,509.50 L 651.00,505.50 L 657.50,500.50 L 665.50,492.50 L 669.50,487.00 L 672.50,481.00 L 673.50,477.00 L 673.00,475.00 L 671.00,472.50 L 661.50,467.00 L 648.00,457.00 L 638.00,448.00 L 629.00,438.00 L 625.50,430.50 L 624.50,406.50 L 622.50,399.00 L 619.50,392.50 L 612.50,382.00 L 611.00,378.50 L 613.50,363.50 L 623.50,335.00 L 627.00,322.00 L 629.50,306.50 Z M 567.50,417.50 L 573.00,417.50 L 575.50,419.00 L 579.00,423.50 L 579.00,428.50 L 578.00,431.00 L 575.50,433.50 L 572.00,435.00 L 568.50,435.00 L 566.00,434.00 L 561.50,429.50 L 561.50,422.50 L 564.50,419.00 Z M 621.50,309.50 L 622.00,312.00 L 621.00,313.50 L 619.00,322.00 L 608.00,353.50 L 604.50,367.50 L 603.00,368.50 L 589.50,355.50 L 590.50,350.50 L 597.50,335.50 L 603.50,327.00 L 617.50,312.00 Z M 489.00,291.50 L 495.50,296.50 L 509.00,310.50 L 520.00,326.50 L 526.00,337.50 L 529.00,345.00 L 532.50,359.50 L 528.50,362.00 L 518.50,366.00 L 512.50,366.00 L 508.50,364.00 L 502.00,358.00 L 498.50,351.50 L 498.00,347.50 L 501.50,347.50 L 505.50,349.50 L 506.00,349.00 L 500.50,331.50 L 499.50,330.50 L 496.50,322.50 L 489.50,308.50 L 487.50,306.50 L 483.00,317.50 L 480.00,333.00 L 480.00,350.50 L 483.00,363.00 L 484.50,365.00 L 487.50,361.00 L 490.00,366.00 L 494.00,372.00 L 497.00,375.00 L 497.00,376.00 L 493.00,379.00 L 482.00,390.50 L 481.00,390.50 L 475.50,381.50 L 471.50,367.50 L 470.50,360.50 L 470.50,339.50 L 473.50,323.50 L 478.50,308.50 L 485.50,294.50 L 487.50,292.00 Z"/></svg></div>
+      <div class="signoff">Christopher Fox · <b>Foxfield Studio LLC</b> · foxfield.studio</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="hint" id="hint">← → or space to navigate</div>
+
+<div class="nav">
+  <span class="counter"><b id="cur">01</b> / <span id="total">11</span></span>
+  <div class="dots" id="dots"></div>
+  <div class="arrows">
+    <button id="prev" aria-label="Previous slide">←</button>
+    <button id="next" aria-label="Next slide">→</button>
+  </div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let i = 0;
+  const cur = document.getElementById('cur');
+  const progress = document.getElementById('progress');
+  const dotsWrap = document.getElementById('dots');
+  const hint = document.getElementById('hint');
+
+  document.getElementById('total').textContent = String(total).padStart(2,'0');
+
+  slides.forEach((_, idx) => {
+    const d = document.createElement('button');
+    d.setAttribute('aria-label', 'Go to slide ' + (idx+1));
+    d.addEventListener('click', () => go(idx));
+    dotsWrap.appendChild(d);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function go(n){
+    i = Math.max(0, Math.min(total-1, n));
+    slides.forEach((s,idx)=>s.classList.toggle('active', idx===i));
+    dots.forEach((d,idx)=>d.classList.toggle('on', idx===i));
+    cur.textContent = String(i+1).padStart(2,'0');
+    progress.style.width = ((i)/(total-1)*100) + '%';
+    if(i>0) hint.classList.add('hide');
+  }
+  function nextS(){ go(i+1); }
+  function prevS(){ go(i-1); }
+
+  document.getElementById('next').addEventListener('click', nextS);
+  document.getElementById('prev').addEventListener('click', prevS);
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();nextS();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevS();}
+    else if(e.key==='Home'){go(0);}
+    else if(e.key==='End'){go(total-1);}
+  });
+  // touch
+  let sx=0;
+  document.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+  document.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-sx;
+    if(Math.abs(dx)>50){ dx<0?nextS():prevS(); }
+  },{passive:true});
+
+  go(0);
+</script>
+</body>
+</html>
