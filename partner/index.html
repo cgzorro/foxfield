@@ -1,8 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="color-scheme" content="dark">
+<meta name="darkreader-lock">
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Foxfield Studio — Suburban Lawn & Garden Signature-Client Proposal</title>
@@ -160,12 +161,10 @@
   @media(max-width:640px){.term{grid-template-columns:1fr;gap:.3rem}}
 
   /* slide 8 — capability ramp */
-  .ramp{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.6rem 0 1.3rem;align-items:end}
+  .ramp{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.6rem 0 1.3rem;align-items:stretch}
   .step{display:flex;flex-direction:column;position:relative;border:1px solid var(--line-soft);border-radius:14px;background:linear-gradient(180deg,var(--soil-2),var(--soil));padding:1.3rem 1.25rem;overflow:hidden}
   .step::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--st)}
-  .step.s1{min-height:206px}
-  .step.s2{min-height:230px}
-  .step.s3{min-height:254px}
+  .step.s1,.step.s2,.step.s3{min-height:236px}
   .step .when{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.55rem}
   .step .cap{font-family:var(--display);font-weight:600;font-size:1.22rem;color:var(--st);margin-bottom:.85rem;line-height:1.1}
   .step .price{font-family:var(--display);font-weight:700;font-size:2rem;color:var(--ink);line-height:1}
@@ -240,6 +239,7 @@
   .dots button:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
   .hint{position:fixed;bottom:62px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;color:var(--ink-3);opacity:.7;z-index:20;transition:opacity .5s}
   .hint.hide{opacity:0}
+  html{color-scheme:dark}
 </style>
 </head>
 <body>
