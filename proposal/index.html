@@ -1,1 +1,494 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foxfield Studio — Software fit for the floor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Archivo:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --soil:#15100a;
+    --soil-2:#1d1610;
+    --soil-3:#261d13;
+    --line:rgba(224,148,74,.16);
+    --line-soft:rgba(242,233,220,.10);
+    --ink:#f3ebdd;
+    --ink-2:#c3b29c;
+    --ink-3:#8c7c68;
+    --amber:#e0944a;
+    --amber-bright:#f0a85c;
+    --wayfinder:#86ab6b;
+    --orderflow:#cd6b3e;
+    --consultant:#62a8a0;
+    --display:'Cinzel',serif;
+    --body:'Archivo',system-ui,sans-serif;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--soil);
+    color:var(--ink);
+    font-family:var(--body);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(20px,5vw,40px)}
+
+  /* ---------- type ---------- */
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.72rem;letter-spacing:.26em;text-transform:uppercase;
+    color:var(--amber);
+    display:flex;align-items:center;gap:.7em;margin-bottom:1.4rem;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--amber);opacity:.7}
+  h1{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(2.4rem,7vw,4.8rem);line-height:1.03;text-wrap:balance;
+    letter-spacing:.004em;
+  }
+  h2{
+    font-family:var(--display);font-weight:600;
+    font-size:clamp(1.7rem,4vw,2.8rem);line-height:1.08;text-wrap:balance;
+  }
+  h3{font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,2.6vw,1.8rem);line-height:1.1}
+  .lead{font-size:clamp(1.05rem,1.7vw,1.32rem);color:var(--ink-2);line-height:1.55;max-width:62ch}
+  strong{color:var(--ink);font-weight:600}
+  .amber{color:var(--amber-bright)}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(10px);
+    background:rgba(21,16,10,.72);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .topbar .row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 0}
+  .brandmark{display:flex;align-items:center;gap:.6rem;font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:.01em;color:var(--ink);text-decoration:none}
+  .brandmark .dot{color:var(--amber)}
+  .brandmark svg{height:26px;width:auto;fill:var(--amber)}
+  .topbar nav{display:flex;gap:1.4rem;align-items:center}
+  .topbar nav a{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;transition:color .2s}
+  .topbar nav a:hover{color:var(--amber)}
+  .topbar nav a.cta{color:var(--soil);background:var(--amber);padding:.5rem .85rem;border-radius:8px;font-weight:500}
+  .topbar nav a.cta:hover{background:var(--amber-bright);color:var(--soil)}
+  @media (max-width:720px){.topbar nav a:not(.cta){display:none}}
+
+  /* ---------- hero ---------- */
+  .hero{padding:clamp(4rem,11vw,8.5rem) 0 clamp(3rem,7vw,5rem)}
+  .hero h1{margin-bottom:1.7rem}
+  .hero .lead{margin-bottom:2.4rem}
+  .hero h1 .b{color:var(--amber-bright)}
+  .cta-row{display:flex;flex-wrap:wrap;gap:.9rem;align-items:center}
+  .btn{
+    font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
+    text-decoration:none;padding:.85rem 1.3rem;border-radius:10px;transition:all .2s;display:inline-block;
+  }
+  .btn.primary{background:var(--amber);color:var(--soil);font-weight:500}
+  .btn.primary:hover{background:var(--amber-bright);transform:translateY(-1px)}
+  .btn.ghost{border:1px solid var(--line);color:var(--ink-2)}
+  .btn.ghost:hover{border-color:var(--amber);color:var(--ink)}
+
+  /* ---------- section frame ---------- */
+  section{padding:clamp(3.2rem,7vw,5.5rem) 0;border-top:1px solid var(--line-soft)}
+  .sec-head{margin-bottom:2.4rem}
+  .sec-head h2{margin-bottom:1rem}
+
+  /* ---------- suite triptych ---------- */
+  .jobs{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;position:relative}
+  .job{
+    border:1px solid var(--line-soft);border-radius:16px;padding:1.6rem 1.4rem 1.5rem;
+    background:linear-gradient(180deg,var(--soil-2),var(--soil));position:relative;overflow:hidden;
+  }
+  .job::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--j)}
+  .job .jverb{font-family:var(--mono);font-weight:500;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.45rem}
+  .job .jname{font-family:var(--display);font-weight:700;font-size:1.35rem;line-height:1.05;color:var(--j);margin-bottom:.9rem}
+  .job .jtext{color:var(--ink-2);font-size:.95rem;line-height:1.55}
+  .spine-bar{
+    margin-top:1.5rem;display:flex;align-items:center;gap:1rem;
+    border:1px dashed var(--line);border-radius:12px;padding:1rem 1.3rem;
+  }
+  .spine-bar .lab{font-family:var(--mono);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:var(--amber)}
+  .spine-bar .txt{color:var(--ink-2);font-size:.95rem}
+  @media (max-width:760px){.jobs{grid-template-columns:1fr}}
+
+  /* ---------- product blocks ---------- */
+  .product{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4rem);align-items:start}
+  .product.flip .pcopy{order:2}
+  .product .ptag{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--pa);margin-bottom:1rem;display:flex;align-items:center;gap:.7em}
+  .product .ptag::before{content:"";width:22px;height:1px;background:var(--pa)}
+  .product h2{margin-bottom:1.1rem}
+  .product h2 .pa{color:var(--pa)}
+  .product .pbody{color:var(--ink-2);font-size:1.02rem;line-height:1.6;margin-bottom:1.4rem;max-width:54ch}
+  .plist{list-style:none;display:grid;gap:.75rem;margin-bottom:1.6rem}
+  .plist li{position:relative;padding-left:1.55rem;color:var(--ink-2);font-size:.97rem;line-height:1.5}
+  .plist li::before{content:"";position:absolute;left:0;top:.5em;width:7px;height:7px;border-radius:50%;background:var(--pa)}
+  .plist li b{color:var(--ink)}
+  .live-link{font-family:var(--mono);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--pa);text-decoration:none;border:1px solid var(--pa);padding:.7rem 1.1rem;border-radius:10px;display:inline-block;transition:all .2s}
+  .live-link:hover{background:var(--pa);color:var(--soil)}
+  .live-tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-left:.9rem}
+  @media (max-width:760px){.product{grid-template-columns:1fr;gap:1.6rem}.product.flip .pcopy{order:0}}
+
+  /* product visual panel */
+  .pvis{border:1px solid var(--line-soft);border-radius:16px;background:linear-gradient(160deg,var(--soil-3),var(--soil));padding:1.5rem;min-height:220px}
+  .pvis .vlabel{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:1.1rem}
+
+  /* wayfinder mock rows */
+  .wf-row{display:flex;justify-content:space-between;align-items:center;padding:.7rem .9rem;border-radius:9px;background:rgba(134,171,107,.07);border:1px solid rgba(134,171,107,.16);margin-bottom:.6rem}
+  .wf-row .nm{font-size:.92rem;color:var(--ink)}
+  .wf-row .nm em{color:var(--ink-3);font-style:italic;font-size:.82rem}
+  .wf-row .qty{font-family:var(--mono);font-size:.78rem;color:var(--wayfinder)}
+
+  /* orderflow exceptions mock */
+  .of-line{display:flex;align-items:center;gap:.8rem;padding:.62rem .9rem;border-radius:9px;margin-bottom:.5rem;font-size:.9rem;background:rgba(242,233,220,.03);border:1px solid var(--line-soft)}
+  .of-line .ck{flex:none;width:18px;height:18px;border-radius:5px;display:grid;place-items:center;font-family:var(--mono);font-size:.7rem}
+  .of-line.ok .ck{background:rgba(134,171,107,.18);color:var(--wayfinder)}
+  .of-line.flag{background:rgba(205,107,62,.09);border-color:rgba(205,107,62,.32)}
+  .of-line.flag .ck{background:rgba(205,107,62,.22);color:var(--orderflow)}
+  .of-line .onm{flex:1;color:var(--ink-2)}
+  .of-line .onm b{color:var(--ink)}
+  .of-line .ovar{font-family:var(--mono);font-size:.76rem;color:var(--orderflow)}
+  .of-line.ok .ovar{color:var(--ink-3)}
+  .of-cap{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:var(--ink-3);margin-top:.9rem;line-height:1.5}
+
+  /* path to end-to-end */
+  .flow{margin-top:2.4rem;border-top:1px solid var(--line-soft);padding-top:2rem}
+  .flow .ftitle{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:1.3rem}
+  .flow-steps{display:flex;align-items:stretch;gap:.5rem;flex-wrap:wrap}
+  .fstep{flex:1;min-width:130px;border:1px solid var(--line-soft);border-radius:12px;padding:1rem .9rem;position:relative;background:var(--soil-2)}
+  .fstep .fs-n{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;color:var(--orderflow)}
+  .fstep .fs-t{font-family:var(--display);font-weight:600;font-size:1.05rem;color:var(--ink);margin:.3rem 0 .35rem}
+  .fstep .fs-d{font-size:.82rem;color:var(--ink-3);line-height:1.45}
+  .fstep .fs-state{margin-top:.7rem;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;border-radius:5px;display:inline-block}
+  .fstep .fs-state.live{color:var(--wayfinder);background:rgba(134,171,107,.12)}
+  .fstep .fs-state.build{color:var(--amber);background:rgba(224,148,74,.12)}
+  .fstep .fs-state.farm{color:var(--ink-2);background:transparent;border:1px dashed var(--line)}
+  .flow-note{margin-top:1.3rem;font-size:.9rem;color:var(--ink-3);font-style:italic;line-height:1.5;max-width:64ch}
+
+  /* ---------- spine defensibility ---------- */
+  .defend{border-left:2px solid var(--amber);padding-left:1.4rem;max-width:64ch}
+  .defend p{color:var(--ink-2);font-size:1.05rem;line-height:1.6}
+
+  /* ---------- builder ---------- */
+  .builder{display:grid;grid-template-columns:1fr;gap:1.4rem;max-width:70ch}
+  .creds{display:grid;gap:.6rem}
+  .cred{display:flex;gap:1.1rem;align-items:baseline;padding-bottom:.6rem;border-bottom:1px solid var(--line-soft)}
+  .cred:last-child{border-bottom:0}
+  .cred .tg{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;color:var(--amber);white-space:nowrap;min-width:7.5rem;text-transform:uppercase}
+  .cred .tx{color:var(--ink-2);font-size:.95rem;line-height:1.55}
+  .cred .tx b{color:var(--ink)}
+
+  /* ---------- close ---------- */
+  .close{text-align:center}
+  .close h2{margin-bottom:1.2rem}
+  .close .lead{margin:0 auto 2.2rem}
+  .start-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:2.4rem 0;text-align:left}
+  .start{border:1px solid var(--line-soft);border-radius:14px;padding:1.3rem 1.2rem;background:var(--soil-2)}
+  .start .sn{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:.6rem}
+  .start .st{color:var(--ink-2);font-size:.92rem;line-height:1.5}
+  .start .st b{color:var(--ink)}
+  @media (max-width:760px){.start-grid{grid-template-columns:1fr}}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line-soft);padding:2.4rem 0 3rem;text-align:center;background:#000}
+  footer .flogo{margin-bottom:1rem;line-height:0}
+  footer .flogo svg{height:46px;width:auto;fill:var(--amber)}
+  footer .fmark{font-family:var(--display);font-weight:700;font-size:1.1rem;color:#fff}
+  footer .fmark .dot{color:var(--amber)}
+  footer .fmeta{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--ink-3);margin-top:.6rem}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+  a:focus-visible,.btn:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:4px}
+
+  /* Brand link/button colors — force over any environment that forces anchor color to blue */
+  a{color:var(--ink);text-decoration:none}
+  a:visited{color:inherit}
+  .topbar nav a{color:var(--ink-2)!important}
+  .topbar nav a:hover{color:var(--amber)!important}
+  .topbar nav a.cta,.topbar nav a.cta:hover,.btn.primary,.btn.primary:hover{color:var(--soil)!important}
+  .btn.ghost,.btn.ghost:hover{color:var(--ink)!important}
+  .live-link{color:var(--pa)!important}
+  .live-link:hover{color:var(--soil)!important}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap row">
+    <a class="brandmark" href="#top">
+      <svg viewBox="322.5 271.5 355.0 362.5" aria-hidden="true"><path fill-rule="evenodd" d="M 629.50,292.50 L 626.50,293.00 L 611.50,299.00 L 592.50,309.50 L 572.50,324.00 L 555.50,340.00 L 542.50,340.00 L 539.50,337.00 L 531.50,322.00 L 520.50,305.50 L 512.50,296.00 L 499.50,283.00 L 489.50,275.50 L 488.00,276.00 L 474.00,292.00 L 465.00,305.00 L 459.00,315.50 L 452.00,330.50 L 443.00,357.50 L 443.00,360.00 L 441.00,366.00 L 438.00,380.50 L 431.00,397.00 L 416.00,420.00 L 398.00,444.00 L 385.00,463.50 L 371.00,486.50 L 370.00,489.50 L 365.00,497.50 L 355.00,517.00 L 342.00,548.50 L 333.00,579.50 L 328.00,607.50 L 326.50,630.00 L 528.00,630.00 L 517.50,624.00 L 508.50,617.00 L 495.00,603.00 L 484.50,587.00 L 479.50,575.00 L 476.50,565.00 L 474.50,552.00 L 474.50,538.50 L 476.50,525.50 L 478.50,518.00 L 483.50,505.50 L 494.00,489.50 L 492.50,489.00 L 483.00,491.00 L 467.00,497.00 L 454.00,505.00 L 442.00,515.50 L 440.50,515.00 L 445.50,495.00 L 448.50,487.50 L 455.50,475.00 L 463.00,465.50 L 470.00,458.50 L 477.50,452.50 L 488.00,446.50 L 503.50,441.50 L 517.00,439.50 L 535.50,439.50 L 552.50,442.50 L 575.50,450.50 L 622.50,472.50 L 638.00,477.50 L 648.00,479.50 L 651.00,486.00 L 655.00,491.50 L 655.00,493.00 L 653.50,494.50 L 646.50,499.00 L 632.00,503.00 L 611.50,503.00 L 573.00,497.00 L 552.00,497.00 L 543.50,499.00 L 534.50,503.50 L 531.50,506.00 L 532.00,506.50 L 538.50,505.00 L 552.00,505.00 L 555.50,506.00 L 545.00,519.50 L 541.00,528.00 L 539.00,535.00 L 539.00,554.00 L 542.00,563.00 L 545.50,569.00 L 546.00,568.00 L 544.50,562.50 L 544.50,554.00 L 546.50,541.50 L 548.50,535.50 L 554.50,525.00 L 562.50,517.00 L 567.50,513.50 L 573.50,510.50 L 581.50,508.50 L 592.00,508.50 L 595.00,509.50 L 599.50,509.50 L 619.50,512.50 L 630.00,512.50 L 636.00,511.50 L 643.00,509.50 L 651.00,505.50 L 657.50,500.50 L 665.50,492.50 L 669.50,487.00 L 672.50,481.00 L 673.50,477.00 L 673.00,475.00 L 671.00,472.50 L 661.50,467.00 L 648.00,457.00 L 638.00,448.00 L 629.00,438.00 L 625.50,430.50 L 624.50,406.50 L 622.50,399.00 L 619.50,392.50 L 612.50,382.00 L 611.00,378.50 L 613.50,363.50 L 623.50,335.00 L 627.00,322.00 L 629.50,306.50 Z M 567.50,417.50 L 573.00,417.50 L 575.50,419.00 L 579.00,423.50 L 579.00,428.50 L 578.00,431.00 L 575.50,433.50 L 572.00,435.00 L 568.50,435.00 L 566.00,434.00 L 561.50,429.50 L 561.50,422.50 L 564.50,419.00 Z M 621.50,309.50 L 622.00,312.00 L 621.00,313.50 L 619.00,322.00 L 608.00,353.50 L 604.50,367.50 L 603.00,368.50 L 589.50,355.50 L 590.50,350.50 L 597.50,335.50 L 603.50,327.00 L 617.50,312.00 Z M 489.00,291.50 L 495.50,296.50 L 509.00,310.50 L 520.00,326.50 L 526.00,337.50 L 529.00,345.00 L 532.50,359.50 L 528.50,362.00 L 518.50,366.00 L 512.50,366.00 L 508.50,364.00 L 502.00,358.00 L 498.50,351.50 L 498.00,347.50 L 501.50,347.50 L 505.50,349.50 L 506.00,349.00 L 500.50,331.50 L 499.50,330.50 L 496.50,322.50 L 489.50,308.50 L 487.50,306.50 L 483.00,317.50 L 480.00,333.00 L 480.00,350.50 L 483.00,363.00 L 484.50,365.00 L 487.50,361.00 L 490.00,366.00 L 494.00,372.00 L 497.00,375.00 L 497.00,376.00 L 493.00,379.00 L 482.00,390.50 L 481.00,390.50 L 475.50,381.50 L 471.50,367.50 L 470.50,360.50 L 470.50,339.50 L 473.50,323.50 L 478.50,308.50 L 485.50,294.50 L 487.50,292.00 Z"/></svg>
+      Foxfield<span class="dot">.</span>
+    </a>
+    <nav>
+      <a href="#suite">The suite</a>
+      <a href="#orderflow">Orderflow</a>
+      <a href="#start">How it starts</a>
+      <a class="cta" href="https://foxfield.studio/wayfinder/" target="_blank" rel="noopener">See it live</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" style="border-top:0">
+    <div class="wrap">
+      <div class="eyebrow">Software for independent garden centers</div>
+      <h1>Your register knows what sold.<br>It's <span class="b">blind to your floor.</span></h1>
+      <p class="lead">The paper availability sheet that didn't match the truck. The customer who drove across town for twenty and found eight. Foxfield is the layer that closes that gap — three tools on one living catalog, running alongside the point-of-sale you already own. Nothing to rip out, nothing to integrate.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#suite">See the three tools</a>
+        <a class="btn ghost" href="https://foxfield.studio/wayfinder/" target="_blank" rel="noopener">Open Wayfinder live ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE SUITE / THREE JOBS -->
+  <section id="suite">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">Three tools, three jobs</div>
+        <h2>Find it. Stock it right. Sell more of it.</h2>
+      </div>
+      <div class="jobs rv">
+        <div class="job" style="--j:var(--wayfinder)">
+          <div class="jverb">Find it</div>
+          <div class="jname">Wayfinder</div>
+          <div class="jtext">Customers and staff find the right plant fast — browse, store map, kiosk — without interrupting a consultative sale.</div>
+        </div>
+        <div class="job" style="--j:var(--orderflow)">
+          <div class="jverb">Stock it right</div>
+          <div class="jname">Orderflow</div>
+          <div class="jtext">Ordering and receiving that catches what the truck actually delivered — so your counts are true and the phantom inventory disappears.</div>
+        </div>
+        <div class="job" style="--j:var(--consultant)">
+          <div class="jverb">Sell more of it</div>
+          <div class="jname">Plant Consultant</div>
+          <div class="jtext">A channel where pros and contractors plan, reserve, and buy their materials from you — on the same live catalog.</div>
+        </div>
+      </div>
+      <div class="spine-bar rv">
+        <span class="lab">One spine</span>
+        <span class="txt">All three run on a single living catalog. Digitize what comes off the truck once, and every tool downstream stays accurate for free. That's the part competitors can't copy.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAYFINDER -->
+  <section id="wayfinder">
+    <div class="wrap">
+      <div class="product rv" style="--pa:var(--wayfinder)">
+        <div class="pcopy">
+          <div class="ptag">Find it · Wayfinder</div>
+          <h2>The plant a customer wants, <span class="pa">found in seconds.</span></h2>
+          <p class="pbody">A searchable, filterable catalog of your floor — bloom time, sun, water, native, pollinator — with a store map and a self-serve kiosk. Customers self-orient on the busy Saturdays you can't staff, and your experts spend their time on the sales that need a human.</p>
+          <ul class="plist">
+            <li><b>Browse and filter</b> the whole catalog by what a customer actually asks for</li>
+            <li><b>Store map</b> that points them to the right section, not just a SKU</li>
+            <li><b>Kiosk mode</b> for self-serve, bilingual, on any screen</li>
+            <li>Runs from a <b>catalog export</b> — live this season, nothing to integrate</li>
+          </ul>
+          <a class="live-link" href="https://foxfield.studio/wayfinder/" target="_blank" rel="noopener">Open Wayfinder live ↗</a>
+          <span class="live-tag">working demo</span>
+        </div>
+        <div class="pvis" aria-hidden="true">
+          <div class="vlabel">Browse · what's on the floor</div>
+          <div class="wf-row"><span class="nm">Coneflower <em>Echinacea</em></span><span class="qty">full sun · 18 in stock</span></div>
+          <div class="wf-row"><span class="nm">Catmint <em>Nepeta</em></span><span class="qty">full sun · 8 in stock</span></div>
+          <div class="wf-row"><span class="nm">Hosta <em>'Patriot'</em></span><span class="qty">shade · 24 in stock</span></div>
+          <div class="wf-row"><span class="nm">Switchgrass <em>Panicum</em></span><span class="qty">native · 11 in stock</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORDERFLOW -->
+  <section id="orderflow">
+    <div class="wrap">
+      <div class="product flip rv" style="--pa:var(--orderflow)">
+        <div class="pcopy">
+          <div class="ptag">Stock it right · Orderflow</div>
+          <h2>The clipboard, <span class="pa">finally counting for you.</span></h2>
+          <p class="pbody">Ordering and receiving built for the dock, not the back office. The order is the expected list; receiving checks the truck against it. The order carries a QR — scan it off the cart with any phone and that expected list opens, already filled in. Most lines come in as ordered — you confirm them in one tap. You only put a finger on what came up short. The bar is simple: it has to be faster than paper, or it doesn't belong on your floor.</p>
+          <ul class="plist">
+            <li><b>Touch only the exceptions</b> — paper makes you write every line; this doesn't</li>
+            <li><b>Scan the cart's QR</b> — any phone opens the order's expected list, no app to install</li>
+            <li><b>Variance caught at the dock</b>, not three weeks later on the bench</li>
+            <li><b>A grower scorecard</b> builds itself — order around the farms that short you</li>
+            <li><b>Your allocation rules</b> when a truck runs short — you set them, you approve every split</li>
+          </ul>
+          <a class="live-link" href="https://foxfield.studio/orderflow/" target="_blank" rel="noopener">Open Orderflow live ↗</a>
+          <span class="live-tag">working demo · scan the order's QR with your phone to run receiving</span>
+        </div>
+        <div class="pvis" aria-hidden="true">
+          <div class="vlabel">Receiving · confirm, then fix the misses</div>
+          <div class="of-line ok"><span class="ck">✓</span><span class="onm"><b>Coneflower</b> · ordered 36</span><span class="ovar">36 ✓</span></div>
+          <div class="of-line ok"><span class="ck">✓</span><span class="onm"><b>Hosta 'Patriot'</b> · ordered 24</span><span class="ovar">24 ✓</span></div>
+          <div class="of-line flag"><span class="ck">!</span><span class="onm"><b>Catmint</b> · ordered 24</span><span class="ovar">got 8 · short 16</span></div>
+          <div class="of-line ok"><span class="ck">✓</span><span class="onm"><b>Switchgrass</b> · ordered 40</span><span class="ovar">40 ✓</span></div>
+          <div class="of-cap">Three taps confirm the truck. One flag catches the miss the register would have carried as phantom stock all season.</div>
+        </div>
+      </div>
+
+      <!-- PATH TO END-TO-END -->
+      <div class="flow rv">
+        <div class="ftitle">The path — farm to customer, on one shared sheet</div>
+        <div class="flow-steps">
+          <div class="fstep">
+            <div class="fs-n">01</div>
+            <div class="fs-t">Digital order</div>
+            <div class="fs-d">Orderflow holds the order as the expected list — digitized once.</div>
+            <span class="fs-state live">live</span>
+          </div>
+          <div class="fstep">
+            <div class="fs-n">02</div>
+            <div class="fs-t">Farm QR</div>
+            <div class="fs-d">When the grower runs the same sheet, their QR carries the invoice and what actually shipped.</div>
+            <span class="fs-state farm">needs the grower</span>
+          </div>
+          <div class="fstep">
+            <div class="fs-n">03</div>
+            <div class="fs-t">One-tap receiving</div>
+            <div class="fs-d">Scan the cart's QR with any phone — the expected list opens; confirm in full, or tap only the lines that came up short.</div>
+            <span class="fs-state live">working demo</span>
+          </div>
+          <div class="fstep">
+            <div class="fs-n">04</div>
+            <div class="fs-t">The floor</div>
+            <div class="fs-d">The true count flows to Wayfinder and Plant Consultant — same catalog.</div>
+            <span class="fs-state live">live</span>
+          </div>
+        </div>
+        <p class="flow-note">Two gaps get caught in one scan: what the grower shipped vs. what you ordered (the QR), and what actually arrived vs. their invoice (your taps). The farm QR needs the grower on the shared sheet — but receiving still works without them, pre-filling from your order, and the QR switches on grower by grower as they join. The floor apps are live today, and scan-to-receive runs in the demo right now — hardening it for big orders and a dead-signal dock is the off-season build.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANT CONSULTANT -->
+  <section id="consultant">
+    <div class="wrap">
+      <div class="product rv" style="--pa:var(--consultant)">
+        <div class="pcopy">
+          <div class="ptag">Sell more of it · Plant Consultant</div>
+          <h2>Turn plant advice into <span class="pa">a buying channel.</span></h2>
+          <p class="pbody">A bilingual, zone-aware planner that helps a customer — or a landscape pro — build the right plant list, then reserve and buy it from you. Contractor and pro sales are high-volume and repeat; this is the tool that pulls them onto your live catalog instead of a distributor's.</p>
+          <ul class="plist">
+            <li><b>Guided planning</b> by zone, sun, and site — bilingual from the start</li>
+            <li><b>Pros reserve and buy</b> their materials directly, against real availability</li>
+            <li><b>A repeat channel</b> for the highest-value buyers you already serve</li>
+            <li>Reads the <b>same living catalog</b> — no separate list to maintain</li>
+          </ul>
+          <a class="live-link" href="https://app.foxfield.studio/" target="_blank" rel="noopener">Open Plant Consultant live ↗</a>
+          <span class="live-tag">working demo</span>
+        </div>
+        <div class="pvis" aria-hidden="true">
+          <div class="vlabel">Plan · a pro builds an order</div>
+          <div class="wf-row" style="background:rgba(98,168,160,.07);border-color:rgba(98,168,160,.18)"><span class="nm">Full-sun border · 40 ft</span><span class="qty" style="color:var(--consultant)">zone 6a</span></div>
+          <div class="wf-row" style="background:rgba(98,168,160,.07);border-color:rgba(98,168,160,.18)"><span class="nm">Coneflower <em>× 18</em></span><span class="qty" style="color:var(--consultant)">reserved</span></div>
+          <div class="wf-row" style="background:rgba(98,168,160,.07);border-color:rgba(98,168,160,.18)"><span class="nm">Catmint <em>× 12</em></span><span class="qty" style="color:var(--consultant)">reserved</span></div>
+          <div class="wf-row" style="background:rgba(98,168,160,.07);border-color:rgba(98,168,160,.18)"><span class="nm">Switchgrass <em>× 9</em></span><span class="qty" style="color:var(--consultant)">reserved</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEFENSIBILITY -->
+  <section id="spine">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">Why it holds together</div>
+        <h2>One spine, not three apps.</h2>
+      </div>
+      <div class="defend rv">
+        <p>The quiet part that makes this defensible: <strong>Orderflow's receiving generates the living catalog</strong> that Wayfinder and Plant Consultant run on. You digitize what comes off the truck once, and every tool downstream stays accurate without anyone re-typing a thing. Start with one tool; the same spine grows into all three. A larger competitor can clone a screen — they can't easily rebuild the data underneath it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUILDER -->
+  <section id="builder">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">Who built this</div>
+        <h2>Built on the floor, not in a vacuum.</h2>
+      </div>
+      <div class="builder rv">
+        <p class="lead">Foxfield comes from someone who has shipped ag-tech before and then spent four seasons inside garden centers — buying, receiving, and selling — where the product thesis came straight off the bench.</p>
+        <div class="creds">
+          <div class="cred"><span class="tg">Founded</span><span class="tx"><b>SeediQ</b> — co-founder, acquired.</span></div>
+          <div class="cred"><span class="tg">Rebuilt</span><span class="tx"><b>Greenbook</b> — turned a print business into a data-services one.</span></div>
+          <div class="cred"><span class="tg">Sold &amp; launched</span><span class="tx">Enterprise sales for <b>CropTrak</b>; US GTM for <b>Breedr</b>.</span></div>
+          <div class="cred"><span class="tg">Then the floors</span><span class="tx">Four seasons in Kansas City garden centers — perennial buying, receiving, retail.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSE / HOW IT STARTS -->
+  <section id="start">
+    <div class="wrap close">
+      <div class="rv">
+        <div class="eyebrow" style="justify-content:center">How it starts</div>
+        <h2>Small, contained, and yours to prove.</h2>
+        <p class="lead">No POS swap, no IT project, no all-or-nothing commitment. Start with the one tool that's live today, on one store, and let it earn the next one.</p>
+      </div>
+      <div class="start-grid rv">
+        <div class="start">
+          <div class="sn">01 · This season</div>
+          <div class="st"><b>Wayfinder goes live</b> on a catalog export. Immediate value, nothing to integrate.</div>
+        </div>
+        <div class="start">
+          <div class="sn">02 · Off-season</div>
+          <div class="st"><b>Orderflow, co-built</b> to your dock — receiving that beats paper, stable before spring.</div>
+        </div>
+        <div class="start">
+          <div class="sn">03 · The loop</div>
+          <div class="st"><b>Plant Consultant</b> opens the contractor channel on the same live catalog.</div>
+        </div>
+      </div>
+      <div class="cta-row rv" style="justify-content:center">
+        <a class="btn primary" href="https://foxfield.studio/wayfinder/" target="_blank" rel="noopener">See Wayfinder live ↗</a>
+        <a class="btn ghost" href="https://foxfield.studio/" target="_blank" rel="noopener">foxfield.studio</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="flogo"><svg viewBox="322.5 271.5 355.0 362.5" aria-hidden="true"><path fill-rule="evenodd" d="M 629.50,292.50 L 626.50,293.00 L 611.50,299.00 L 592.50,309.50 L 572.50,324.00 L 555.50,340.00 L 542.50,340.00 L 539.50,337.00 L 531.50,322.00 L 520.50,305.50 L 512.50,296.00 L 499.50,283.00 L 489.50,275.50 L 488.00,276.00 L 474.00,292.00 L 465.00,305.00 L 459.00,315.50 L 452.00,330.50 L 443.00,357.50 L 443.00,360.00 L 441.00,366.00 L 438.00,380.50 L 431.00,397.00 L 416.00,420.00 L 398.00,444.00 L 385.00,463.50 L 371.00,486.50 L 370.00,489.50 L 365.00,497.50 L 355.00,517.00 L 342.00,548.50 L 333.00,579.50 L 328.00,607.50 L 326.50,630.00 L 528.00,630.00 L 517.50,624.00 L 508.50,617.00 L 495.00,603.00 L 484.50,587.00 L 479.50,575.00 L 476.50,565.00 L 474.50,552.00 L 474.50,538.50 L 476.50,525.50 L 478.50,518.00 L 483.50,505.50 L 494.00,489.50 L 492.50,489.00 L 483.00,491.00 L 467.00,497.00 L 454.00,505.00 L 442.00,515.50 L 440.50,515.00 L 445.50,495.00 L 448.50,487.50 L 455.50,475.00 L 463.00,465.50 L 470.00,458.50 L 477.50,452.50 L 488.00,446.50 L 503.50,441.50 L 517.00,439.50 L 535.50,439.50 L 552.50,442.50 L 575.50,450.50 L 622.50,472.50 L 638.00,477.50 L 648.00,479.50 L 651.00,486.00 L 655.00,491.50 L 655.00,493.00 L 653.50,494.50 L 646.50,499.00 L 632.00,503.00 L 611.50,503.00 L 573.00,497.00 L 552.00,497.00 L 543.50,499.00 L 534.50,503.50 L 531.50,506.00 L 532.00,506.50 L 538.50,505.00 L 552.00,505.00 L 555.50,506.00 L 545.00,519.50 L 541.00,528.00 L 539.00,535.00 L 539.00,554.00 L 542.00,563.00 L 545.50,569.00 L 546.00,568.00 L 544.50,562.50 L 544.50,554.00 L 546.50,541.50 L 548.50,535.50 L 554.50,525.00 L 562.50,517.00 L 567.50,513.50 L 573.50,510.50 L 581.50,508.50 L 592.00,508.50 L 595.00,509.50 L 599.50,509.50 L 619.50,512.50 L 630.00,512.50 L 636.00,511.50 L 643.00,509.50 L 651.00,505.50 L 657.50,500.50 L 665.50,492.50 L 669.50,487.00 L 672.50,481.00 L 673.50,477.00 L 673.00,475.00 L 671.00,472.50 L 661.50,467.00 L 648.00,457.00 L 638.00,448.00 L 629.00,438.00 L 625.50,430.50 L 624.50,406.50 L 622.50,399.00 L 619.50,392.50 L 612.50,382.00 L 611.00,378.50 L 613.50,363.50 L 623.50,335.00 L 627.00,322.00 L 629.50,306.50 Z M 567.50,417.50 L 573.00,417.50 L 575.50,419.00 L 579.00,423.50 L 579.00,428.50 L 578.00,431.00 L 575.50,433.50 L 572.00,435.00 L 568.50,435.00 L 566.00,434.00 L 561.50,429.50 L 561.50,422.50 L 564.50,419.00 Z M 621.50,309.50 L 622.00,312.00 L 621.00,313.50 L 619.00,322.00 L 608.00,353.50 L 604.50,367.50 L 603.00,368.50 L 589.50,355.50 L 590.50,350.50 L 597.50,335.50 L 603.50,327.00 L 617.50,312.00 Z M 489.00,291.50 L 495.50,296.50 L 509.00,310.50 L 520.00,326.50 L 526.00,337.50 L 529.00,345.00 L 532.50,359.50 L 528.50,362.00 L 518.50,366.00 L 512.50,366.00 L 508.50,364.00 L 502.00,358.00 L 498.50,351.50 L 498.00,347.50 L 501.50,347.50 L 505.50,349.50 L 506.00,349.00 L 500.50,331.50 L 499.50,330.50 L 496.50,322.50 L 489.50,308.50 L 487.50,306.50 L 483.00,317.50 L 480.00,333.00 L 480.00,350.50 L 483.00,363.00 L 484.50,365.00 L 487.50,361.00 L 490.00,366.00 L 494.00,372.00 L 497.00,375.00 L 497.00,376.00 L 493.00,379.00 L 482.00,390.50 L 481.00,390.50 L 475.50,381.50 L 471.50,367.50 L 470.50,360.50 L 470.50,339.50 L 473.50,323.50 L 478.50,308.50 L 485.50,294.50 L 487.50,292.00 Z"/></svg></div>
+    <div class="fmark">Foxfield<span class="dot">.</span></div>
+    <div class="fmeta">Foxfield Studio LLC · Kansas · foxfield.studio</div>
+  </div>
+</footer>
+
+<script>
+  // gentle scroll reveal
+  (function(){
+    var els = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+    if(!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      els.forEach(function(e){e.classList.add('in');});
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}
+      });
+    },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(e){io.observe(e);});
+  })();
+</script>
+</body>
+</html>
