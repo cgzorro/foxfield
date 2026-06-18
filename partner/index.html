@@ -260,6 +260,10 @@
   .dots button:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
   .hint{position:fixed;bottom:62px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;color:var(--ink-3);opacity:.7;z-index:20;transition:opacity .5s}
   .hint.hide{opacity:0}
+  @media(max-width:760px){
+    .slide{padding:60px clamp(20px,5vw,26px) 96px}   /* clear the fixed header + bottom nav on phones */
+    .hint{display:none}                              /* keyboard hint is irrelevant on touch */
+  }
   html{color-scheme:dark}
 </style>
 </head>
