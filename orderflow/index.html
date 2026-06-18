@@ -39,31 +39,31 @@
   --radius-sm:14px;
 }
 body[data-theme="dark"]{
-  --bg:#071325;
-  --bg2:#0d1d36;
-  --bg3:#132746;
-  --card:rgba(16,35,63,.94);
-  --card-solid:#10233f;
-  --ink:#eef4ff;
-  --muted:#b7c4da;
-  --line:#29456f;
-  --line-strong:#3a5d8d;
-  --green:#f08f34;
-  --green-2:#ffab57;
-  --green-soft:rgba(240,143,52,.14);
-  --amber:#f2c27d;
-  --amber-soft:rgba(242,194,125,.14);
+  --bg:#160f08;
+  --bg2:#1d140b;
+  --bg3:#251b10;
+  --card:rgba(33,25,16,.94);
+  --card-solid:#211910;
+  --ink:#f3ebde;
+  --muted:#b7a98f;
+  --line:#3a2d1c;
+  --line-strong:#54422a;
+  --green:#e88c3a;
+  --green-2:#f6a85d;
+  --green-soft:rgba(232,140,58,.16);
+  --amber:#e0b36a;
+  --amber-soft:rgba(224,179,106,.16);
   --red:#ef9b84;
-  --red-soft:rgba(239,155,132,.14);
-  --blue:#a9bdd9;
-  --blue-soft:rgba(169,189,217,.14);
-  --field:#0b1930;
-  --fieldLine:#29456f;
-  --chip:#132746;
-  --chipBorder:#355681;
-  --shadow:0 20px 44px rgba(0,0,0,.34);
-  --shadow-strong:0 28px 60px rgba(0,0,0,.48);
-  --glow:0 0 0 1px rgba(255,255,255,.03), 0 14px 34px rgba(0,0,0,.28);
+  --red-soft:rgba(239,155,132,.16);
+  --blue:#a99c86;
+  --blue-soft:rgba(169,156,134,.16);
+  --field:#1a130b;
+  --fieldLine:#3a2d1c;
+  --chip:#241a10;
+  --chipBorder:#54422a;
+  --shadow:0 20px 44px rgba(0,0,0,.42);
+  --shadow-strong:0 28px 60px rgba(0,0,0,.55);
+  --glow:0 0 0 1px rgba(255,255,255,.03), 0 14px 34px rgba(0,0,0,.34);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -258,13 +258,13 @@ tr:hover td{background:color-mix(in srgb, var(--green-soft) 24%, var(--card-soli
 .qr-box{display:grid;gap:12px}
 .qr-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .btn-small{padding:9px 11px;font-size:12px}
-.qr-grid{display:grid;grid-template-columns:132px 1fr;gap:14px;align-items:center}
+.qr-grid{display:grid;grid-template-columns:160px 1fr;gap:14px;align-items:center}
 .qr-preview{
-  width:132px;height:132px;border-radius:18px;border:1px solid var(--line);
+  width:160px;height:160px;border-radius:18px;border:1px solid var(--line);
   background:repeating-linear-gradient(45deg, color-mix(in srgb, var(--card-solid) 88%, var(--line) 12%), color-mix(in srgb, var(--card-solid) 88%, var(--line) 12%) 10px, color-mix(in srgb, var(--card-solid) 96%, transparent) 10px, color-mix(in srgb, var(--card-solid) 96%, transparent) 20px);
   display:grid;place-items:center;overflow:hidden
 }
-.qr-preview img{display:block;width:100%;height:100%;object-fit:cover}
+.qr-preview img{display:block;width:100%;height:100%;object-fit:contain}
 .qr-url{
   font-size:12px;line-height:1.45;color:var(--muted);
   padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:color-mix(in srgb, var(--card-solid) 95%, var(--line) 5%);
@@ -508,7 +508,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
 
 /* Order-screen QR tile (boardroom scan-to-verify) */
 .order-qr{display:flex;align-items:center;gap:14px;margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card-solid)}
-.order-qr img{width:112px;height:112px;flex:none;border-radius:10px;background:#fff;padding:6px;border:1px solid var(--line)}
+.order-qr img{width:168px;height:168px;flex:none;border-radius:10px;background:#fff;padding:8px;border:1px solid var(--line);object-fit:contain}
 .order-qr-cap{display:flex;flex-direction:column;gap:4px}
 .order-qr-cap strong{font-weight:800;font-size:15px}
 @media print{ #packetPanel .panel-note{display:none !important} .order-qr{display:none !important} }
@@ -877,7 +877,7 @@ const STATUS_MAP = {
   B:'Blooming'
 };
 const EXCEPTION_TYPES = ['', 'Short ship', 'Substitution', 'Damaged', 'Wrong size', 'Wrong color', 'Partial fill'];
-const QR_ENDPOINT = 'https://api.qrserver.com/v1/create-qr-code/?size=720x720&margin=18&ecc=M&data=';
+/* QR is generated locally (inline SVG) — no external service, works offline / boardroom / dock */
 const CONDITION_TYPES = ['Pending', 'Good', 'Monitor', 'Issue'];
 
 const DEFAULT_ROWS = [
@@ -1370,11 +1370,361 @@ function renderMetrics(){
   els.metricExceptions.textContent = exceptions;
 }
 
+/* ---- inline QR encoder (offline, no network) ---- */
+/* qrcodegen — faithful port of Nayuki's reference QR Code generator (MIT).
+   Only hardcoded data: the two ECC block tables. GF/RS/alignment/BCH all computed. */
+var QRCG = (function(){
+  function assert(c){ if(!c) throw new Error("assert"); }
+
+  // ---- Reed-Solomon over GF(256), prim poly 0x11D, no lookup tables ----
+  function rsMultiply(x, y){
+    var z = 0;
+    for (var i = 7; i >= 0; i--){
+      z = (z << 1) ^ ((z >>> 7) * 0x11D);
+      z ^= ((y >>> i) & 1) * x;
+    }
+    assert((z >>> 8) === 0);
+    return z & 0xFF;
+  }
+  function rsDivisor(degree){
+    assert(degree >= 1 && degree <= 255);
+    var result = [];
+    for (var i = 0; i < degree - 1; i++) result.push(0);
+    result.push(1);
+    var root = 1;
+    for (var i = 0; i < degree; i++){
+      for (var j = 0; j < result.length; j++){
+        result[j] = rsMultiply(result[j], root);
+        if (j + 1 < result.length) result[j] ^= result[j + 1];
+      }
+      root = rsMultiply(root, 0x02);
+    }
+    return result;
+  }
+  function rsRemainder(data, divisor){
+    var result = divisor.map(function(){ return 0; });
+    data.forEach(function(b){
+      var factor = b ^ result.shift();
+      result.push(0);
+      divisor.forEach(function(coef, i){ result[i] ^= rsMultiply(coef, factor); });
+    });
+    return result;
+  }
+
+  // ---- ECC tables (the only hardcoded data) index [ecl][version], ecl: L,M,Q,H ----
+  var ECC_CODEWORDS_PER_BLOCK = [
+    [-1,7,10,15,20,26,18,20,24,30,18,20,24,26,30,22,24,28,30,28,28,28,28,30,30,26,28,30,30,30,30,30,30,30,30,30,30,30,30,30,30],
+    [-1,10,16,26,18,24,16,18,22,22,26,30,22,22,24,24,28,28,26,26,26,26,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28],
+    [-1,13,22,18,26,18,24,18,22,20,24,28,26,24,20,30,24,28,28,26,30,28,30,30,30,30,28,30,30,30,30,30,30,30,30,30,30,30,30,30,30],
+    [-1,17,28,22,16,22,28,26,26,24,28,24,28,22,24,24,30,28,28,26,28,30,24,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30]
+  ];
+  var NUM_ERROR_CORRECTION_BLOCKS = [
+    [-1,1,1,1,1,1,2,2,2,2,4,4,4,4,4,6,6,6,6,7,8,8,9,9,10,12,12,12,13,14,15,16,17,18,19,19,20,21,22,24,25],
+    [-1,1,1,1,2,2,4,4,4,5,5,5,8,9,9,10,10,11,13,14,16,17,17,18,20,21,23,25,26,28,29,31,33,35,37,38,40,43,45,47,49],
+    [-1,1,1,2,2,4,4,6,6,8,8,8,10,12,16,12,17,16,18,21,20,23,23,25,27,29,34,34,35,38,40,43,45,48,51,53,56,59,62,65,68],
+    [-1,1,1,2,4,4,4,5,6,8,8,11,11,16,16,18,16,19,21,25,25,25,34,30,32,35,37,40,42,45,48,51,54,57,60,63,66,70,74,77,81]
+  ];
+
+  function numRawDataModules(ver){
+    assert(ver >= 1 && ver <= 40);
+    var result = (16 * ver + 128) * ver + 64;
+    if (ver >= 2){
+      var numAlign = Math.floor(ver / 7) + 2;
+      result -= (25 * numAlign - 10) * numAlign - 55;
+      if (ver >= 7) result -= 36;
+    }
+    return result;
+  }
+  function numDataCodewords(ver, ecl){
+    return Math.floor(numRawDataModules(ver) / 8)
+      - ECC_CODEWORDS_PER_BLOCK[ecl][ver] * NUM_ERROR_CORRECTION_BLOCKS[ecl][ver];
+  }
+
+  // ecl ordinal -> format bits
+  var FORMAT_BITS = [1, 0, 3, 2]; // L,M,Q,H
+
+  function getAlignmentPatternPositions(ver){
+    if (ver === 1) return [];
+    var numAlign = Math.floor(ver / 7) + 2;
+    var step = (ver === 32) ? 26 : Math.ceil((ver * 4 + 4) / (numAlign * 2 - 2)) * 2;
+    var size = ver * 4 + 17;
+    var result = [6];
+    for (var pos = size - 7; result.length < numAlign; pos -= step) result.splice(1, 0, pos);
+    return result;
+  }
+
+  // ---- bit buffer ----
+  function appendBits(val, len, bb){
+    if (len < 0 || len > 31 || (val >>> len) !== 0) throw new Error("appendBits range");
+    for (var i = len - 1; i >= 0; i--) bb.push((val >>> i) & 1);
+  }
+
+  // ---- build data codewords for a single BYTE segment of utf8 bytes ----
+  function utf8Bytes(str){
+    var out = [];
+    var enc = encodeURIComponent(str); // -> %XX escapes for non-ASCII
+    for (var i = 0; i < enc.length; i++){
+      if (enc[i] === '%'){ out.push(parseInt(enc.substr(i+1,2),16)); i += 2; }
+      else out.push(enc.charCodeAt(i));
+    }
+    return out;
+  }
+
+  function makeQr(text, eclOrd){
+    var bytes = utf8Bytes(text);
+    // choose smallest version that fits a byte segment at this ecl
+    var version = -1, dataCapacityBits = 0, dataUsedBits = 0;
+    for (var v = 1; v <= 40; v++){
+      var ccbits = (v <= 9) ? 8 : 16; // byte-mode char count bits
+      var used = 4 + ccbits + 8 * bytes.length;
+      var cap = numDataCodewords(v, eclOrd) * 8;
+      if (used <= cap){ version = v; dataCapacityBits = cap; dataUsedBits = used; break; }
+    }
+    if (version === -1) throw new Error("Data too long for QR (byte mode)");
+
+    // bit stream
+    var bb = [];
+    appendBits(0x4, 4, bb); // byte mode
+    appendBits(bytes.length, (version <= 9) ? 8 : 16, bb);
+    for (var i = 0; i < bytes.length; i++) appendBits(bytes[i], 8, bb);
+    // terminator + bit/byte padding
+    appendBits(0, Math.min(4, dataCapacityBits - bb.length), bb);
+    appendBits(0, (8 - bb.length % 8) % 8, bb);
+    for (var pad = 0xEC; bb.length < dataCapacityBits; pad ^= 0xEC ^ 0x11)
+      appendBits(pad, 8, bb);
+    // pack to codewords
+    var dataCodewords = [];
+    for (var i = 0; i < bb.length; i += 8){
+      var b = 0;
+      for (var j = 0; j < 8; j++) b = (b << 1) | bb[i + j];
+      dataCodewords.push(b);
+    }
+
+    // interleave with EC
+    var numBlocks = NUM_ERROR_CORRECTION_BLOCKS[eclOrd][version];
+    var blockEccLen = ECC_CODEWORDS_PER_BLOCK[eclOrd][version];
+    var rawCodewords = Math.floor(numRawDataModules(version) / 8);
+    var numShortBlocks = numBlocks - rawCodewords % numBlocks;
+    var shortBlockLen = Math.floor(rawCodewords / numBlocks);
+
+    var blocks = [];
+    var divisor = rsDivisor(blockEccLen);
+    for (var i = 0, k = 0; i < numBlocks; i++){
+      var datLen = shortBlockLen - blockEccLen + (i < numShortBlocks ? 0 : 1);
+      var dat = dataCodewords.slice(k, k + datLen);
+      k += datLen;
+      var ecc = rsRemainder(dat, divisor);
+      if (i < numShortBlocks) dat.push(0);
+      blocks.push(dat.concat(ecc));
+    }
+    var result = [];
+    for (var i = 0; i < blocks[0].length; i++){
+      for (var j = 0; j < blocks.length; j++){
+        if (i !== shortBlockLen - blockEccLen || j >= numShortBlocks)
+          result.push(blocks[j][i]);
+      }
+    }
+    // codewords array length check
+    assert(result.length === rawCodewords);
+
+    return drawQr(version, eclOrd, result);
+  }
+
+  function drawQr(version, eclOrd, allCodewords){
+    var size = version * 4 + 17;
+    var modules = [];
+    var isFunction = [];
+    for (var i = 0; i < size; i++){ modules.push(new Array(size).fill(false)); isFunction.push(new Array(size).fill(false)); }
+
+    function setFunc(x, y, dark){ modules[y][x] = dark; isFunction[y][x] = true; }
+    function drawFinder(x, y){
+      for (var dy = -4; dy <= 4; dy++){
+        for (var dx = -4; dx <= 4; dx++){
+          var dist = Math.max(Math.abs(dx), Math.abs(dy));
+          var xx = x + dx, yy = y + dy;
+          if (0 <= xx && xx < size && 0 <= yy && yy < size)
+            setFunc(xx, yy, dist !== 2 && dist !== 4);
+        }
+      }
+    }
+    function drawAlign(x, y){
+      for (var dy = -2; dy <= 2; dy++)
+        for (var dx = -2; dx <= 2; dx++)
+          setFunc(x + dx, y + dy, Math.max(Math.abs(dx), Math.abs(dy)) !== 1);
+    }
+
+    // timing
+    for (var i = 0; i < size; i++){ setFunc(6, i, i % 2 === 0); setFunc(i, 6, i % 2 === 0); }
+    // finders
+    drawFinder(3, 3); drawFinder(size - 4, 3); drawFinder(3, size - 4);
+    // alignment
+    var alignPos = getAlignmentPatternPositions(version);
+    var n = alignPos.length;
+    for (var i = 0; i < n; i++){
+      for (var j = 0; j < n; j++){
+        if (!((i === 0 && j === 0) || (i === 0 && j === n - 1) || (i === n - 1 && j === 0)))
+          drawAlign(alignPos[i], alignPos[j]);
+      }
+    }
+    // reserve format & version areas (drawn after mask known)
+    function reserveFormat(){
+      for (var i = 0; i < 9; i++){ setFunc(8, i, false); setFunc(i, 8, false); }
+      for (var i = 0; i < 8; i++){ setFunc(size - 1 - i, 8, false); setFunc(8, size - 1 - i, false); }
+      setFunc(8, size - 8, true); // dark module
+    }
+    reserveFormat();
+    if (version >= 7){
+      var rem = version;
+      for (var i = 0; i < 12; i++) rem = (rem << 1) ^ ((rem >>> 11) * 0x1F25);
+      var bits = version << 12 | rem; // 18 bits
+      for (var i = 0; i < 18; i++){
+        var bit = (bits >>> i) & 1;
+        var a = size - 11 + i % 3, b = Math.floor(i / 3);
+        setFunc(a, b, bit === 1); setFunc(b, a, bit === 1);
+      }
+    }
+
+    // draw data with zigzag
+    var dataLen = allCodewords.length;
+    var idx = 0;
+    for (var right = size - 1; right >= 1; right -= 2){
+      if (right === 6) right = 5;
+      for (var vert = 0; vert < size; vert++){
+        for (var jj = 0; jj < 2; jj++){
+          var x = right - jj;
+          var upward = ((right + 1) & 2) === 0;
+          var y = upward ? size - 1 - vert : vert;
+          if (!isFunction[y][x] && idx < dataLen * 8){
+            modules[y][x] = ((allCodewords[idx >>> 3] >>> (7 - (idx & 7))) & 1) !== 0;
+            idx++;
+          }
+        }
+      }
+    }
+
+    // try all masks, pick lowest penalty
+    function applyMask(mask){
+      for (var y = 0; y < size; y++){
+        for (var x = 0; x < size; x++){
+          if (isFunction[y][x]) continue;
+          var invert;
+          switch (mask){
+            case 0: invert = (x + y) % 2 === 0; break;
+            case 1: invert = y % 2 === 0; break;
+            case 2: invert = x % 3 === 0; break;
+            case 3: invert = (x + y) % 3 === 0; break;
+            case 4: invert = (Math.floor(x / 3) + Math.floor(y / 2)) % 2 === 0; break;
+            case 5: invert = x * y % 2 + x * y % 3 === 0; break;
+            case 6: invert = (x * y % 2 + x * y % 3) % 2 === 0; break;
+            case 7: invert = ((x + y) % 2 + x * y % 3) % 2 === 0; break;
+          }
+          if (invert) modules[y][x] = !modules[y][x];
+        }
+      }
+    }
+    function drawFormat(mask){
+      var data = FORMAT_BITS[eclOrd] << 3 | mask;
+      var rem = data;
+      for (var i = 0; i < 10; i++) rem = (rem << 1) ^ ((rem >>> 9) * 0x537);
+      var bits = (data << 10 | rem) ^ 0x5412;
+      // first copy
+      for (var i = 0; i <= 5; i++) setFunc(8, i, ((bits >>> i) & 1) !== 0);
+      setFunc(8, 7, ((bits >>> 6) & 1) !== 0);
+      setFunc(8, 8, ((bits >>> 7) & 1) !== 0);
+      setFunc(7, 8, ((bits >>> 8) & 1) !== 0);
+      for (var i = 9; i < 15; i++) setFunc(14 - i, 8, ((bits >>> i) & 1) !== 0);
+      // second copy
+      for (var i = 0; i < 8; i++) setFunc(size - 1 - i, 8, ((bits >>> i) & 1) !== 0);
+      for (var i = 8; i < 15; i++) setFunc(8, size - 15 + i, ((bits >>> i) & 1) !== 0);
+      setFunc(8, size - 8, true);
+    }
+    function penalty(){
+      var p = 0, dark = 0;
+      // rule 1: runs in rows/cols
+      for (var y = 0; y < size; y++){
+        var runColor = false, runX = 0;
+        for (var x = 0; x < size; x++){
+          if (modules[y][x] === runColor){ runX++; if (runX === 5) p += 3; else if (runX > 5) p++; }
+          else { runColor = modules[y][x]; runX = 1; }
+          if (modules[y][x]) dark++;
+        }
+      }
+      for (var x = 0; x < size; x++){
+        var runColor = false, runY = 0;
+        for (var y = 0; y < size; y++){
+          if (modules[y][x] === runColor){ runY++; if (runY === 5) p += 3; else if (runY > 5) p++; }
+          else { runColor = modules[y][x]; runY = 1; }
+        }
+      }
+      // rule 2: 2x2 blocks
+      for (var y = 0; y < size - 1; y++)
+        for (var x = 0; x < size - 1; x++){
+          var c = modules[y][x];
+          if (c === modules[y][x+1] && c === modules[y+1][x] && c === modules[y+1][x+1]) p += 3;
+        }
+      // rule 3: finder-like patterns 1:1:3:1:1 with 4 light
+      var pat = [true,false,true,true,true,false,true];
+      function check(get){
+        for (var i = 0; i + 7 <= size; i++){
+          var ok = true; for (var k = 0; k < 7; k++) if (get(i+k) !== pat[k]) { ok = false; break; }
+          if (ok){
+            var beforeLight = true; for (var k = i-4; k < i; k++) if (k < 0 || get(k)) { beforeLight = false; break; }
+            var afterLight = true; for (var k = i+7; k < i+11; k++) if (k >= size || get(k)) { afterLight = false; break; }
+            if (beforeLight || afterLight) p += 40;
+          }
+        }
+      }
+      for (var y = 0; y < size; y++) check(function(i){ return modules[y][i]; });
+      for (var x = 0; x < size; x++) check(function(i){ return modules[i][x]; });
+      // rule 4: dark ratio
+      var total = size * size;
+      var k = Math.ceil(Math.abs(dark * 20 - total * 10) / total) - 1;
+      p += k * 10;
+      return p;
+    }
+
+    var bestMask = 0, minPenalty = Infinity, bestSnapshot = null;
+    var saved = modules.map(function(r){ return r.slice(); });
+    for (var mask = 0; mask < 8; mask++){
+      // restore data layer
+      modules = saved.map(function(r){ return r.slice(); });
+      applyMask(mask);
+      drawFormat(mask);
+      var pen = penalty();
+      if (pen < minPenalty){ minPenalty = pen; bestMask = mask; bestSnapshot = modules.map(function(r){ return r.slice(); }); }
+    }
+    modules = bestSnapshot;
+    return { size: size, modules: modules, version: version, mask: bestMask };
+  }
+
+  function svg(qr, border, dark, light){
+    border = border == null ? 4 : border;
+    dark = dark || '#1c130a'; light = light || '#ffffff';
+    var dim = qr.size + border * 2;
+    var parts = [];
+    for (var y = 0; y < qr.size; y++)
+      for (var x = 0; x < qr.size; x++)
+        if (qr.modules[y][x]) parts.push("M" + (x + border) + "," + (y + border) + "h1v1h-1z");
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + dim + ' ' + dim +
+      '" width="' + dim + '" height="' + dim + '" shape-rendering="crispEdges">' +
+      '<rect width="' + dim + '" height="' + dim + '" fill="' + light + '"/>' +
+      '<path d="' + parts.join('') + '" fill="' + dark + '"/></svg>';
+  }
+  function dataUri(text, eclOrd, border, dark, light){
+    var qr = makeQr(text, eclOrd == null ? 1 : eclOrd);
+    var s = svg(qr, border, dark, light);
+    return { uri: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s), qr: qr };
+  }
+
+  return { makeQr: makeQr, svg: svg, dataUri: dataUri, numDataCodewords: numDataCodewords, numRawDataModules: numRawDataModules };
+})();
+
 function buildQrValue(){
   return receiveBaseUrl() + '#recv=' + b64urlEncode(JSON.stringify(buildReceiveManifest()));
 }
 function qrImageUrl(){
-  return QR_ENDPOINT + encodeURIComponent(buildQrValue());
+  try { return QRCG.dataUri(buildQrValue(), 1, 4, '#15100a', '#ffffff').uri; }  /* ecl M, 4-module quiet zone */
+  catch(e){ console.warn('QR encode failed', e); return ''; }
 }
 function renderQr(){
   if(!els.qrPreview || !els.qrValueLabel) return;
