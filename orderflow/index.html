@@ -1510,6 +1510,19 @@ function manifestFromValue(value){
     return JSON.parse(b64urlDecode(h));
   }catch(e){ return null; }
 }
+function scrollToReceiving(){
+  const banner = document.getElementById('receiveBanner');
+  const panel = document.getElementById('receivingPanel');
+  const target = (banner && !banner.hidden) ? banner : panel;
+  if (!target) return;
+  requestAnimationFrame(()=>{
+    const nav = document.querySelector('.nav');
+    const navH = nav ? nav.getBoundingClientRect().height : 0;
+    const y = target.getBoundingClientRect().top + window.pageYOffset - navH - 12;
+    try { window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' }); }
+    catch(e) { window.scrollTo(0, Math.max(0, y)); }
+  });
+}
 function receiveFromManifest(manifest){
   const n = applyReceiveManifest(manifest, true);
   if (!n) return false;
@@ -1517,6 +1530,7 @@ function receiveFromManifest(manifest){
   renderAll();
   activatePanel('receivingPanel');
   showReceiveBanner(manifest, n);
+  scrollToReceiving();
   return true;
 }
 function loadReceiveFromUrl(){
