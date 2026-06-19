@@ -7,6 +7,14 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Foxfield Studio — Suburban Lawn & Garden Signature-Client Proposal</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NFMZDY1SL0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NFMZDY1SL0');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Archivo:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -264,6 +272,33 @@
     .slide{padding:60px clamp(20px,5vw,26px) 96px}   /* clear the fixed header + bottom nav on phones */
     .hint{display:none}                              /* keyboard hint is irrelevant on touch */
   }
+  /* pilot scorecard slide */
+  .sc-deal{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:1.5rem;background:var(--soil-2)}
+  .sc-deal .half{padding:1rem 1.25rem}
+  .sc-deal .half + .half{border-left:1px solid var(--line-soft)}
+  .sc-deal .dh{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:.55em}
+  .sc-deal .dh::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+  .sc-deal .half.you .dh{color:var(--amber)}
+  .sc-deal .half.sub .dh{color:var(--wayfinder)}
+  .sc-deal .dv{font-size:.95rem;color:var(--ink);line-height:1.5}
+  .sc-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:2.4rem;margin-top:1.6rem}
+  .sc-bucket .bh{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.15rem;display:inline-flex;align-items:center;gap:.55em;padding:.34rem .85rem;border:1px solid var(--line-soft);border-radius:999px}
+  .sc-bucket.auto .bh{color:var(--amber)}
+  .sc-bucket.team .bh{color:var(--consultant)}
+  .sc-bucket ul{list-style:none;display:grid;gap:1rem}
+  .sc-metric{position:relative;padding-left:1.2rem}
+  .sc-metric::before{content:"";position:absolute;left:0;top:.5em;width:7px;height:7px;border-radius:50%;background:var(--mk);opacity:.9}
+  .sc-bucket.auto .sc-metric{--mk:var(--amber)}
+  .sc-bucket.team .sc-metric{--mk:var(--consultant)}
+  .sc-metric .mn{color:var(--ink);font-size:1rem;font-weight:600;line-height:1.35}
+  .sc-metric .ms{color:var(--ink-3);font-size:.86rem;line-height:1.45;margin-top:.15rem}
+  .sc-cadence{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.9rem;padding-top:1.1rem;border-top:1px solid var(--line-soft)}
+  .sc-legend{display:flex;flex-wrap:wrap;align-items:center;gap:1.1rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+  .sc-legend .lg{display:inline-flex;align-items:center;gap:.45em;color:var(--ink-2)}
+  .sc-legend .lg i{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .sc-go{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--wayfinder);display:inline-flex;align-items:center;gap:.5em}
+  .sc-go b{color:var(--amber);font-weight:500}
+  @media(max-width:760px){.sc-deal{grid-template-columns:1fr}.sc-deal .half + .half{border-left:0;border-top:1px solid var(--line-soft)}.sc-grid{grid-template-columns:1fr;gap:1.5rem}}
   html{color-scheme:dark}
 </style>
 </head>
@@ -328,7 +363,7 @@
       <div class="suite">
         <div class="pc" style="--pc-accent:var(--wayfinder)">
           <div class="pname">Wayfinder</div>
-          <div class="pwhat">Plant browser, store map, and customer kiosk. Search → select → go, without interrupting a consultative sale.</div>
+          <div class="pwhat">Plant browser, store map, and in-store finder. Search → select → go, without interrupting a consultative sale.</div>
           <span class="ptag">Ship-ready · runs on your catalog export</span>
           <a class="plink" href="https://foxfield.studio/wayfinder/" target="_blank" rel="noopener">Open Wayfinder live ↗</a>
         </div>
@@ -449,7 +484,7 @@
           <div class="cap">Wayfinder</div>
           <div class="price">$250<small>/ month · founder</small></div>
           <div class="std">standard <s>$400</s></div>
-          <div class="inc">Plant browser, kiosk &amp; finder — live at Lenexa.</div>
+          <div class="inc">Plant browser &amp; in-store finder — live at Lenexa.</div>
         </div>
         <div class="step s2" style="--st:var(--orderflow)">
           <span class="when">Off-season · Orderflow pilot</span>
@@ -526,6 +561,55 @@
           <div class="ct">A real agreement</div>
           <p>All of it in writing before a dollar moves — IP, data, pricing, exclusivity, and the employee/vendor line. Not a handshake; a signed agreement.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10b — PILOT SCORECARD -->
+  <section class="slide" id="s-scorecard">
+    <div class="slide-inner">
+      <div class="eyebrow">The pilot scorecard</div>
+      <h2>What “working” looks like</h2>
+      <p class="lead">Six measures, set together at kickoff — tested once both sides bring their half. Hit the marks we set, and Orderflow is go.</p>
+
+      <div class="sc-deal">
+        <div class="half you">
+          <div class="dh">You bring</div>
+          <div class="dv">Working product · ready-to-post videos</div>
+        </div>
+        <div class="half sub">
+          <div class="dh">Suburban brings</div>
+          <div class="dv">Loyalty email · social · signage + QR · staff referrals</div>
+        </div>
+      </div>
+
+      <div class="sc-grid">
+        <div class="sc-bucket auto">
+          <div class="bh">Counted automatically · GA4</div>
+          <ul>
+            <li class="sc-metric"><div class="mn">Searches per week</div><div class="ms">Climbs and holds past the novelty spike.</div></li>
+            <li class="sc-metric"><div class="mn">Top searched plants</div><div class="ms">A live demand signal for stocking.</div></li>
+            <li class="sc-metric"><div class="mn">No-result searches</div><div class="ms">The gap list — what to carry or rename.</div></li>
+            <li class="sc-metric"><div class="mn">In-store sessions</div><div class="ms">Started in-store, scanned from signage.</div></li>
+          </ul>
+        </div>
+        <div class="sc-bucket team">
+          <div class="bh">Your team reports · weekly</div>
+          <ul>
+            <li class="sc-metric"><div class="mn">“Where is it?” asks</div><div class="ms">Measured vs. a baseline week. Fewer = working.</div></li>
+            <li class="sc-metric"><div class="mn">Staff thumbs-up</div><div class="ms">Would the floor team keep it?</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sc-cadence">
+        <div class="sc-legend">
+          <span class="lg"><i style="background:var(--wayfinder)"></i>on target</span>
+          <span class="lg"><i style="background:var(--amber)"></i>trending</span>
+          <span class="lg"><i style="background:var(--orderflow)"></i>off target</span>
+          <span>· checked at 30 / 60 / 90 days</span>
+        </div>
+        <div class="sc-go">Hits the marks → <b>Orderflow</b> is go</div>
       </div>
     </div>
   </section>
