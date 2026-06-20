@@ -10,7 +10,16 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-NFMZDY1SL0');
+  (function(){
+    var qp; try{ qp = new URLSearchParams(location.search); }catch(e){ qp = null; }
+    var fromQr = /[#&]recv=/.test(location.hash || '');
+    window.FX_SOURCE = fromQr ? 'qr_receive' : ((qp && qp.get('source')) || 'direct');
+  })();
+  gtag('config', 'G-NFMZDY1SL0', { session_source: window.FX_SOURCE });
+  window.fxTrack = function(name, params){
+    try{ gtag('event', name, Object.assign({ session_source: window.FX_SOURCE }, params || {})); }catch(e){}
+  };
+  if (window.FX_SOURCE === 'qr_receive'){ window.fxTrack('qr_receive_open'); }
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2163,6 +2172,34 @@ loadReceiveFromUrl();
   if(en)en.addEventListener('click',function(){apply('en');});
   if(es)es.addEventListener('click',function(){apply('es');});
   apply(saved);
+})();
+</script>
+<script>
+/* Foxfield activity tracking — emits events via fxTrack() (defined in <head>); wraps, never alters, app logic */
+(function(){
+  if (typeof window.fxTrack !== 'function') return;
+  try{
+    if (typeof activatePanel === 'function'){
+      var _ap = activatePanel;
+      activatePanel = function(id){ window.fxTrack('view_panel', { panel: id }); return _ap.apply(this, arguments); };
+    }
+  }catch(e){}
+  try{
+    if (typeof receiveFromManifest === 'function'){
+      var _rfm = receiveFromManifest;
+      receiveFromManifest = function(manifest){
+        var n = (manifest && Array.isArray(manifest.L)) ? manifest.L.length : 0;
+        window.fxTrack('receive_loaded', { items: n });
+        return _rfm.apply(this, arguments);
+      };
+    }
+  }catch(e){}
+  try{
+    if (typeof Scan === 'object' && Scan && typeof Scan.open === 'function'){
+      var _so = Scan.open;
+      Scan.open = function(){ window.fxTrack('scan_open'); return _so.apply(this, arguments); };
+    }
+  }catch(e){}
 })();
 </script>
 </body>
