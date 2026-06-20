@@ -7,6 +7,21 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Foxfield Studio — Software fit for the floor</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NFMZDY1SL0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  (function(){
+    var qp; try{ qp = new URLSearchParams(location.search); }catch(e){ qp = null; }
+    window.FX_SOURCE = (qp && qp.get('source')) || 'direct';
+  })();
+  gtag('config', 'G-NFMZDY1SL0', { session_source: window.FX_SOURCE });
+  window.fxTrack = function(name, params){
+    try{ gtag('event', name, Object.assign({ session_source: window.FX_SOURCE }, params || {})); }catch(e){}
+  };
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Archivo:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -508,6 +523,26 @@
     },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
     els.forEach(function(e){io.observe(e);});
   })();
+</script>
+<script>
+/* Foxfield — CTA click-through tracking (events via fxTrack() from <head>) */
+(function(){
+  if (typeof window.fxTrack !== 'function') return;
+  document.addEventListener('click', function(ev){
+    var t = ev.target;
+    var a = (t && t.closest) ? t.closest('a[href]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    var cta = null;
+    if (/\/wayfinder\//.test(href)) cta = 'wayfinder';
+    else if (/\/orderflow\//.test(href)) cta = 'orderflow';
+    else if (/app\.foxfield\.studio/.test(href)) cta = 'plant_consultant';
+    else if (/^https?:\/\/(www\.)?foxfield\.studio\/?($|[?#])/.test(href)) cta = 'home';
+    else if (/linkedin\.com/i.test(href)) cta = 'linkedin';
+    else if (/^mailto:/i.test(href)) cta = 'email';
+    if (cta) window.fxTrack('cta_click', { cta: cta, link_url: href });
+  }, true);
+})();
 </script>
 </body>
 </html>
