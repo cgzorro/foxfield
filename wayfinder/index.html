@@ -5342,6 +5342,16 @@ function renderDefinitions() {
         applyFilters();
         applyFinderFilters();
         applyKioskFilters();
+        try{
+          window.fxResolveSku = function(sku){
+            var hits = findPlantsBySku(sku);
+            if(!hits || !hits.length) return null;
+            var p = hits[0];
+            return { name: p.name||"", img: imageFor(p)||"", size: p.size||"", price: p.price||"" };
+          };
+          window.fxCatalogReady = true;
+          if (typeof window.fxHydrateList === "function") window.fxHydrateList();
+        }catch(e){}
       } catch (err) {
         els.summaryBar.innerHTML = `<span class="pill">Failed to load plants</span>`;
         els.results.innerHTML = `<div class="empty">Could not load <code>plants.json</code>. ${err.message}</div>`;
@@ -5516,6 +5526,14 @@ function renderDefinitions() {
   #fxQrWrap img{background:#fff;padding:10px;border-radius:12px;width:200px;height:200px}
   #fxQrWrap .fx-qr-cap{margin-top:8px;font-size:12px;opacity:.7}
   #fxListPanel .fx-empty{opacity:.7;font-size:14px;padding:14px 0}
+  #fxListPanel .fx-saved{margin-top:18px;border-top:1px solid rgba(255,255,255,.12);padding-top:14px}
+  #fxListPanel .fx-saved-h{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;opacity:.6;margin-bottom:8px}
+  #fxListPanel .fx-saved-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+  #fxListPanel .fx-saved-main{flex:1;min-width:0}
+  #fxListPanel .fx-saved-name{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #fxListPanel .fx-saved-meta{font-size:12px;opacity:.6}
+  #fxListPanel .fx-saved-open{background:rgba(123,208,95,.18);border:1px solid rgba(123,208,95,.45);color:#cfe8bb;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:700;cursor:pointer;flex:none}
+  #fxListPanel .fx-saved-del{background:none;border:none;color:#ef9a9a;cursor:pointer;font-size:13px;font-weight:600;flex:none}
 </style>
 <button id="fxListFab" type="button" aria-label="My plant list">My List <span class="fx-count">0</span></button>
 <div id="fxListOverlay"><div id="fxListPanel" role="dialog" aria-modal="true"></div></div>
@@ -5524,12 +5542,33 @@ function renderDefinitions() {
   try{
     var KEY="foxfield-wf-list", list=[];
     try{ list=JSON.parse(localStorage.getItem(KEY)||"[]")||[]; }catch(e){ list=[]; }
+    var SKEY="foxfield-wf-saved", saved=[];
+    try{ saved=JSON.parse(localStorage.getItem(SKEY)||"[]")||[]; }catch(e){ saved=[]; }
     var fab=document.getElementById("fxListFab"), overlay=document.getElementById("fxListOverlay"), panel=document.getElementById("fxListPanel");
     if(!fab||!overlay||!panel) return;
     function save(){ try{ localStorage.setItem(KEY,JSON.stringify(list)); }catch(e){} }
     function count(){ return list.reduce(function(n,i){return n+(i.qty||1);},0); }
     function syncFab(){ var c=fab.querySelector(".fx-count"); if(c) c.textContent=count(); }
     function keyOf(i){ return i.sku||i.name||""; }
+    function hydrate(){
+      if(typeof window.fxResolveSku!=="function") return false;
+      var changed=false;
+      list.forEach(function(it){
+        if(!it.sku) return;
+        if(it.name && it.name!==it.sku && it.img) return;
+        var r=window.fxResolveSku(it.sku);
+        if(r){
+          if(r.name) it.name=r.name;
+          if(r.img) it.img=r.img;
+          if(r.size) it.size=r.size;
+          if(r.price) it.price=r.price;
+          changed=true;
+        }
+      });
+      if(changed){ save(); syncFab(); if(overlay.classList.contains("open")) renderPanel(); }
+      return changed;
+    }
+    window.fxHydrateList=hydrate;
     function payload(){ return list.map(function(i){return (i.sku||"")+"."+(i.qty||1);}).filter(function(s){return s.charAt(0)!=="."}).join("_"); }
     function listUrl(){ return location.origin+location.pathname+"?list="+encodeURIComponent(payload()); }
     var toast;
@@ -5545,9 +5584,32 @@ function renderDefinitions() {
     }
     function remove(k){ list=list.filter(function(i){return keyOf(i)!==k;}); save(); syncFab(); renderPanel(); }
     function clearAll(){ list=[]; save(); syncFab(); renderPanel(); }
+    function saveSavedStore(){ try{ localStorage.setItem(SKEY,JSON.stringify(saved)); }catch(e){} }
+    function saveCurrentAs(){
+      if(!list.length){ flash("List is empty"); return; }
+      var nm=null; try{ nm=window.prompt("Name this list",""); }catch(e){ nm=""; }
+      if(nm===null) return; nm=String(nm).trim(); if(!nm) nm="My list";
+      saved.unshift({ id:"l"+Date.now().toString(36)+Math.random().toString(36).slice(2,6), name:nm, items:JSON.parse(JSON.stringify(list)), at:Date.now() });
+      saveSavedStore(); flash("Saved: "+nm); renderPanel();
+    }
+    function loadList(id){
+      var sv=null,i; for(i=0;i<saved.length;i++){ if(String(saved[i].id)===String(id)){ sv=saved[i]; break; } }
+      if(!sv) return; list=JSON.parse(JSON.stringify(sv.items||[])); save(); syncFab(); renderPanel(); flash("Opened: "+(sv.name||"list"));
+    }
+    function deleteSaved(id){ saved=saved.filter(function(sv){ return String(sv.id)!==String(id); }); saveSavedStore(); renderPanel(); }
+    function savedListsHtml(){
+      if(!saved.length) return "";
+      var rows=saved.map(function(sv){
+        var c=(sv.items||[]).reduce(function(n,i){return n+(i.qty||1);},0);
+        var nm=String(sv.name||"List").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+        var id=String(sv.id).replace(/"/g,"&quot;");
+        return '<div class="fx-saved-row"><div class="fx-saved-main"><div class="fx-saved-name">'+nm+'</div><div class="fx-saved-meta">'+c+" plant"+(c===1?"":"s")+'</div></div><button type="button" class="fx-saved-open" data-id="'+id+'">Open</button><button type="button" class="fx-saved-del" data-id="'+id+'">Delete</button></div>';
+      }).join("");
+      return '<div class="fx-saved"><div class="fx-saved-h">Saved lists</div>'+rows+'</div>';
+    }
     function renderPanel(){
       if(!list.length){
-        panel.innerHTML='<h2>My List</h2><p class="fx-sub">Plants you save show up here.</p><div class="fx-empty">Your list is empty \u2014 tap \u201cAdd to list\u201d on any plant.</div><div class="fx-actions"><button type="button" class="fx-close-btn">Close</button></div>';
+        panel.innerHTML='<h2>My List</h2><p class="fx-sub">Plants you save show up here.</p><div class="fx-empty">Your list is empty \u2014 tap \u201cAdd to list\u201d on any plant.</div>'+savedListsHtml()+'<div class="fx-actions"><button type="button" class="fx-close-btn">Close</button></div>';
         return;
       }
       var items=list.map(function(i){
@@ -5558,7 +5620,7 @@ function renderDefinitions() {
       }).join("");
       panel.innerHTML='<h2>My List</h2><p class="fx-sub">Show this at the counter, print it, or start a plan.</p>'+items+
         '<div id="fxQrWrap"><img alt="Scan to open this list"><div class="fx-qr-cap">Scan with a phone to open the list \u2014 staff can scan to pull it</div></div>'+
-        '<div class="fx-actions"><button type="button" class="fx-qr-btn fx-primary">Show QR</button><button type="button" class="fx-print-btn">Print</button><button type="button" class="fx-clear-btn">Clear</button><button type="button" class="fx-close-btn">Close</button></div>';
+        '<div class="fx-actions"><button type="button" class="fx-qr-btn fx-primary">Show QR</button><button type="button" class="fx-print-btn">Print</button><button type="button" class="fx-save-btn">Save list</button><button type="button" class="fx-clear-btn">Clear</button><button type="button" class="fx-close-btn">Close</button></div>'+savedListsHtml();
     }
     function openPanel(){ renderPanel(); overlay.classList.add("open"); }
     function closePanel(){ overlay.classList.remove("open"); }
@@ -5580,6 +5642,9 @@ function renderDefinitions() {
       else if(t.classList.contains("fx-step")){ var sk=t.getAttribute("data-key"), sd=t.classList.contains("fx-inc")?1:-1, si, sit=null; for(si=0;si<list.length;si++){ if(keyOf(list[si])===sk){ sit=list[si]; break; } } if(sit){ sit.qty=Math.max(1,(sit.qty||1)+sd); save(); syncFab(); var qn=t.parentNode&&t.parentNode.querySelector(".fx-qn"); if(qn) qn.textContent=sit.qty; var qw=document.getElementById("fxQrWrap"); if(qw&&qw.classList.contains("show")){ var qim=qw.querySelector("img"); if(qim) qim.src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data="+encodeURIComponent(listUrl()); } } }
       else if(t.classList.contains("fx-clear-btn")) clearAll();
       else if(t.classList.contains("fx-print-btn")) printList();
+      else if(t.classList.contains("fx-save-btn")) saveCurrentAs();
+      else if(t.classList.contains("fx-saved-open")) loadList(t.getAttribute("data-id"));
+      else if(t.classList.contains("fx-saved-del")) deleteSaved(t.getAttribute("data-id"));
       else if(t.classList.contains("fx-qr-btn")){ var w=document.getElementById("fxQrWrap"); if(w){ var im=w.querySelector("img"); if(im) im.src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data="+encodeURIComponent(listUrl()); w.classList.toggle("show"); } }
     });
     try{
@@ -5592,6 +5657,7 @@ function renderDefinitions() {
       }
     }catch(e){}
     syncFab();
+    hydrate();
   }catch(err){}
 })();
 </script>
