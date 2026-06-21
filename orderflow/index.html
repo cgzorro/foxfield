@@ -484,7 +484,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
 .print-receive{display:none}
 @media print{
   #qrPanel{display:none !important}
-  .recv-actions,.recv-banner,.scan-modal{display:none !important}
+  .recv-actions,.recv-banner,.scan-modal,.recv-verify-actions{display:none !important}
   .print-receive{display:flex !important;align-items:center;justify-content:space-between;gap:24px;border:1px solid #c9c9c9;border-radius:8px;padding:16px 20px;margin:0 0 16px}
   .print-receive-meta div{margin:3px 0;font-size:13px;color:#000}
   .print-receive-meta .prl{display:inline-block;min-width:84px;color:#555;text-transform:uppercase;font-size:10px;letter-spacing:.06em;margin-right:6px}
@@ -516,7 +516,17 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
 .recv-exc-f{display:flex;flex-direction:column;gap:4px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
 .recv-exc-f select,.recv-exc-f input{font-size:14px;text-transform:none;letter-spacing:0}
 .recv-exc-notes{flex:1;min-width:160px}
+.recv-verify{margin-top:18px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card-solid);padding:16px}
+.recv-verify-sum{display:flex;flex-wrap:wrap;gap:16px 28px;margin-bottom:14px}
+.recv-verify .rv-stat{display:flex;flex-direction:column;gap:3px}
+.recv-verify .rv-k{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.recv-verify .rv-stat b{font-size:20px;font-weight:800}
+.recv-verify .rv-warn{color:var(--amber)}
+.recv-verify-actions{display:flex;gap:10px;flex-wrap:wrap}
+.recv-verify-done{margin-top:12px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--ok-soft);border:1px solid var(--ok);color:var(--ink);font-size:14px;font-weight:700}
 @media(max-width:560px){
+  .recv-verify-actions{flex-direction:column}
+  .recv-verify-actions .btn-primary,.recv-verify-actions .btn-secondary{width:100%}
   .recv-quick{width:100%;margin-left:0}
   .recv-quick .rq{flex:1}
   .recv-line-exc{flex-direction:column}
@@ -792,6 +802,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
       </div>
     </div>
     <div id="receivingBody" class="recv-list"></div>
+    <div class="recv-verify" id="recvVerify" hidden></div>
   </section>
 
   <section class="card panel" id="schemaPanel">
@@ -1299,9 +1310,14 @@ function refreshRecvLine(row){
   const card = els.receivingBody.querySelector('.recv-line[data-id="' + row.line_id + '"]');
   if (!card) return;
   const st = recvPill(row);
-  card.classList.toggle('is-exc', !st.inFull);
+  const inp = card.querySelector('input[data-field="received_qty"]');
+  const editing = inp && document.activeElement === inp;
+  /* While the quantity field is being typed in, keep the card height stable. Revealing the
+     exception panel mid-keystroke reflows the page under the mobile keyboard, dismisses it,
+     and the next Back tap navigates away. Defer the reveal until the field loses focus. */
+  if (!editing) card.classList.toggle('is-exc', !st.inFull);
   const pill = card.querySelector('.recv-pill'); if (pill){ pill.className = 'recv-pill ' + st.cls; pill.textContent = st.txt; }
-  const inp = card.querySelector('input[data-field="received_qty"]'); if (inp && document.activeElement !== inp) inp.value = Number(row.received_qty || 0);
+  if (inp && !editing) inp.value = Number(row.received_qty || 0);
   const ex = card.querySelector('select[data-field="exception_type"]'); if (ex && document.activeElement !== ex) ex.value = row.exception_type || '';
   const co = card.querySelector('select[data-field="condition"]'); if (co && document.activeElement !== co) co.value = row.condition || 'Pending';
   card.querySelectorAll('.rq').forEach(b=>b.classList.toggle('on', b.dataset.act === 'full' && st.inFull));
@@ -1321,7 +1337,7 @@ function renderReceiving(){
         </div>
         <div class="recv-line-body">
           <div class="recv-amt"><span class="recv-amt-l">Approved</span><b>${exp}</b></div>
-          <div class="recv-amt"><span class="recv-amt-l">Received</span><input class="inline-input recv-recv" type="number" min="0" inputmode="numeric" data-line="${r.line_id}" data-field="received_qty" value="${rec}" /></div>
+          <div class="recv-amt"><span class="recv-amt-l">Received</span><input class="inline-input recv-recv" type="text" inputmode="numeric" pattern="[0-9]*" data-line="${r.line_id}" data-field="received_qty" value="${rec}" /></div>
           <div class="recv-quick">
             <button type="button" class="rq ${st.inFull ? 'on' : ''}" data-act="full" data-line="${r.line_id}">In full</button>
             <button type="button" class="rq" data-act="short" data-line="${r.line_id}">Short</button>
@@ -1354,7 +1370,9 @@ function renderReceiving(){
   });
   bindNumberInput('#receivingBody input[data-field="received_qty"]', e=>{
     const row = rows.find(r=>r.line_id === e.target.dataset.line); if (!row) return;
-    row.received_qty = Math.max(0, Number(e.target.value || 0));
+    const clean = (e.target.value || '').replace(/[^0-9]/g, '');
+    if (clean !== e.target.value) e.target.value = clean;
+    row.received_qty = Math.max(0, parseInt(clean || '0', 10) || 0);
     const exp = Number(row.approved_qty || 0);
     if (row.received_qty === exp) row.exception_type = '';
     else if (row.received_qty < exp && !row.exception_type) row.exception_type = 'Short ship';
@@ -1368,6 +1386,67 @@ function renderReceiving(){
     row[e.target.dataset.field] = e.target.value;
     saveState(); renderMetrics(); refreshRecvLine(row);
   });
+  els.receivingBody.querySelectorAll('input[data-field="received_qty"]').forEach(inp=>{
+    inp.addEventListener('blur', ()=>{
+      const row = rows.find(r=>r.line_id === inp.dataset.line); if (row) refreshRecvLine(row);
+    });
+  });
+  renderRecvVerify();
+}
+function renderRecvVerify(){
+  const el = document.getElementById('recvVerify');
+  if (!el) return;
+  const data = rows.filter(r=>Number(r.approved_qty || 0) > 0);
+  if (!data.length){ el.hidden = true; el.innerHTML = ''; return; }
+  let inFull = 0, exceptions = 0, unitsExp = 0, unitsRec = 0;
+  data.forEach(r=>{
+    if (recvPill(r).inFull) inFull++; else exceptions++;
+    unitsExp += Number(r.approved_qty || 0);
+    unitsRec += Number(r.received_qty || 0);
+  });
+  el.hidden = false;
+  el.innerHTML =
+    '<div class="recv-verify-sum">' +
+      '<div class="rv-stat"><span class="rv-k">Lines</span><b>' + data.length + '</b></div>' +
+      '<div class="rv-stat"><span class="rv-k">In full</span><b>' + inFull + '</b></div>' +
+      '<div class="rv-stat"><span class="rv-k">Exceptions</span><b class="' + (exceptions ? 'rv-warn' : '') + '">' + exceptions + '</b></div>' +
+      '<div class="rv-stat"><span class="rv-k">Units received / expected</span><b>' + unitsRec + ' / ' + unitsExp + '</b></div>' +
+    '</div>' +
+    '<div class="recv-verify-actions">' +
+      '<button type="button" class="btn-primary" id="recvRecordBtn">Record receiving</button>' +
+      '<button type="button" class="btn-secondary" id="recvCsvBtn">Export CSV</button>' +
+      '<button type="button" class="btn-secondary" id="recvPrintBtn">Print</button>' +
+    '</div>' +
+    '<div class="recv-verify-done" id="recvVerifyDone" hidden></div>';
+  const rb = document.getElementById('recvRecordBtn'); if (rb) rb.addEventListener('click', recordReceiving);
+  const cb = document.getElementById('recvCsvBtn'); if (cb) cb.addEventListener('click', exportReceivingCsv);
+  const pb = document.getElementById('recvPrintBtn'); if (pb) pb.addEventListener('click', ()=>window.print());
+}
+function exportReceivingCsv(){
+  const data = rows.filter(r=>Number(r.approved_qty || 0) > 0);
+  const cell = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const head = ['line_id','item','size','approved','received','variance','exception','condition','notes'];
+  const lines = [head.join(',')];
+  data.forEach(r=>{
+    const exp = Number(r.approved_qty || 0), rec = Number(r.received_qty || 0);
+    lines.push([r.line_id, r.item_name, (r.container_or_size || r.size || ''), exp, rec, rec - exp, (r.exception_type || ''), (r.condition || ''), (r.receiving_notes || '')].map(cell).join(','));
+  });
+  downloadFile((els.orderId.value || 'order') + '-receiving.csv', lines.join('\n'), 'text/csv');
+  if (typeof window.fxTrack === 'function') window.fxTrack('receiving_export', { format: 'csv' });
+}
+function recordReceiving(){
+  const data = rows.filter(r=>Number(r.approved_qty || 0) > 0);
+  if (!data.length) return;
+  let inFull = 0, exceptions = 0;
+  data.forEach(r=>{ if (recvPill(r).inFull) inFull++; else exceptions++; });
+  const stamp = new Date();
+  saveState();
+  const done = document.getElementById('recvVerifyDone');
+  if (done){
+    done.hidden = false;
+    done.textContent = 'Receiving recorded \u00b7 ' + data.length + ' lines \u00b7 ' + exceptions + ' exception' + (exceptions === 1 ? '' : 's') + ' \u00b7 ' + stamp.toLocaleString();
+  }
+  if (typeof window.fxTrack === 'function') window.fxTrack('receiving_recorded', { lines: data.length, exceptions: exceptions });
 }
 function renderMetrics(){
   const requestedLines = rows.filter(r=>Number(r.requested_qty || 0) > 0);
