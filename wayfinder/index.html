@@ -5498,12 +5498,16 @@ function renderDefinitions() {
   @media(min-width:600px){#fxListOverlay{align-items:center}#fxListPanel{border-radius:18px}}
   #fxListPanel h2{margin:0 0 2px;font-size:19px}
   #fxListPanel .fx-sub{margin:0 0 14px;font-size:13px;opacity:.7}
-  #fxListPanel .fx-item{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+  #fxListPanel .fx-item{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)}
   #fxListPanel .fx-item img,#fxListPanel .fx-thumb{width:46px;height:46px;border-radius:8px;object-fit:cover;flex:none;background:rgba(255,255,255,.08)}
   #fxListPanel .fx-item-main{flex:1;min-width:0}
   #fxListPanel .fx-item-name{font-weight:700;font-size:14px}
   #fxListPanel .fx-item-meta{font-size:12px;opacity:.7}
   #fxListPanel .fx-rm{background:none;border:none;color:#ef9a9a;cursor:pointer;font-size:13px;font-weight:700;flex:none}
+  #fxListPanel .fx-qty{display:inline-flex;align-items:stretch;margin-top:8px;border:1px solid rgba(255,255,255,.2);border-radius:9px;overflow:hidden}
+  #fxListPanel .fx-step{-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.05);border:none;color:inherit;width:32px;height:30px;font:800 17px/1 -apple-system,Segoe UI,Roboto,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+  #fxListPanel .fx-step:active{background:rgba(123,208,95,.28)}
+  #fxListPanel .fx-qn{min-width:36px;padding:0 4px;display:flex;align-items:center;justify-content:center;font:800 14px/1 -apple-system,Segoe UI,Roboto,sans-serif;font-variant-numeric:tabular-nums;border-left:1px solid rgba(255,255,255,.16);border-right:1px solid rgba(255,255,255,.16)}
   #fxListPanel .fx-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
   #fxListPanel .fx-actions button,#fxListPanel .fx-actions a{flex:1;min-width:120px;text-align:center;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:transparent;color:#eaf0f7;font:600 14px/1 -apple-system,Segoe UI,Roboto,sans-serif;cursor:pointer;text-decoration:none}
   #fxListPanel .fx-actions .fx-primary{background:var(--accent,#58b641);border-color:var(--accent,#58b641);color:#10210e}
@@ -5550,11 +5554,11 @@ function renderDefinitions() {
         var meta=[i.size,i.price].filter(Boolean).join(" \u00b7 "); if(i.sku) meta+=(meta?" \u00b7 ":"")+"SKU "+i.sku;
         var k=String(keyOf(i)).replace(/"/g,"&quot;");
         var thumb=i.img?'<img src="'+i.img+'" alt="">':'<div class="fx-thumb"></div>';
-        return '<div class="fx-item">'+thumb+'<div class="fx-item-main"><div class="fx-item-name">'+(i.name||i.sku||"Plant")+(i.qty>1?" \u00d7"+i.qty:"")+'</div><div class="fx-item-meta">'+meta+'</div></div><button type="button" class="fx-rm" data-key="'+k+'">Remove</button></div>';
+        return '<div class="fx-item">'+thumb+'<div class="fx-item-main"><div class="fx-item-name">'+(i.name||i.sku||"Plant")+'</div><div class="fx-item-meta">'+meta+'</div><div class="fx-qty"><button type="button" class="fx-step fx-dec" data-key="'+k+'" aria-label="Decrease quantity">\u2212</button><span class="fx-qn">'+(i.qty||1)+'</span><button type="button" class="fx-step fx-inc" data-key="'+k+'" aria-label="Increase quantity">+</button></div></div><button type="button" class="fx-rm" data-key="'+k+'">Remove</button></div>';
       }).join("");
       panel.innerHTML='<h2>My List</h2><p class="fx-sub">Show this at the counter, print it, or start a plan.</p>'+items+
         '<div id="fxQrWrap"><img alt="Scan to open this list"><div class="fx-qr-cap">Scan with a phone to open the list \u2014 staff can scan to pull it</div></div>'+
-        '<div class="fx-actions"><button type="button" class="fx-qr-btn fx-primary">Show QR</button><button type="button" class="fx-print-btn">Print</button><a class="fx-plan-link" href="https://app.foxfield.studio/?list='+encodeURIComponent(payload())+'" target="_blank" rel="noopener">Start a plan \u2192</a><button type="button" class="fx-clear-btn">Clear</button><button type="button" class="fx-close-btn">Close</button></div>';
+        '<div class="fx-actions"><button type="button" class="fx-qr-btn fx-primary">Show QR</button><button type="button" class="fx-print-btn">Print</button><button type="button" class="fx-clear-btn">Clear</button><button type="button" class="fx-close-btn">Close</button></div>';
     }
     function openPanel(){ renderPanel(); overlay.classList.add("open"); }
     function closePanel(){ overlay.classList.remove("open"); }
@@ -5573,6 +5577,7 @@ function renderDefinitions() {
       if(!t.classList) return;
       if(t.classList.contains("fx-close-btn")) closePanel();
       else if(t.classList.contains("fx-rm")) remove(t.getAttribute("data-key"));
+      else if(t.classList.contains("fx-step")){ var sk=t.getAttribute("data-key"), sd=t.classList.contains("fx-inc")?1:-1, si, sit=null; for(si=0;si<list.length;si++){ if(keyOf(list[si])===sk){ sit=list[si]; break; } } if(sit){ sit.qty=Math.max(1,(sit.qty||1)+sd); save(); syncFab(); var qn=t.parentNode&&t.parentNode.querySelector(".fx-qn"); if(qn) qn.textContent=sit.qty; var qw=document.getElementById("fxQrWrap"); if(qw&&qw.classList.contains("show")){ var qim=qw.querySelector("img"); if(qim) qim.src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data="+encodeURIComponent(listUrl()); } } }
       else if(t.classList.contains("fx-clear-btn")) clearAll();
       else if(t.classList.contains("fx-print-btn")) printList();
       else if(t.classList.contains("fx-qr-btn")){ var w=document.getElementById("fxQrWrap"); if(w){ var im=w.querySelector("img"); if(im) im.src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data="+encodeURIComponent(listUrl()); w.classList.toggle("show"); } }
