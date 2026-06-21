@@ -5,6 +5,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Foxfield Wayfinder — Plant Discovery + Retail Guidance</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NFMZDY1SL0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    var FX_SRC = (new URLSearchParams(location.search).get('source') || '').toLowerCase();
+    var FX_INSTORE = (FX_SRC === 'instore' || FX_SRC === 'kiosk' || location.search.indexOf('mode=kiosk') !== -1);
+    var FX_SESSION = FX_INSTORE ? 'in_store' : 'remote';
+    gtag('config', 'G-NFMZDY1SL0', { session_source: FX_SESSION, page_location: (function(){ try{ var u=new URL(location.href); u.searchParams.delete('list'); return u.href; }catch(e){ return location.href; } })() });
+    function fxTrack(name, params){
+      try { gtag('event', name, Object.assign({ session_source: FX_SESSION }, params || {})); } catch (e) {}
+    }
+  </script>
   <style>
     :root {
       --bg: #071325;
@@ -2584,40 +2598,40 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
         <button id="themeToggle" class="theme-toggle" type="button">Dark / Light: Dark</button>
       </div>
       </div>
-      <p class="fox-hero-lead">Perennial browser, nursery finder, and customer kiosk in one app. The plant browser stays intact, while the Finder adds a full nursery map and a zoomed detail view for trees, shrubs, hoop houses, and field-flag lookups.</p>
+      <p class="fox-hero-lead" data-i18n="wf-lead">Perennial browser, nursery finder, and customer kiosk in one app. The plant browser stays intact, while the Finder adds a full nursery map and a zoomed detail view for trees, shrubs, hoop houses, and field-flag lookups.</p>
     </section>
 
     <section id="browserView" class="app-view">
       <section class="controls-wrap">
         <div class="controls-grid">
           <div class="field">
-            <label for="searchInput">Search catalog</label>
-            <input id="searchInput" type="text" placeholder="Name, common name, genus, SKU" />
+            <label for="searchInput" data-i18n="wf-l-search">Search catalog</label>
+            <input id="searchInput" type="text" placeholder="Name, common name, genus, SKU" data-i18n-ph="wf-ph-search" />
           </div>
 
           <div class="field">
-            <label for="exposureFilter">Exposure</label>
+            <label for="exposureFilter" data-i18n="wf-l-exposure">Exposure</label>
             <select id="exposureFilter">
               <option value="">All exposures</option>
             </select>
           </div>
 
           <div class="field">
-            <label for="groupFilter">Plant group</label>
+            <label for="groupFilter" data-i18n="wf-l-group">Plant group</label>
             <select id="groupFilter">
               <option value="">All groups</option>
             </select>
           </div>
 
           <div class="field">
-            <label for="colorFilter">Color</label>
+            <label for="colorFilter" data-i18n="wf-l-color">Color</label>
             <select id="colorFilter">
               <option value="">All colors</option>
             </select>
           </div>
 
           <div class="field">
-            <label for="heightFilter">Height</label>
+            <label for="heightFilter" data-i18n="wf-l-height">Height</label>
             <select id="heightFilter">
               <option value="">All heights</option>
               <option value="under12">Under 12&quot;</option>
@@ -2628,7 +2642,7 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
           </div>
 
           <div class="field">
-            <label for="showCount">Show</label>
+            <label for="showCount" data-i18n="wf-l-show">Show</label>
             <select id="showCount">
               <option value="24">24 cards</option>
               <option value="48" selected>48 cards</option>
@@ -2641,7 +2655,7 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
         <div class="chips" id="traitChips"></div>
 
         <div class="button-col">
-          <button id="clearFilters" class="btn" type="button">Clear filters</button>
+          <button id="clearFilters" class="btn" type="button" data-i18n="wf-clear">Clear filters</button>
         </div>
 
         <section class="scan-panel" id="scanPanel" data-open="false">
@@ -2653,8 +2667,8 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
             aria-controls="scanPanelContent"
           >
             <div>
-              <strong>SKU / Scanner tools</strong>
-              <span>Hidden by default so the browser lands on plants first.</span>
+              <strong data-i18n="wf-sku-h">SKU / Scanner tools</strong>
+              <span data-i18n="wf-sku-sub">Hidden by default so the browser lands on plants first.</span>
             </div>
             <span class="chevron">⌄</span>
           </button>
@@ -2662,7 +2676,7 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
           <div id="scanPanelContent" class="scan-panel-content" hidden>
             <div class="scan-grid">
               <div class="field">
-                <label for="scanSkuInput">SKU lookup</label>
+                <label for="scanSkuInput" data-i18n="wf-l-skulookup">SKU lookup</label>
                 <input
                   id="scanSkuInput"
                   type="text"
@@ -2672,23 +2686,23 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
                   autocapitalize="off"
                   autocorrect="off"
                   spellcheck="false"
-                  placeholder="Enter or scan SKU"
+                  placeholder="Enter or scan SKU" data-i18n-ph="wf-ph-sku"
                 />
               </div>
 
               <div class="field">
-                <label for="findSkuBtn">Find</label>
-                <button id="findSkuBtn" class="btn primary" type="button" style="width:100%;">Find SKU</button>
+                <label for="findSkuBtn" data-i18n="wf-l-find">Find</label>
+                <button id="findSkuBtn" class="btn primary" type="button" style="width:100%;" data-i18n="wf-btn-find">Find SKU</button>
               </div>
 
               <div class="field">
-                <label for="startScannerBtn">Scanner</label>
-                <button id="startScannerBtn" class="btn secondary" type="button" style="width:100%;">Start Scanner</button>
+                <label for="startScannerBtn" data-i18n="wf-l-scanner">Scanner</label>
+                <button id="startScannerBtn" class="btn secondary" type="button" style="width:100%;" data-i18n="wf-btn-startscan">Start Scanner</button>
               </div>
             </div>
 
             <div class="scanner-actions">
-              <button id="stopScannerBtn" class="btn" type="button">Stop Scanner</button>
+              <button id="stopScannerBtn" class="btn" type="button" data-i18n="wf-btn-stopscan">Stop Scanner</button>
             </div>
 
             <div id="scanStatus" class="scan-status"></div>
@@ -5481,11 +5495,32 @@ function renderDefinitions() {
     'wf-h-closer':['Closer look','Vista de cerca'],
     'wf-h-notes':['Nursery notes','Notas del vivero'],
     'wf-h-quick':['Quick results','Resultados rápidos'],
-    'wf-h-kioskttl':['Customer Kiosk','Quiosco para clientes']
+    'wf-h-kioskttl':['Customer Kiosk','Quiosco para clientes'],
+    'wf-lead':['Perennial browser, nursery finder, and customer kiosk in one app. The plant browser stays intact, while the Finder adds a full nursery map and a zoomed detail view for trees, shrubs, hoop houses, and field-flag lookups.','Navegador de perennes, localizador de vivero y quiosco para clientes en una sola app. El navegador de plantas permanece intacto, mientras que el Localizador añade un mapa completo del vivero y una vista detallada para árboles, arbustos, túneles de cultivo e identificación por banderines de campo.'],
+    'wf-l-search':['Search catalog','Buscar en el catálogo'],
+    'wf-ph-search':['Name, common name, genus, SKU','Nombre, nombre común, género, SKU'],
+    'wf-l-exposure':['Exposure','Exposición'],
+    'wf-l-group':['Plant group','Grupo de plantas'],
+    'wf-l-color':['Color','Color'],
+    'wf-l-height':['Height','Altura'],
+    'wf-l-show':['Show','Mostrar'],
+    'wf-clear':['Clear filters','Borrar filtros'],
+    'wf-sku-h':['SKU / Scanner tools','Herramientas de SKU / Escáner'],
+    'wf-sku-sub':['Hidden by default so the browser lands on plants first.','Oculto por defecto para que el navegador muestre primero las plantas.'],
+    'wf-l-skulookup':['SKU lookup','Búsqueda por SKU'],
+    'wf-ph-sku':['Enter or scan SKU','Ingrese o escanee el SKU'],
+    'wf-l-find':['Find','Buscar'],
+    'wf-btn-find':['Find SKU','Buscar SKU'],
+    'wf-l-scanner':['Scanner','Escáner'],
+    'wf-btn-startscan':['Start Scanner','Iniciar escáner'],
+    'wf-btn-stopscan':['Stop Scanner','Detener escáner']
   };
   function apply(l){
     document.querySelectorAll('[data-i18n]').forEach(function(el){
       var p=D[el.getAttribute('data-i18n')]; if(p) el.textContent=p[l==='es'?1:0];
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+      var p=D[el.getAttribute('data-i18n-ph')]; if(p) el.setAttribute('placeholder',p[l==='es'?1:0]);
     });
     var en=document.getElementById('langEn'),es=document.getElementById('langEs');
     if(en)en.classList.toggle('on',l==='en');
@@ -5550,6 +5585,7 @@ function renderDefinitions() {
     function count(){ return list.reduce(function(n,i){return n+(i.qty||1);},0); }
     function syncFab(){ var c=fab.querySelector(".fx-count"); if(c) c.textContent=count(); }
     function keyOf(i){ return i.sku||i.name||""; }
+    function track(n,p){ try{ if(typeof fxTrack==="function"){ fxTrack(n,p||{}); } else if(typeof gtag==="function"){ gtag("event",n,p||{}); } }catch(e){} }
     function hydrate(){
       if(typeof window.fxResolveSku!=="function") return false;
       var changed=false;
@@ -5580,23 +5616,24 @@ function renderDefinitions() {
       if(!item.sku && !item.name) return;
       var f=null,i; for(i=0;i<list.length;i++){ if(keyOf(list[i])===(item.sku||item.name)){ f=list[i]; break; } }
       if(f){ f.qty=(f.qty||1)+1; } else { item.qty=1; list.push(item); }
+      track("add_to_list",{item_sku:item.sku||"",item_name:item.name||"",list_count:count()});
       save(); syncFab(); flash("Added to list \u2713");
     }
-    function remove(k){ list=list.filter(function(i){return keyOf(i)!==k;}); save(); syncFab(); renderPanel(); }
-    function clearAll(){ list=[]; save(); syncFab(); renderPanel(); }
+    function remove(k){ list=list.filter(function(i){return keyOf(i)!==k;}); save(); syncFab(); renderPanel(); track("list_remove",{list_count:count()}); if(!list.length) track("list_emptied",{}); }
+    function clearAll(){ track("list_clear",{list_count:count()}); list=[]; save(); syncFab(); renderPanel(); }
     function saveSavedStore(){ try{ localStorage.setItem(SKEY,JSON.stringify(saved)); }catch(e){} }
     function saveCurrentAs(){
       if(!list.length){ flash("List is empty"); return; }
       var nm=null; try{ nm=window.prompt("Name this list",""); }catch(e){ nm=""; }
       if(nm===null) return; nm=String(nm).trim(); if(!nm) nm="My list";
       saved.unshift({ id:"l"+Date.now().toString(36)+Math.random().toString(36).slice(2,6), name:nm, items:JSON.parse(JSON.stringify(list)), at:Date.now() });
-      saveSavedStore(); flash("Saved: "+nm); renderPanel();
+      saveSavedStore(); flash("Saved: "+nm); renderPanel(); track("list_save",{list_count:count()});
     }
     function loadList(id){
       var sv=null,i; for(i=0;i<saved.length;i++){ if(String(saved[i].id)===String(id)){ sv=saved[i]; break; } }
-      if(!sv) return; list=JSON.parse(JSON.stringify(sv.items||[])); save(); syncFab(); renderPanel(); flash("Opened: "+(sv.name||"list"));
+      if(!sv) return; list=JSON.parse(JSON.stringify(sv.items||[])); save(); syncFab(); renderPanel(); flash("Opened: "+(sv.name||"list")); track("list_open_saved",{list_count:count()});
     }
-    function deleteSaved(id){ saved=saved.filter(function(sv){ return String(sv.id)!==String(id); }); saveSavedStore(); renderPanel(); }
+    function deleteSaved(id){ saved=saved.filter(function(sv){ return String(sv.id)!==String(id); }); saveSavedStore(); renderPanel(); track("list_delete_saved",{}); }
     function savedListsHtml(){
       if(!saved.length) return "";
       var rows=saved.map(function(sv){
@@ -5618,13 +5655,13 @@ function renderDefinitions() {
         var thumb=i.img?'<img src="'+i.img+'" alt="">':'<div class="fx-thumb"></div>';
         return '<div class="fx-item">'+thumb+'<div class="fx-item-main"><div class="fx-item-name">'+(i.name||i.sku||"Plant")+'</div><div class="fx-item-meta">'+meta+'</div><div class="fx-qty"><button type="button" class="fx-step fx-dec" data-key="'+k+'" aria-label="Decrease quantity">\u2212</button><span class="fx-qn">'+(i.qty||1)+'</span><button type="button" class="fx-step fx-inc" data-key="'+k+'" aria-label="Increase quantity">+</button></div></div><button type="button" class="fx-rm" data-key="'+k+'">Remove</button></div>';
       }).join("");
-      panel.innerHTML='<h2>My List</h2><p class="fx-sub">Show this at the counter, print it, or start a plan.</p>'+items+
+      panel.innerHTML='<h2>My List</h2><p class="fx-sub">Show this at the counter, print it, or save it for later.</p>'+items+
         '<div id="fxQrWrap"><img alt="Scan to open this list"><div class="fx-qr-cap">Scan with a phone to open the list \u2014 staff can scan to pull it</div></div>'+
         '<div class="fx-actions"><button type="button" class="fx-qr-btn fx-primary">Show QR</button><button type="button" class="fx-print-btn">Print</button><button type="button" class="fx-save-btn">Save list</button><button type="button" class="fx-clear-btn">Clear</button><button type="button" class="fx-close-btn">Close</button></div>'+savedListsHtml();
     }
-    function openPanel(){ renderPanel(); overlay.classList.add("open"); }
+    function openPanel(){ renderPanel(); overlay.classList.add("open"); track("list_view",{list_count:count()}); }
     function closePanel(){ overlay.classList.remove("open"); }
-    function printList(){
+    function printList(){ track("list_print",{list_count:count()});
       var w; try{ w=window.open("","_blank"); }catch(e){}
       if(!w){ flash("Allow pop-ups to print"); return; }
       var rows=list.map(function(i){return "<tr><td>"+(i.qty||1)+"</td><td>"+(i.name||i.sku||"")+"</td><td>"+(i.sku||"")+"</td><td>"+(i.size||"")+"</td><td>"+(i.price||"")+"</td></tr>";}).join("");
@@ -5636,16 +5673,17 @@ function renderDefinitions() {
     document.addEventListener("click", function(e){
       var t=e.target, addBtn=t.closest?t.closest(".fx-add-btn"):null;
       if(addBtn){ e.preventDefault(); add({sku:addBtn.getAttribute("data-sku")||"",name:addBtn.getAttribute("data-name")||"",size:addBtn.getAttribute("data-size")||"",price:addBtn.getAttribute("data-price")||"",img:addBtn.getAttribute("data-img")||""}); return; }
+      var buyA=t.closest?t.closest("a.product-btn"):null; if(buyA){ track("buy_click",{item_sku:buyA.getAttribute("data-sku")||""}); }
       if(!t.classList) return;
       if(t.classList.contains("fx-close-btn")) closePanel();
       else if(t.classList.contains("fx-rm")) remove(t.getAttribute("data-key"));
-      else if(t.classList.contains("fx-step")){ var sk=t.getAttribute("data-key"), sd=t.classList.contains("fx-inc")?1:-1, si, sit=null; for(si=0;si<list.length;si++){ if(keyOf(list[si])===sk){ sit=list[si]; break; } } if(sit){ sit.qty=Math.max(1,(sit.qty||1)+sd); save(); syncFab(); var qn=t.parentNode&&t.parentNode.querySelector(".fx-qn"); if(qn) qn.textContent=sit.qty; var qw=document.getElementById("fxQrWrap"); if(qw&&qw.classList.contains("show")){ var qim=qw.querySelector("img"); if(qim) qim.src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data="+encodeURIComponent(listUrl()); } } }
+      else if(t.classList.contains("fx-step")){ var sk=t.getAttribute("data-key"), sd=t.classList.contains("fx-inc")?1:-1, si, sit=null; for(si=0;si<list.length;si++){ if(keyOf(list[si])===sk){ sit=list[si]; break; } } if(sit){ sit.qty=Math.max(1,(sit.qty||1)+sd); save(); syncFab(); track("list_qty_change",{item_sku:sk,qty:sit.qty}); var qn=t.parentNode&&t.parentNode.querySelector(".fx-qn"); if(qn) qn.textContent=sit.qty; var qw=document.getElementById("fxQrWrap"); if(qw&&qw.classList.contains("show")){ var qim=qw.querySelector("img"); if(qim) qim.src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data="+encodeURIComponent(listUrl()); } } }
       else if(t.classList.contains("fx-clear-btn")) clearAll();
       else if(t.classList.contains("fx-print-btn")) printList();
       else if(t.classList.contains("fx-save-btn")) saveCurrentAs();
       else if(t.classList.contains("fx-saved-open")) loadList(t.getAttribute("data-id"));
       else if(t.classList.contains("fx-saved-del")) deleteSaved(t.getAttribute("data-id"));
-      else if(t.classList.contains("fx-qr-btn")){ var w=document.getElementById("fxQrWrap"); if(w){ var im=w.querySelector("img"); if(im) im.src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data="+encodeURIComponent(listUrl()); w.classList.toggle("show"); } }
+      else if(t.classList.contains("fx-qr-btn")){ var w=document.getElementById("fxQrWrap"); if(w){ var im=w.querySelector("img"); if(im) im.src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data="+encodeURIComponent(listUrl()); w.classList.toggle("show"); track("list_show_qr",{list_count:count()}); } }
     });
     try{
       var qp=new URLSearchParams(location.search), lp=qp.get("list");
@@ -5654,6 +5692,7 @@ function renderDefinitions() {
         save();
         openPanel();
         try{ qp.delete("list"); var qs=qp.toString(); history.replaceState(null,"",location.pathname+(qs?"?"+qs:"")+location.hash); }catch(e){}
+        track("list_opened_via_qr",{item_count:list.length});
       }
     }catch(e){}
     syncFab();
