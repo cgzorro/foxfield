@@ -1264,7 +1264,7 @@
 
       .container {
         width: min(100%, calc(100% - 14px));
-        padding: 12px 0 18px;
+        padding: max(20px, calc(12px + env(safe-area-inset-top, 0px))) 0 18px;
       }
       .hero {
         padding: 16px 14px;
@@ -5579,7 +5579,12 @@ function renderDefinitions() {
     });
     try{
       var qp=new URLSearchParams(location.search), lp=qp.get("list");
-      if(lp){ lp.split("_").forEach(function(tok){ var p=tok.split("."), sku=p[0], qty=parseInt(p[1]||"1",10)||1; if(sku){ var ex=false,j; for(j=0;j<list.length;j++){ if(list[j].sku===sku){ex=true;break;} } if(!ex) list.push({sku:sku,name:sku,qty:qty}); } }); save(); }
+      if(lp){
+        lp.split("_").forEach(function(tok){ var p=tok.split("."), sku=p[0], qty=parseInt(p[1]||"1",10)||1; if(sku){ var ex=false,j; for(j=0;j<list.length;j++){ if(list[j].sku===sku){ex=true;break;} } if(!ex) list.push({sku:sku,name:sku,qty:qty}); } });
+        save();
+        openPanel();
+        try{ qp.delete("list"); var qs=qp.toString(); history.replaceState(null,"",location.pathname+(qs?"?"+qs:"")+location.hash); }catch(e){}
+      }
     }catch(e){}
     syncFab();
   }catch(err){}
