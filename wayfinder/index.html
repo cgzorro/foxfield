@@ -2766,7 +2766,7 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
 
           <div class="finder-actions">
             <button id="finderClearBtn" class="btn" type="button">Clear</button>
-            <a class="map-link" href="https://www.google.com/maps/@?api=1&amp;map_action=map&amp;center=38.9594854,-94.8573139&amp;zoom=19&amp;basemap=satellite" target="_blank" rel="noopener noreferrer">Open satellite map</a>
+            <a class="map-link" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Open satellite map</a>
           </div>
         </div>
 
@@ -2798,9 +2798,9 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
 
             <div class="finder-map-mode" role="tablist" aria-label="Finder map view">
               <button id="finderModeSchematic" class="finder-mode-btn active" type="button" data-map-mode="schematic" aria-pressed="true">Schematic</button>
-              <button id="finderModeBeta" class="finder-mode-btn" type="button" data-map-mode="beta" aria-pressed="false">Beta Map</button>
+              <button id="finderModeBeta" class="finder-mode-btn sat-beta-btn" type="button" aria-pressed="false" data-sat-tip="Your store, mapped from satellite">Satellite <span class="beta-pill">beta</span></button>
             </div>
-            <p class="finder-beta-note" id="finderBetaNote" hidden>Preview the nursery on a satellite-aligned beta overlay while keeping the current Finder selection and highlighted destination synced.</p>
+            <p class="finder-beta-note" id="finderBetaNote" hidden>A satellite view of a sample garden center with its zones mapped on top — a preview of what we build for your store.</p>
 
             <div class="map-pan-shell" id="mapPanShell">
               <div class="map-board" id="overviewMapBoard"></div>
@@ -2905,8 +2905,8 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
   <script>
-    const NURSERY_MAPS_LINK = "https://www.google.com/maps/@38.9594854,-94.8573139,220m/data=!3m1!1e3";
-    const NURSERY_SATELLITE_BROWSER_LINK = "https://www.google.com/maps/@38.9594854,-94.8573139,220m/data=!3m1!1e3";
+    const NURSERY_MAPS_LINK = "https://www.google.com/maps";
+    const NURSERY_SATELLITE_BROWSER_LINK = "https://www.google.com/maps";
     const OWNER_LOGO = "./images/foxfield-studio-mark.png";
 
     const FLAG_COLORS = {
@@ -3043,7 +3043,7 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
       { id: "container", title: "Container Trees", subtitle: "", shape: "rect", x: 262, y: 330, w: 286, h: 96, centerX: 405, centerY: 378 },
       { id: "e", title: "E", subtitle: "Center Bed", shape: "rect", x: 566, y: 322, w: 84, h: 118, centerX: 608, centerY: 382 },
       { id: "flowering", title: "Flowering Shrubs", subtitle: "", shape: "rect", x: 664, y: 330, w: 164, h: 228, centerX: 746, centerY: 438 },
-      { id: "playground", title: "Playground", subtitle: "", shape: "rect", x: 684, y: 472, w: 110, h: 62, centerX: 739, centerY: 503 },
+      { id: "playground", title: "Display Garden", subtitle: "", shape: "rect", x: 684, y: 472, w: 110, h: 62, centerX: 739, centerY: 503 },
       { id: "house8", title: "8", subtitle: "Dogwoods", shape: "pill", x: 850, y: 330, w: 132, h: 42, centerX: 916, centerY: 351 },
       { id: "house7", title: "7", subtitle: "Japanese Maples", shape: "pill", x: 850, y: 378, w: 132, h: 42, centerX: 916, centerY: 399 },
       { id: "house6", title: "6", subtitle: "Redbud / Magnolia", shape: "pill", x: 850, y: 426, w: 132, h: 42, centerX: 916, centerY: 447 },
@@ -3187,7 +3187,7 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
       { name: "Chokeberry", category: "Shrub", zoneIds: ["field-shrub"], locationLabel: "Shrub field — follow yellow flag", area: "Flowering Shrubs", flagColor: "yellow" },
       { name: "Clethra", category: "Shrub", zoneIds: ["house3"], locationLabel: "Hoop House 3", area: "Shrubs for Shade", flagColor: "yellow" },
       { name: "Cotoneaster", category: "Shrub", zoneIds: ["field-shrub"], locationLabel: "Shrub field — follow yellow flag", area: "Flowering Shrubs", flagColor: "yellow" },
-      { name: "Crapemyrtle", category: "Shrub", zoneIds: ["playground"], locationLabel: "Playground area", area: "Flowering Shrubs", flagColor: "red" },
+      { name: "Crapemyrtle", category: "Shrub", zoneIds: ["playground"], locationLabel: "Display Garden", area: "Flowering Shrubs", flagColor: "red" },
       { name: "False Cypress", category: "Shrub", zoneIds: ["field-shrub"], locationLabel: "Shrub field — follow pink flag", area: "Evergreen Trees & Shrubs", flagColor: "pink" },
       { name: "Deutzia", category: "Shrub", zoneIds: ["house3"], locationLabel: "Hoop House 3", area: "Shrubs for Shade", flagColor: "red" },
       { name: "Dogwood, Shrub", category: "Shrub", zoneIds: ["house8"], locationLabel: "Hoop House 8", area: "Dogwood Trees / related stock", flagColor: "purple" },
@@ -3199,11 +3199,11 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
       { name: "Holly", category: "Shrub", zoneIds: ["house3"], locationLabel: "Hoop House 3", area: "Shrubs for Shade", flagColor: "yellow" },
       { name: "Honeysuckle", category: "Shrub", zoneIds: ["field-shrub"], locationLabel: "Shrub field — follow yellow flag", area: "Flowering Shrubs", flagColor: "yellow" },
       { name: "Hydrangea", category: "Tree/Shrub", zoneIds: ["house5"], locationLabel: "Hoop House 5", area: "Hydrangeas", flagColor: "yellow", notes: "Available in shrub form on paper sheet; hydrangea traits included from brochure." },
-      { name: "Hypericum", category: "Shrub", zoneIds: ["playground"], locationLabel: "Playground area", area: "Flowering Shrubs", flagColor: "yellow" },
+      { name: "Hypericum", category: "Shrub", zoneIds: ["playground"], locationLabel: "Display Garden", area: "Flowering Shrubs", flagColor: "yellow" },
       { name: "Inkberry Holly", category: "Shrub", zoneIds: ["house3"], locationLabel: "Hoop House 3", area: "Shrubs for Shade", flagColor: "yellow" },
       { name: "Juniper Shrub", category: "Tree/Shrub", zoneIds: ["field-shrub"], locationLabel: "Shrub field — follow dark flag", area: "Evergreen Trees & Shrubs", flagColor: "gray", notes: "Available in tree form and shrub form." },
       { name: "Laurel", category: "Shrub", zoneIds: ["house3"], locationLabel: "Hoop House 3", area: "Shrubs for Shade", flagColor: "gray" },
-      { name: "Lilac", category: "Shrub", zoneIds: ["playground"], locationLabel: "Playground area", area: "Flowering Shrubs", flagColor: "purple" },
+      { name: "Lilac", category: "Shrub", zoneIds: ["playground"], locationLabel: "Display Garden", area: "Flowering Shrubs", flagColor: "purple" },
       { name: "Liriope", category: "Shrub", zoneIds: ["house1"], locationLabel: "Hoop House 1", area: "Groundcovers, Vines & Liriope", flagColor: "yellow" },
       { name: "Mahonia", category: "Shrub", zoneIds: ["house3"], locationLabel: "Hoop House 3", area: "Shrubs for Shade", flagColor: "yellow" },
       { name: "Mockorange", category: "Shrub", zoneIds: ["field-shrub"], locationLabel: "Shrub field — follow yellow flag", area: "Flowering Shrubs", flagColor: "yellow" },
@@ -3224,7 +3224,7 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
       { name: "Sorbaria", category: "Shrub", zoneIds: ["field-shrub"], locationLabel: "Shrub field — follow yellow flag", area: "Flowering Shrubs", flagColor: "yellow" },
       { name: "Spirea", category: "Shrub", zoneIds: ["field-shrub"], locationLabel: "Shrub field — follow purple flag", area: "Flowering Shrubs", flagColor: "purple" },
       { name: "Spruce Shrub", category: "Tree/Shrub", zoneIds: ["field-shrub"], locationLabel: "Shrub field — follow green flag", area: "Evergreen Trees & Shrubs", flagColor: "green", notes: "Available in tree form and shrub form." },
-      { name: "St. John's Wort", category: "Shrub", zoneIds: ["playground"], locationLabel: "Playground area", area: "Flowering Shrubs", flagColor: "yellow" },
+      { name: "St. John's Wort", category: "Shrub", zoneIds: ["playground"], locationLabel: "Display Garden", area: "Flowering Shrubs", flagColor: "yellow" },
       { name: "Sumac", category: "Shrub", zoneIds: ["field-shrub"], locationLabel: "Shrub field — follow yellow flag", area: "Flowering Shrubs", flagColor: "yellow" },
       { name: "Sweetspire", category: "Shrub", zoneIds: ["field-shrub"], locationLabel: "Shrub field — follow yellow flag", area: "Flowering Shrubs", flagColor: "yellow" },
       { name: "Viburnum", category: "Shrub", zoneIds: ["field-shrub"], locationLabel: "Shrub field — follow purple flag", area: "Flowering Shrubs", flagColor: "purple" },
@@ -3241,7 +3241,7 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
       filtered: [],
       activeTraits: new Set(),
       visibleCount: 48,
-      theme: localStorage.getItem("suburban-theme") || "dark",
+      theme: localStorage.getItem("wayfinder-theme") || "dark",
       scanner: null,
       scannerActive: false,
       scanLock: false,
@@ -3266,7 +3266,7 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
     };
 
     const TRAITS = ["sun", "shade", "pollinator", "drought", "deer resistant"];
-    const FINDER_BETA_MAP_IMAGE = "./images/suburban-beta-map-teaser.png";
+    const FINDER_BETA_MAP_IMAGE = "./images/store-map-teaser.png";
 
     const els = {
       html: document.documentElement,
@@ -3403,7 +3403,7 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
     function setTheme(theme) {
       state.theme = theme;
       els.html.setAttribute("data-theme", theme);
-      localStorage.setItem("suburban-theme", theme);
+      localStorage.setItem("wayfinder-theme", theme);
       els.themeToggle.textContent = theme === "dark" ? "Dark / Light: Dark" : "Dark / Light: Light";
     }
 
@@ -4682,18 +4682,21 @@ function renderDefinitions() {
       `;
     }
 
+    const FX_BETA_OVERVIEW_HTML = `
+        <div class="sat-inline">
+          <svg class="sat-aerial" viewBox="0 0 1000 751" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Sample garden center aerial with mapped wayfinding zones"><image href="./sample-aerial.jpg" x="0" y="0" width="1000" height="751" preserveAspectRatio="xMidYMid meet"/><rect x="0.0" y="0.0" width="1000.0" height="751.0"  fill="rgba(0,0,0,0.06)"/><path d="M400 660 C 432 565, 452 480, 470 414" fill="none" stroke="var(--accent)" stroke-width="3.4" stroke-dasharray="7 8" opacity="0.9"/><g transform="translate(162,375) scale(1.8)"><path d="M0 0 C -6 -8 -11 -11 -11 -18 A 11 11 0 1 1 11 -18 C 11 -11 6 -8 0 0 Z" fill="var(--accent)" stroke="#0c1208" stroke-width="1.5"/><circle cx="0" cy="-18" r="4" fill="#0c1208"/></g><g transform="translate(340,288) scale(1.8)"><path d="M0 0 C -6 -8 -11 -11 -11 -18 A 11 11 0 1 1 11 -18 C 11 -11 6 -8 0 0 Z" fill="var(--accent)" stroke="#0c1208" stroke-width="1.5"/><circle cx="0" cy="-18" r="4" fill="#0c1208"/></g><g transform="translate(470,410) scale(1.8)"><path d="M0 0 C -6 -8 -11 -11 -11 -18 A 11 11 0 1 1 11 -18 C 11 -11 6 -8 0 0 Z" fill="var(--accent)" stroke="#0c1208" stroke-width="1.5"/><circle cx="0" cy="-18" r="4" fill="#0c1208"/></g><rect x="87.3" y="305.5" width="149.4" height="33.0" rx="7" fill="rgba(6,10,6,0.66)"/><rect x="87.3" y="305.5" width="149.4" height="33.0" rx="7" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/><text x="162.0" y="329.1" text-anchor="middle" font-size="21" font-weight="700" fill="var(--accent)">Greenhouses</text><rect x="325.3" y="78.5" width="149.4" height="33.0" rx="7" fill="rgba(6,10,6,0.66)"/><rect x="325.3" y="78.5" width="149.4" height="33.0" rx="7" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/><text x="400.0" y="102.1" text-anchor="middle" font-size="21" font-weight="700" fill="var(--accent)">Field Trees</text><rect x="294.7" y="225.5" width="90.6" height="33.0" rx="7" fill="rgba(6,10,6,0.66)"/><rect x="294.7" y="225.5" width="90.6" height="33.0" rx="7" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/><text x="340.0" y="249.1" text-anchor="middle" font-size="21" font-weight="700" fill="var(--accent)">Shrubs</text><rect x="401.2" y="347.5" width="137.6" height="33.0" rx="7" fill="rgba(6,10,6,0.66)"/><rect x="401.2" y="347.5" width="137.6" height="33.0" rx="7" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/><text x="470.0" y="371.1" text-anchor="middle" font-size="21" font-weight="700" fill="var(--accent)">Perennials</text><rect x="306.8" y="543.5" width="196.4" height="33.0" rx="7" fill="rgba(6,10,6,0.66)"/><rect x="306.8" y="543.5" width="196.4" height="33.0" rx="7" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/><text x="405.0" y="567.1" text-anchor="middle" font-size="21" font-weight="700" fill="var(--accent)">Roses & Grasses</text><rect x="694.9" y="234.5" width="190.2" height="31.0" rx="7" fill="rgba(6,10,6,0.66)"/><rect x="694.9" y="234.5" width="190.2" height="31.0" rx="7" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/><text x="790.0" y="256.5" text-anchor="middle" font-size="19" font-weight="700" fill="#e9eef4">Bulk / Hardgoods</text><rect x="60.8" y="658.5" width="102.3" height="33.0" rx="7" fill="rgba(6,10,6,0.66)"/><rect x="60.8" y="658.5" width="102.3" height="33.0" rx="7" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/><text x="112.0" y="682.1" text-anchor="middle" font-size="21" font-weight="700" fill="#e9eef4">Parking</text><rect x="299.6" y="678.5" width="200.9" height="31.0" rx="7" fill="rgba(6,10,6,0.66)"/><rect x="299.6" y="678.5" width="200.9" height="31.0" rx="7" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/><text x="400.0" y="700.5" text-anchor="middle" font-size="19" font-weight="700" fill="#e9eef4">Retail / Checkout</text><text x="400.0" y="640.0" text-anchor="middle" font-size="20" font-weight="700" fill="var(--accent)">YOU ARE HERE</text><g transform="translate(400,662)"><circle r="15" fill="none" stroke="var(--accent)" stroke-width="4" opacity="0.6"/><circle r="7.5" fill="var(--accent)"/></g></svg>
+          <p class="sat-caption"><b>Sample aerial.</b> We map your actual store from satellite &#8212; beds, benches, and houses become tappable zones, the same wayfinding you see on the schematic. Ready to enable for your location.</p>
+      <div class="sat-modal-actions">
+        <a class="sat-open-link" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Open in Google satellite &#8599;</a>
+      </div>
+      <p class="sat-foot">Live imagery is served by Google Maps. In your deployment, this opens your actual store location.</p>
+      <div class="sat-cta">
+        <div class="sat-cta-text"><b>Want your store on the map like this?</b> We map your actual yard from above and have Wayfinder live this season.</div>
+        <a class="sat-cta-btn" href="mailto:hello@foxfield.studio?subject=Wayfinder%20for%20my%20garden%20center&body=Hi%20Foxfield%20%E2%80%94%20I%20saw%20the%20Wayfinder%20demo%20and%20I%27d%20like%20to%20talk%20about%20mapping%20my%20store.%20A%20bit%20about%20us%3A%0D%0A%0D%0AStore%3A%20%0D%0ALocation%3A%20%0D%0A%23%20of%20locations%3A%20">Map my store with Foxfield &#8594;</a>
+      </div>
+        </div>`;
     function renderFinderBetaOverview(activeZoneIds = [], markerItems = []) {
-      const active = Array.isArray(activeZoneIds) ? activeZoneIds.filter(Boolean) : [];
-      const zones = active
-        .map(zoneId => MAP_ZONES.find(z => z.id === zoneId))
-        .filter(Boolean);
-      els.overviewMapBoard.innerHTML = `
-        <div class="beta-map-wrap">
-          <img class="beta-map-image" src="${FINDER_BETA_MAP_IMAGE}" alt="Suburban L&G beta satellite map overlay" />
-          <div class="beta-map-overlay">${zones.map(zone => betaZoneMarkup(zone, markerItems)).join("")}</div>
-        </div>
-        ${renderBetaHouseGuide()}
-      `;
+      els.overviewMapBoard.innerHTML = FX_BETA_OVERVIEW_HTML;
     }
 
     function setFinderMapMode(mode) {
@@ -5711,5 +5714,47 @@ function renderDefinitions() {
   }catch(err){}
 })();
 </script>
+
+  <!-- ===== Satellite teaser (generic, no real location) ===== -->
+  <style>
+    .sat-beta-btn { position: relative; display:inline-flex; align-items:center; gap:6px; }
+    .beta-pill { font-size:.6em; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+      padding:2px 6px; border-radius:999px; background:var(--bg-soft); color:var(--accent);
+      border:1px solid var(--border); line-height:1; }
+    .sat-beta-btn[data-sat-tip]:hover::after,
+    .sat-beta-btn[data-sat-tip]:focus-visible::after {
+      content: attr(data-sat-tip); position:absolute; bottom:calc(100% + 8px); left:50%;
+      transform:translateX(-50%); white-space:nowrap; background:var(--bg-elev); color:var(--text);
+      border:1px solid var(--border); border-radius:8px; padding:6px 10px; font-size:.8rem;
+      font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.35); z-index:60; pointer-events:none; }
+    .sat-modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.55); display:none;
+      align-items:center; justify-content:center; z-index:1000; padding:20px; }
+    .sat-modal-backdrop[data-open="true"] { display:flex; }
+    .sat-modal { width:min(560px,100%); max-height:90vh; overflow:auto; background:var(--panel);
+      border:1px solid var(--border); border-radius:18px; padding:22px; box-shadow:0 24px 70px rgba(0,0,0,.5); }
+    .sat-modal-head { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .sat-modal-head h3 { margin:0; font-size:1.15rem; color:var(--text); }
+    .sat-modal-close { margin-left:auto; background:transparent; border:1px solid var(--border);
+      color:var(--text-muted); border-radius:8px; width:34px; height:34px; cursor:pointer; font-size:1.2rem; line-height:1; }
+    .sat-modal-close:hover { color:var(--text); border-color:var(--accent); }
+    .sat-aerial { width:100%; height:auto; border-radius:12px; border:1px solid var(--border); display:block; }
+    .sat-caption { color:var(--text); font-size:.92rem; line-height:1.55; margin:14px 0 0; }
+    .sat-caption b { color:var(--accent); }
+    .sat-modal-actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:16px; }
+    .sat-open-link { display:inline-flex; align-items:center; gap:6px; font-weight:600; color:var(--accent);
+      text-decoration:none; border:1px solid var(--border); border-radius:10px; padding:9px 14px; }
+    .sat-open-link:hover { background:var(--bg-soft); border-color:var(--accent); }
+    .sat-foot { color:var(--text-muted); font-size:.78rem; margin:10px 0 0; }
+    .sat-cta { margin-top:16px; padding:16px; border:1px solid var(--accent); border-radius:14px; background:var(--bg-soft); }
+    .sat-cta-text { color:var(--text); font-size:.95rem; line-height:1.5; margin-bottom:12px; }
+    .sat-cta-text b { color:var(--accent); }
+    .sat-cta-btn { display:inline-flex; align-items:center; gap:8px; background:var(--accent); color:#0c1f0c; font-weight:700; text-decoration:none; border-radius:10px; padding:12px 18px; font-size:1rem; }
+    .sat-cta-btn:hover { filter:brightness(1.08); }
+    .sat-inline { padding:6px 8px 4px; }
+    .sat-inline .sat-aerial { max-width:720px; margin:0 auto; }
+  </style>
+
+
+  <!-- ===== /Satellite teaser ===== -->
 </body>
 </html>
