@@ -87,8 +87,8 @@
 
     body {
       background:
-        radial-gradient(circle at top left, rgba(89, 156, 93, 0.12), transparent 28%),
-        radial-gradient(circle at top right, rgba(89, 156, 93, 0.08), transparent 24%),
+        radial-gradient(circle at top left, rgba(224, 145, 63, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(224, 145, 63, 0.08), transparent 24%),
         var(--bg);
     }
 
@@ -272,7 +272,7 @@
       color: #fff;
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,0.16),
-        0 12px 24px rgba(98, 184, 79, 0.22);
+        0 12px 24px rgba(224, 145, 63, 0.22);
     }
 
     .tab-icon {
@@ -320,7 +320,7 @@
       color: #ffffff;
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,0.16),
-        0 10px 22px rgba(98,184,79,0.22);
+        0 10px 22px rgba(224,145,63,0.22);
     }
 
     html[data-theme="light"] .theme-toggle {
@@ -734,7 +734,7 @@
 
     .tag.green,
     .trait-badge.good {
-      background: rgba(113, 193, 96, 0.18);
+      background: rgba(224, 145, 63, 0.18);
       color: #e0ead2;
     }
 
@@ -1718,7 +1718,7 @@
 
     .map-board {
       background:
-        radial-gradient(circle at top right, rgba(111,200,109,0.08), transparent 24%),
+        radial-gradient(circle at top right, rgba(224,145,63,0.08), transparent 24%),
         linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
         var(--map-bg);
       border: 1px solid rgba(169, 157, 134, 0.18);
@@ -1817,10 +1817,10 @@
       position: relative;
       overflow: hidden;
       background:
-        radial-gradient(circle at top right, rgba(151,224,127,0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(224,145,63,0.18), transparent 28%),
         linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015)),
         var(--bg-elev);
-      border: 1px solid rgba(151, 224, 127, 0.28);
+      border: 1px solid rgba(224, 145, 63, 0.28);
       border-radius: 26px;
       padding: 20px;
     }
@@ -1872,7 +1872,7 @@
     }
 
     .kiosk-card.active {
-      box-shadow: 0 14px 34px rgba(79, 164, 80, 0.20);
+      box-shadow: 0 14px 34px rgba(224, 145, 63, 0.20);
     }
 
     .status-note {
@@ -2390,25 +2390,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Cinzel:wght@500;600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
 
 :root{
-  --bg:#f1ece1; --bg-elev:#fbf7ec; --bg-soft:#ece4d3; --panel:#fbf7ec;
-  --text:#221d15; --text-muted:#7c7060; --border:#e0d6c2;
-  --accent:#3f7d3f; --accent-2:#4f9a4f;
-  --chip-bg:#eee7d8; --chip-text:#221d15;
-  --success:#3f7d3f; --warning:#a9781f; --danger:#b44c3c;
-  --input-bg:#fffdf8; --card-bg:#fffdf7;
-  --map-bg:#f6f1e6; --map-line:#7c7060; --map-text:#221d15;
-  --map-zone:#ece4d3; --map-zone-active:#c4dca6;
+  --bg:#f0e9d8; --bg-elev:#fbf7ee; --bg-soft:#e7ddc9; --panel:#fbf7ee;
+  --text:#2b2218; --text-muted:#6b5f4d; --border:#ddd0b8;
+  --accent:#b9701f; --accent-2:#cf8a3e; --moss:#4d7a44; --brass:#9a6f1e;
+  --chip-bg:#ece2cf; --chip-text:#2b2218;
+  --success:#4d7a44; --warning:#a9781f; --danger:#b44c3c;
+  --input-bg:#fbf7ee; --card-bg:#fbf7ee;
+  --map-bg:#f6efe1; --map-line:#8a7a5f; --map-text:#2b2218;
+  --map-zone:#ece2cf; --map-zone-active:#e8cfa0;
   --shadow:0 12px 30px rgba(34,29,21,.08);
 }
 html[data-theme="dark"]{
-  --bg:#120d07; --bg-elev:#1d140b; --bg-soft:#251b10; --panel:#1d140b;
-  --text:#f3ebde; --text-muted:#b7a98f; --border:#3a2d1c;
-  --accent:#6fae66; --accent-2:#8cc77f;
-  --chip-bg:#241a10; --chip-text:#f3ebde;
-  --success:#6fae66; --warning:#e0b36a; --danger:#ef9b84;
-  --input-bg:#1a130b; --card-bg:#1d140b;
-  --map-bg:#160f08; --map-line:#b7a98f; --map-text:#f3ebde;
-  --map-zone:#251b10; --map-zone-active:#3d5e30;
+  --bg:#15120d; --bg-elev:#1a160f; --bg-soft:#29231a; --panel:#1e1a13;
+  --text:#f0e9da; --text-muted:#a99d86; --border:#3b3326;
+  --accent:#e0913f; --accent-2:#eaa552; --moss:#7aa564; --brass:#caa24a;
+  --chip-bg:#2a2418; --chip-text:#f0e9da;
+  --success:#7aa564; --warning:#e0b36a; --danger:#ef9b84;
+  --input-bg:#221d15; --card-bg:#1e1a13;
+  --map-bg:#1a160f; --map-line:#a99d86; --map-text:#f0e9da;
+  --map-zone:#2a2418; --map-zone-active:#c2812f;
   --shadow:0 18px 40px rgba(0,0,0,.42);
 }
 body{
@@ -2554,6 +2554,15 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
   .fox-lockup .fox-mark{width:42px !important;height:42px !important}
   .fox-lockup .fox-product{font-size:21px !important}
 }
+/* ===== Foxfield premium accents: amber fox + brass hairline motif ===== */
+.fox-mark{ background-color:var(--accent) !important; }
+.fx-bar{ position:relative; padding-bottom:16px; }
+.fx-bar::after{ content:""; position:absolute; left:2px; right:2px; bottom:0; height:1px;
+  background:linear-gradient(90deg, transparent, var(--brass) 18%, var(--brass) 82%, transparent);
+  opacity:.5; pointer-events:none; }
+.panel h2{ position:relative; }
+.panel h2::after{ content:""; display:block; width:34px; height:2px; margin-top:7px; border-radius:2px;
+  background:linear-gradient(90deg, var(--brass), transparent); opacity:.9; }
 </style>
 </head>
 <body>
