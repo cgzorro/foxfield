@@ -723,9 +723,9 @@
     .trait-badge,
     .note-badge,
     .location-badge {
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(107, 95, 72, 0.24);
-      color: var(--text);
+      border: 1px solid color-mix(in srgb, var(--moss) 42%, transparent);
+      background: color-mix(in srgb, var(--moss) 15%, transparent);
+      color: var(--moss);
       border-radius: 999px;
       padding: 10px 14px;
       font-size: .92rem;
@@ -2563,6 +2563,21 @@ html[data-theme="dark"] .lang-toggle b.on{color:#11210e}
 .panel h2{ position:relative; }
 .panel h2::after{ content:""; display:block; width:34px; height:2px; margin-top:7px; border-radius:2px;
   background:linear-gradient(90deg, var(--brass), transparent); opacity:.9; }
+/* footer brass hairline — bookend to the header rule */
+.site-footer{ position:relative; border-top:0 !important; }
+.site-footer::before{ content:""; position:absolute; top:0; left:2px; right:2px; height:1px;
+  background:linear-gradient(90deg, transparent, var(--brass) 18%, var(--brass) 82%, transparent);
+  opacity:.5; pointer-events:none; }
+/* positive plant-trait badges -> moss (nature accent; amber stays action-only) */
+.tag.green,.trait-badge.good,
+html[data-theme="light"] .tag.green,html[data-theme="light"] .trait-badge.good,
+html[data-theme="dark"] .tag.green,html[data-theme="dark"] .trait-badge.good{
+  background:color-mix(in srgb,var(--moss) 16%,transparent) !important; color:var(--moss) !important; }
+/* premium amber focus ring (also restores keyboard accessibility) */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+[tabindex]:focus-visible,.chip:focus-visible,.view-tab:focus-visible,.finder-chip:focus-visible,
+.btn:focus-visible,.kiosk-btn:focus-visible,.location-btn:focus-visible{
+  outline:2px solid var(--accent) !important; outline-offset:2px !important; border-radius:5px; }
 </style>
 </head>
 <body>
