@@ -5704,7 +5704,7 @@ function renderDefinitions() {
     function printList(){ track("list_print",{list_count:count()});
       var w; try{ w=window.open("","_blank"); }catch(e){}
       if(!w){ flash("Allow pop-ups to print"); return; }
-      function abs(u){ try{ return new URL(u, location.href).href; }catch(e){ return u||""; } }
+      function abs(u){ try{ return new URL(u, document.baseURI).href; }catch(e){ return u||""; } }
       function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
       var rows=list.map(function(i){
         var thumb=i.img?'<img class="pt" src="'+abs(i.img)+'" alt="">':'<span class="pt pt-e"></span>';
@@ -5712,7 +5712,7 @@ function renderDefinitions() {
       }).join("");
       var qurl="https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data="+encodeURIComponent(listUrl());
       w.document.write('<html><head><title>My Plant List</title><style>'
-        +'body{font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;padding:24px;color:#111}'
+        +'html{color-scheme:light}body{font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;padding:24px;color:#111;background:#fff}'
         +'.hd{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}'
         +'h1{font-size:22px;margin:0 0 2px}.sub{color:#888;font-size:12px}'
         +'.qr{text-align:center;flex:none}.qr img{width:118px;height:118px}'
