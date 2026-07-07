@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /proposal
+Disallow: /partner
+Disallow: /grimms
+Disallow: /grimms.html
+
+Sitemap: https://foxfield.studio/sitemap.xml
