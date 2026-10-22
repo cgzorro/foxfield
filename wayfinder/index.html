@@ -335,6 +335,7 @@
     }
 
     .app-view[hidden] { display: none !important; }
+    .scan-panel[hidden] { display: none !important; }
 
     .controls-wrap {
       background: linear-gradient(180deg, rgba(59, 51, 38, 0.42), rgba(26, 22, 15, 0.42));
@@ -2641,7 +2642,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="controls-grid">
           <div class="field">
             <label for="searchInput" data-i18n="wf-l-search">Search catalog</label>
-            <input id="searchInput" type="text" placeholder="Name, common name, genus, SKU" data-i18n-ph="wf-ph-search" />
+            <input id="searchInput" type="text" placeholder="Name, common name, genus" data-i18n-ph="wf-ph-search" />
           </div>
 
           <div class="field">
@@ -2693,7 +2694,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
           <button id="clearFilters" class="btn" type="button" data-i18n="wf-clear">Clear filters</button>
         </div>
 
-        <section class="scan-panel" id="scanPanel" data-open="false">
+        <section class="scan-panel" id="scanPanel" data-open="false" hidden>
           <button
             id="scanPanelToggle"
             class="scan-panel-toggle"
@@ -4090,10 +4091,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
             </div>
             ${extraTags.length ? `<div class="tag-row">${extraTags.map(t => `<span class="tag">${t}</span>`).join("")}</div>` : ""}
             <div class="card-actions">
-            <div class="price-row">
-              <div class="price">${plant.price || ""}</div>
-              <div class="sku">SKU: ${plant.sku || "—"}</div>
-            </div>
             <button type="button" class="btn product-btn fx-add-btn" data-sku="${escapeHtml(plant.sku || "")}" data-name="${escapeHtml(plant.name || "")}" data-size="${escapeHtml(plant.size || "")}" data-price="${escapeHtml(plant.price || "")}" data-img="${escapeHtml(img || "")}">Add to list</button>
             </div>
           </div>
@@ -5388,7 +5385,8 @@ function renderDefinitions() {
         const res = await fetch(`./plants.json?v=${Date.now()}`, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-        const rows = Array.isArray(data) ? data : (Array.isArray(data?.plants) ? data.plants : []);
+        const rows = (Array.isArray(data) ? data : (Array.isArray(data?.plants) ? data.plants : []))
+          .map(r => { const c = { ...(r || {}) }; delete c.sku; delete c.price; return c; }); // public build: no SKUs or prices
         state.plants = normalizePlantsData(rows);
         state.kioskCatalogItems = buildKioskCatalogItems(state.plants);
         populateFilters(state.plants);
@@ -5538,7 +5536,7 @@ function renderDefinitions() {
     'wf-h-kioskttl':['Customer Kiosk','Quiosco para clientes'],
     'wf-lead':['Perennial browser, nursery finder, and customer kiosk in one app. The plant browser stays intact, while the Finder adds a full nursery map and a zoomed detail view for trees, shrubs, hoop houses, and field-flag lookups.','Navegador de perennes, localizador de vivero y quiosco para clientes en una sola app. El navegador de plantas permanece intacto, mientras que el Localizador añade un mapa completo del vivero y una vista detallada para árboles, arbustos, túneles de cultivo e identificación por banderines de campo.'],
     'wf-l-search':['Search catalog','Buscar en el catálogo'],
-    'wf-ph-search':['Name, common name, genus, SKU','Nombre, nombre común, género, SKU'],
+    'wf-ph-search':['Name, common name, genus','Nombre, nombre común, género'],
     'wf-l-exposure':['Exposure','Exposición'],
     'wf-l-group':['Plant group','Grupo de plantas'],
     'wf-l-color':['Color','Color'],
