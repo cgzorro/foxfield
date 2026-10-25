@@ -244,6 +244,19 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
 .founder-story{margin-top:18px}
 .founder-story p{margin:0;color:var(--muted);line-height:1.55;max-width:74ch}
 .founder-story p .ink{color:var(--ink)}
+.nav-link{font-family:"Spline Sans Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:0 4px}
+.nav-link:hover{color:var(--of)}
+.story-band{--ac:var(--of);position:relative;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;text-decoration:none;color:inherit;
+  background:radial-gradient(90% 140% at 100% 0,rgba(232,140,58,.10),transparent 55%),linear-gradient(180deg,var(--card),var(--card-2));
+  border:1px solid var(--line);border-radius:18px;padding:22px 24px;box-shadow:var(--shadow);overflow:hidden;margin:-14px 0 clamp(30px,5vh,52px);
+  transition:transform .25s cubic-bezier(.2,.7,.3,1),border-color .25s}
+.story-band::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--of),var(--pc))}
+.story-band:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--of) 55%,var(--line))}
+.story-copy{display:flex;flex-direction:column;min-width:0;flex:1 1 420px}
+.story-band .card-kicker{margin-bottom:8px}.story-band .card-desc{margin-bottom:0;max-width:70ch}
+.story-band:hover .card-go .arr{transform:translateX(4px)}
+.story-band:focus-visible{outline:2px solid var(--of);outline-offset:3px}
+@media(max-width:560px){.nav-link{display:none}}
 </style>
 </head>
 <body>
@@ -272,6 +285,7 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
         </span>
         <button class="tg" id="themeToggle" type="button" aria-label="Toggle light or dark theme"></button>
       </div>
+      <a class="nav-link" href="/video/" data-i18n="navVideo">Video</a>
       <a class="top-contact" href="#contact" data-i18n="contactTop">Contact</a>
     </div>
   </header>
@@ -323,6 +337,15 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
     </a>
 
   </main>
+
+  <a class="story-band reveal d6" href="/video/" aria-label="Foxfield product storytelling and video">
+    <span class="story-copy">
+      <span class="card-kicker" data-i18n="st-k">Also from Foxfield Studio</span>
+      <span class="card-name" data-i18n="st-n">PRODUCT STORYTELLING</span>
+      <span class="card-desc" data-i18n="st-d">Launch videos, explainers, pitch visuals, brand stories, and seasonal promos for garden centers. I tell the product story, then I build the product.</span>
+    </span>
+    <span class="card-go"><span data-i18n="st-go">Watch the reel</span> <span class="arr">→</span></span>
+  </a>
 
 
   <details class="founder reveal d6" aria-label="Who builds Foxfield">
@@ -439,6 +462,11 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
     'open':['Open demo','Abrir demo'],
     'heroCta':['View working demos →','Ver demos funcionales →'],
     'contactTop':['Contact','Contacto'],
+    'navVideo':['Video','Video'],
+    'st-k':['Also from Foxfield Studio','También de Foxfield Studio'],
+    'st-n':['PRODUCT STORYTELLING','HISTORIAS DE PRODUCTO'],
+    'st-d':['Launch videos, explainers, pitch visuals, brand stories, and seasonal promos for garden centers. I tell the product story, then I build the product.','Videos de lanzamiento, explicativos, visuales para inversionistas, historias de marca y promociones de temporada para centros de jardinería. Cuento la historia del producto y luego construyo el producto.'],
+    'st-go':['Watch the reel','Ver el video'],
     'contactCta':['Start a conversation','Iniciar conversación'],
     'loop1k':['Discover','Descubrir'],
     'loop1':['Guide shoppers to the right plants.','Guía a clientes hacia las plantas correctas.'],
