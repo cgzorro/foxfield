@@ -397,8 +397,9 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
       <span class="foot-note">Product storytelling · nursery software · © 2026 Foxfield Studio</span>
     </div>
     <div class="foot-contact">
-      <a class="contact-link" href="mailto:hello@foxfield.studio"><span class="contact-icon">✉</span><span>hello@foxfield.studio</span></a>
+      <button class="contact-button" type="button" id="copyEmail" aria-label="Copy Foxfield email address"><span class="contact-icon">✉</span><span>hello@foxfield.studio</span></button>
       <a class="contact-link" href="https://www.linkedin.com/in/chrisfox2/" target="_blank" rel="noopener"><span class="contact-icon">in</span><span>LinkedIn</span></a>
+      <span class="copy-status" id="copyStatus" aria-live="polite">Copied</span>
     </div>
   </footer>
 
@@ -415,6 +416,14 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
   if(v){v.addEventListener('play',function(){if(!played){played=true;track('reel_play',{page:'video'});}});
         v.addEventListener('ended',function(){track('reel_complete',{page:'video'});});}
   var pl=document.getElementById('portfolioLink'); if(pl) pl.addEventListener('click',function(){track('portfolio_open',{page:'video'});});
+  var eb=document.getElementById('copyEmail'), cs=document.getElementById('copyStatus');
+  function shown(){ if(cs){ cs.textContent='Copied \u2014 paste into your email'; cs.classList.add('show'); setTimeout(function(){cs.classList.remove('show');},2200);} }
+  if(eb) eb.addEventListener('click',function(){
+    var em='hello@foxfield.studio';
+    if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(em).then(shown,function(){prompt('Copy this email:',em);}); }
+    else { prompt('Copy this email:',em); }
+    track('email_copy',{page:'video'});
+  });
   var f=document.getElementById('interestForm'), s=document.getElementById('formStatus');
   var EP='https://script.google.com/macros/s/AKfycbwt9m9cCh4AcbhxIRDjzz6Uq9c4xAUjXYTK0oYMXW6h6uTKV97i12J-99EXKFwQvlvx/exec';
   f.addEventListener('submit',function(e){
