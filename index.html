@@ -374,6 +374,7 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
 
     <form class="interest-form" id="interestForm" autocomplete="on">
       <input type="hidden" name="_subject" value="Foxfield.studio — new inquiry">
+      <input type="hidden" name="source" value="foxfield.studio (home)">
       <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <div class="form-grid">
         <div class="form-field">
@@ -544,7 +545,7 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
   /* soft interest form: preview-safe capture until a backend endpoint is wired */
   var interestForm=document.getElementById('interestForm');
   var formStatus=document.getElementById('formStatus');
-  var FORM_ENDPOINT='https://formspree.io/f/xlgvzoqy';
+  var FORM_ENDPOINT='https://script.google.com/macros/s/AKfycbwt9m9cCh4AcbhxIRDjzz6Uq9c4xAUjXYTK0oYMXW6h6uTKV97i12J-99EXKFwQvlvx/exec';
   function setFormStatus(msg){ if(formStatus){ formStatus.textContent=msg||''; } }
   function buildInquiryText(fd){
     return [
@@ -573,8 +574,8 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
       var submit=interestForm.querySelector('.form-submit');
       if(submit){ submit.disabled=true; submit.textContent='Preparing…'; }
       if(FORM_ENDPOINT){
-        fetch(FORM_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(res){
-          if(!res.ok) throw new Error('Submission failed');
+        fetch(FORM_ENDPOINT,{method:'POST',body:new URLSearchParams(fd)}).then(function(res){return res.json();}).then(function(d){
+          if(!d||!d.ok) throw new Error('Submission failed');
           setFormStatus('Thanks — I’ll follow up directly.');
           interestForm.reset();
         }).catch(function(){
