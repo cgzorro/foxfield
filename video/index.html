@@ -416,12 +416,12 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
         v.addEventListener('ended',function(){track('reel_complete',{page:'video'});});}
   var pl=document.getElementById('portfolioLink'); if(pl) pl.addEventListener('click',function(){track('portfolio_open',{page:'video'});});
   var f=document.getElementById('interestForm'), s=document.getElementById('formStatus');
-  var EP='https://formspree.io/f/xlgvzoqy';
+  var EP='https://script.google.com/macros/s/AKfycbwt9m9cCh4AcbhxIRDjzz6Uq9c4xAUjXYTK0oYMXW6h6uTKV97i12J-99EXKFwQvlvx/exec';
   f.addEventListener('submit',function(e){
     e.preventDefault(); if(!f.checkValidity()){f.reportValidity();return;}
     var fd=new FormData(f), b=f.querySelector('.form-submit'); b.disabled=true; b.textContent='Sending…';
-    fetch(EP,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
-      if(!r.ok) throw 0; s.textContent='Thanks, I\u2019ll follow up directly.'; f.reset(); track('quote_request',{project:fd.get('interest')});
+    fetch(EP,{method:'POST',body:new URLSearchParams(fd)}).then(function(r){return r.json();}).then(function(d){
+      if(!d||!d.ok) throw 0; s.textContent='Thanks, I\u2019ll follow up directly.'; f.reset(); track('quote_request',{project:fd.get('interest')});
     }).catch(function(){
       var body=['Name: '+fd.get('name'),'Email: '+fd.get('email'),'Project: '+fd.get('interest'),'','',fd.get('message')].join('\n');
       s.innerHTML='Couldn\u2019t send automatically. <a style="color:inherit;text-decoration:underline" href="mailto:hello@foxfield.studio?subject='+encodeURIComponent('Foxfield Studio \u2014 video inquiry')+'&body='+encodeURIComponent(body)+'">Email it instead \u2192</a>';
