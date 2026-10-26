@@ -570,10 +570,10 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
         <span class="badge" data-i18n="badge-3loc">3 retail locations</span>
         <span class="badge" data-i18n="badge-sku">SKU translation backbone</span>
         <span class="badge" data-i18n="badge-exc">Exception-ready receiving</span>
-        <span class="badge" data-i18n="badge-wl">White-label · single-file</span>
+        <span class="badge" data-i18n="badge-wl">White-label for your nursery</span>
       </div>
       <div class="hero-note" data-i18n-html="hero-note">
-        Built to show what the <strong>next layer</strong> looks like without replacing the current system of record. It keeps the practical, sheet-driven perennial workflow buyers already understand, then wraps it in a cleaner operating model — normalized status, location splits, vendor-packet output, QR-ready intake, and a future-facing schema that can grow into real farm SKU crosswalks.
+        Works <strong>alongside</strong> your current system of record. It keeps the sheet-driven perennial workflow buyers already know, then adds clear order status, splits by location, vendor packets, and QR order snapshots for receiving.
       </div>
     </div>
     <aside class="card meta">
@@ -609,7 +609,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
         <img id="orderQr" alt="Scan to view this order" />
         <div class="order-qr-cap">
           <strong data-i18n="oqr-head">Scan to view this order</strong>
-          <span class="small" data-i18n="oqr-sub">Open the live order on any phone — verify the lines and quantities, or hand it to the floor.</span>
+          <span class="small" data-i18n="oqr-sub">Scan to load a snapshot of this order on any phone — check lines and quantities, or hand it to the floor. Later edits need a new code.</span>
         </div>
       </div>
     </aside>
@@ -631,7 +631,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
     <button data-panel="reviewPanel" data-i18n="nav-reviewPanel">4. Manager review</button>
     <button data-panel="packetPanel" data-i18n="nav-packetPanel">5. Vendor packet</button>
     <button data-panel="receivingPanel" data-i18n="nav-receivingPanel">6. Receiving</button>
-    <button data-panel="schemaPanel" data-i18n="nav-schemaPanel">7. Schema + standards</button>
+    <button data-panel="schemaPanel" data-i18n="nav-schemaPanel">7. Technical details (partners)</button>
   </div>
 
   <section class="card panel active" id="availabilityPanel">
@@ -2134,7 +2134,7 @@ loadReceiveFromUrl();
     'nav-reviewPanel':['4. Manager review','4. Revisión del gerente'],
     'nav-packetPanel':['5. Vendor packet','5. Paquete de proveedor'],
     'nav-receivingPanel':['6. Receiving','6. Recepción'],
-    'nav-schemaPanel':['7. Schema + standards','7. Esquema y estándares'],
+    'nav-schemaPanel':['7. Technical details (partners)','7. Detalles técnicos (socios)'],
     'h-avail':['Availability intake','Entrada de disponibilidad'],
     'h-cross':['SKU crosswalk','Equivalencias de SKU'],
     'h-alloc':['Multi-location allocation','Asignación multitienda'],
@@ -2147,8 +2147,8 @@ loadReceiveFromUrl();
     'badge-3loc':['','3 tiendas minoristas'],
     'badge-sku':['','Eje central de traducción de SKU'],
     'badge-exc':['','Recepción lista para excepciones'],
-    'badge-wl':['','Marca blanca · archivo único'],
-    'hero-note':['','Creado para mostrar cómo se ve la <strong>siguiente capa</strong> sin reemplazar el sistema de registro actual. Conserva el flujo de trabajo práctico basado en hojas que los compradores de perennes ya conocen, y lo envuelve en un modelo operativo más limpio: estado normalizado, divisiones por tienda, salida de paquete de proveedor, entrada lista para QR y un esquema preparado para el futuro que puede crecer hacia equivalencias reales de SKU de finca.'],
+    'badge-wl':['','Marca blanca para tu vivero'],
+    'hero-note':['','Funciona <strong>junto a</strong> tu sistema de registro actual. Conserva el flujo de trabajo basado en hojas que los compradores de perennes ya conocen y agrega estado claro del pedido, divisiones por tienda, paquetes para proveedores e instantáneas QR del pedido para la recepción.'],
     'f-orderid':['','N.º de pedido'],
     'f-shipweek':['','Semana de envío solicitada'],
     'f-org':['','Organización'],
@@ -2226,7 +2226,7 @@ loadReceiveFromUrl();
     'rb-lead':['','Carrito recibido por QR'],
     'rb-tail':['','líneas esperadas cargadas — toca una línea para marcar un problema de recepción.'],
     'oqr-head':['','Escanear para ver este pedido'],
-    'oqr-sub':['','Abre el pedido en vivo en cualquier teléfono — verifica las líneas y cantidades, o pásalo al piso.']
+    'oqr-sub':['','Escanea para abrir una instantánea de este pedido en cualquier teléfono — revisa líneas y cantidades, o pásalo al piso. Los cambios posteriores requieren un código nuevo.']
   };
   function apply(l){
     var useEs=(l==='es');
