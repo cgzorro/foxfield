@@ -280,6 +280,12 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
 .crosslink{display:flex;gap:14px;align-items:center;flex-wrap:wrap;border:1px dashed var(--line);border-radius:16px;padding:16px 18px;margin-bottom:clamp(30px,5vh,52px);color:var(--muted);font-size:.95rem}
 .crosslink a{color:var(--wf);font-weight:700;text-decoration:none}
 .crosslink a:hover{text-decoration:underline}
+
+.tw.armed .c{opacity:0}
+.tw.run .c{animation:twIn .16s ease-out forwards;animation-delay:var(--d)}
+.tw .w{white-space:nowrap}
+@keyframes twIn{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.tw.armed .c{opacity:1}.tw.run .c{animation:none}}
 </style>
 </head>
 <body>
@@ -311,7 +317,7 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
   <section class="vhero">
     <div class="hero reveal d2">
       <div class="eyebrow">Foxfield Studio · Video</div>
-      <h1>Product stories people actually watch. <span class="accent">Then I build the product.</span></h1>
+      <h1>Product stories, <span class="accent tw">told by a product builder.</span></h1>
       <p>Launch videos, explainers, pitch visuals, and brand stories for companies with something new to show, plus seasonal promos for independent garden centers.</p>
       <p class="proofline">Years on the product side of ag-tech: I turned around Greenbook, co-founded SeediQ (acquired by CDMS), and led US go-to-market for Breedr. I know what a product video has to do: make someone understand what you built and why it matters.</p>
       <div class="hero-actions">
@@ -436,6 +442,21 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
       s.innerHTML='Couldn\u2019t send automatically. <a style="color:inherit;text-decoration:underline" href="mailto:hello@foxfield.studio?subject='+encodeURIComponent('Foxfield Studio \u2014 video inquiry')+'&body='+encodeURIComponent(body)+'">Email it instead \u2192</a>';
     }).finally(function(){b.disabled=false;b.textContent='Request a quote \u2192';});
   });
+})();
+</script>
+<script>
+(function(){
+  var el=document.querySelector('h1 .tw'); if(!el) return;
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var text=el.textContent, i=0, START=650, STEP=42;
+  el.setAttribute('aria-label',text);
+  el.innerHTML=text.split(' ').map(function(w){
+    return '<span class="w" aria-hidden="true">'+w.split('').map(function(ch){
+      return '<span class="c" style="--d:'+(START+(i++)*STEP)+'ms">'+ch+'</span>';
+    }).join('')+'</span>';
+  }).join(' ');
+  el.classList.add('armed');
+  requestAnimationFrame(function(){requestAnimationFrame(function(){el.classList.add('run');});});
 })();
 </script>
 </body>
