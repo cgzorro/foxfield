@@ -542,6 +542,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
 @keyframes rbFlash{0%{box-shadow:0 0 0 3px rgba(232,140,58,.9)}100%{box-shadow:0 0 0 0 rgba(232,140,58,0)}}
 .rb-flash{animation:rbFlash 1.2s ease-out}
 @media (prefers-reduced-motion:reduce){.rb-flash{animation:none}}
+.recv-error{border-color:rgba(203,111,69,.75)!important;background:rgba(203,111,69,.12)!important}
 </style>
 
 </head>
@@ -790,6 +791,7 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
       <button class="btn-primary" id="scanInvoiceBtn" type="button" data-i18n="btn-scan">Scan farm invoice</button>
       <button class="btn-secondary" id="scanSampleBtn" type="button" data-i18n="btn-scansample">Load sample invoice</button>
     </div>
+    <div class="recv-banner recv-error" id="receiveError" role="alert" hidden></div>
     <div class="recv-banner" id="receiveBanner" hidden>
       <strong data-i18n="rb-lead">Cart received via QR</strong> — <span data-rb="order"></span> · <span data-rb="n"></span> <span data-i18n="rb-tail">expected lines loaded — tap a line to flag a receiving issue.</span>
     </div>
@@ -1908,7 +1910,8 @@ function buildReceiveManifest(){
     o: els.orderId.value || '',
     v: els.vendorName.value || '',
     w: els.shipWeek.value || '',
-    L: approved.map(r=>[rows.indexOf(r), Number(r.approved_qty || 0)])
+    sv: 2,
+    L: approved.map(r=>[r.line_id, Number(r.approved_qty || 0)])
   };
 }
 function receiveBaseUrl(){
@@ -1926,23 +1929,53 @@ function activatePanel(id){
   if (id === 'packetPanel') renderPacket();
   if (id === 'receivingPanel') renderReceiving();
 }
+// Validates the whole manifest first; applies nothing unless every line matches.
+// Returns {ok, n} on success or {ok:false, why} describing the mismatch.
+function checkReceiveManifest(manifest){
+  if (!manifest || !Array.isArray(manifest.L) || !manifest.L.length) return {ok:false, why:'empty'};
+  if (manifest.sv !== 2) return {ok:false, why:'old'};
+  const seen = new Set(), unknown = [], plan = [];
+  for (const pair of manifest.L){
+    if (!Array.isArray(pair) || pair.length < 2) return {ok:false, why:'bad'};
+    const id = pair[0], q = Number(pair[1]);
+    if (typeof id !== 'string' || !id) return {ok:false, why:'bad'};
+    if (!Number.isFinite(q) || q < 0 || q > 100000) return {ok:false, why:'bad'};
+    if (seen.has(id)) return {ok:false, why:'dup'};
+    seen.add(id);
+    const r = rows.find(x=>x.line_id === id);
+    if (!r){ unknown.push(id); continue; }
+    plan.push([r, q]);
+  }
+  if (unknown.length) return {ok:false, why:'unknown', unknown};
+  return {ok:true, plan};
+}
 function applyReceiveManifest(manifest, freshPass){
-  if (!manifest || !Array.isArray(manifest.L)) return 0;
+  const chk = checkReceiveManifest(manifest);
+  if (!chk.ok) return chk;
   if (manifest.o) els.orderId.value = manifest.o;
   if (manifest.v) els.vendorName.value = manifest.v;
   if (manifest.w) els.shipWeek.value = manifest.w;
-  let matched = 0;
-  manifest.L.forEach(pair=>{
-    if (!Array.isArray(pair)) return;
-    const key = pair[0], q = Number(pair[1]) || 0;
-    const r = (typeof key === 'number') ? rows[key] : rows.find(x=>x.line_id === key);
-    if (r){
-      r.approved_qty = q;
-      if (freshPass){ r.received_qty = r.approved_qty; r.exception_type = ''; r.condition = 'Good'; r.receiving_notes = ''; }
-      matched++;
-    }
+  chk.plan.forEach(([r, q])=>{
+    r.approved_qty = q;
+    if (freshPass){ r.received_qty = r.approved_qty; r.exception_type = ''; r.condition = 'Good'; r.receiving_notes = ''; }
   });
-  return matched;
+  return {ok:true, n: chk.plan.length};
+}
+function showReceiveError(chk){
+  const el = document.getElementById('receiveError'); if (!el) return;
+  const es = (document.documentElement.lang || '').indexOf('es') === 0;
+  const M = es ? {
+    old:'Este código QR es de una versión anterior y no se puede leer con seguridad. Genera un código nuevo desde el pedido.',
+    unknown:'Este código QR no coincide con este pedido: ', unknownTail:' línea(s) no se encuentran aquí. No se cambió nada.',
+    dup:'Este código QR contiene líneas repetidas. No se cambió nada.', bad:'Este código QR no es válido. No se cambió nada.', empty:'Este código QR no tiene líneas aprobadas.'
+  } : {
+    old:'This QR code is from an older version and can\u2019t be read safely. Generate a new code from the order.',
+    unknown:'This QR code doesn\u2019t match this order: ', unknownTail:' line(s) aren\u2019t found here. Nothing was changed.',
+    dup:'This QR code repeats a line. Nothing was changed.', bad:'This QR code isn\u2019t valid. Nothing was changed.', empty:'This QR code has no approved lines.'
+  };
+  el.textContent = chk.why === 'unknown' ? M.unknown + chk.unknown.length + M.unknownTail : (M[chk.why] || M.bad);
+  el.hidden = false;
+  const b = document.getElementById('receiveBanner'); if (b) b.hidden = true;
 }
 function showReceiveBanner(manifest, n, src){
   const el = document.getElementById('receiveBanner');
@@ -1977,8 +2010,10 @@ function scrollToReceiving(){
   });
 }
 function receiveFromManifest(manifest, src){
-  const n = applyReceiveManifest(manifest, true);
-  if (!n) return false;
+  const res = applyReceiveManifest(manifest, true);
+  if (!res.ok){ activatePanel('receivingPanel'); showReceiveError(res); scrollToReceiving(); return false; }
+  const err = document.getElementById('receiveError'); if (err) err.hidden = true;
+  const n = res.n;
   saveState();
   renderAll();
   activatePanel('receivingPanel');
