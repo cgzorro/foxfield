@@ -64,8 +64,8 @@ body{
 .controls{margin-left:auto;display:flex;gap:12px;align-items:center;justify-content:flex-end}
 .utility-cluster{display:inline-flex;align-items:center;gap:4px;padding:4px;border:1px solid color-mix(in srgb,var(--line) 86%,transparent);border-radius:999px;background:rgba(255,255,255,.018);box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
 .lang{display:inline-flex;border:0;border-radius:999px;overflow:hidden;background:transparent}
-.lang b{min-width:36px;padding:0 9px;height:32px;border-radius:999px;display:grid;place-items:center;font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--muted);background:transparent;cursor:pointer;transition:background .16s,color .16s}
-.lang b.on{background:var(--ink);color:var(--page-b)}
+.lang button{border:0;font-family:inherit;min-width:36px;padding:0 9px;height:32px;border-radius:999px;display:grid;place-items:center;font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--muted);background:transparent;cursor:pointer;transition:background .16s,color .16s}
+.lang button.on{background:var(--ink);color:var(--page-b)}
 .tg{width:32px;height:32px;border:0;border-radius:999px;background:transparent;color:var(--muted);cursor:pointer;font-size:15px;display:grid;place-items:center;line-height:1;transition:background .16s,color .16s}
 .tg:hover{background:rgba(232,140,58,.10);color:var(--ink)}
 html[data-theme="dark"] .tg::before{content:"\2600\FE0F"}
@@ -81,7 +81,7 @@ html[data-theme="light"] .tg::before{content:"\1F319"}
 .cta.primary{border-color:color-mix(in srgb,var(--wf) 55%,var(--line));background:color-mix(in srgb,var(--wf) 13%,transparent);color:var(--ink)}
 .cta:hover{transform:translateY(-1px);border-color:var(--of);background:rgba(232,140,58,.08)}
 .cta.primary::after{content:"";width:6px;height:6px;border-radius:999px;background:var(--wf);box-shadow:0 0 18px color-mix(in srgb,var(--wf) 80%,transparent)}
-.card:focus-visible,.cta:focus-visible,.top-contact:focus-visible,.contact-link:focus-visible,.contact-button:focus-visible,.tg:focus-visible,.lang b:focus-visible{outline:2px solid var(--of);outline-offset:3px}
+.card:focus-visible,.cta:focus-visible,.top-contact:focus-visible,.contact-link:focus-visible,.contact-button:focus-visible,.tg:focus-visible,.lang button:focus-visible{outline:2px solid var(--of);outline-offset:3px}
 .loop{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.025);box-shadow:var(--shadow);padding:16px 18px;margin:0 0 clamp(22px,4vh,38px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;position:relative;overflow:hidden}
 .loop::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--wf),var(--of),var(--pc))}
 .loop-step{display:grid;gap:4px;min-width:0}
@@ -288,7 +288,7 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
     <div class="controls" aria-label="Site utilities">
       <div class="utility-cluster" aria-label="Language and appearance controls">
         <span class="lang" role="group" aria-label="Language">
-          <b id="langEn" class="on">EN</b><b id="langEs">ES</b>
+          <button type="button" id="langEn" class="on" lang="en" aria-pressed="true" aria-label="English">EN</button><button type="button" id="langEs" lang="es" aria-pressed="false" aria-label="Español">ES</button>
         </span>
         <button class="tg" id="themeToggle" type="button" aria-label="Toggle light or dark theme"></button>
       </div>
@@ -517,6 +517,7 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
       if(v.indexOf('<')>-1) el.innerHTML=v; else el.textContent=v;
     });
     en.classList.toggle('on',l==='en'); es.classList.toggle('on',l==='es');
+    en.setAttribute('aria-pressed',l==='en'?'true':'false'); es.setAttribute('aria-pressed',l==='es'?'true':'false');
     root.setAttribute('lang',l);
     try{localStorage.setItem(LK,l);}catch(e){}
   }
@@ -578,27 +579,35 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
       navigator.clipboard.writeText(text).then(ok,function(){fallbackCopy(text);ok();});
     }else{ fallbackCopy(text);ok(); }
   }
+  function FM(k){var es=root.getAttribute('lang')==='es';var M={
+    preparing:['Sending…','Enviando…'],
+    thanks:['Thanks — I’ll follow up directly.','Gracias — te responderé directamente.'],
+    failed:['Couldn’t send automatically. Your note is still in the form and copied to your clipboard.','No se pudo enviar automáticamente. Tu nota sigue en el formulario y se copió al portapapeles.'],
+    emailIt:['Email it to hello@foxfield.studio →','Envíala a hello@foxfield.studio →'],
+    preview:['Preview mode: inquiry copied. Email it to hello@foxfield.studio.','Modo de vista previa: consulta copiada. Envíala a hello@foxfield.studio.'],
+    submit:['Start the conversation →','Iniciar conversación →']};return M[k][es?1:0];}
   if(interestForm){
     interestForm.addEventListener('submit',function(e){
       e.preventDefault();
       if(!interestForm.checkValidity()){ interestForm.reportValidity(); return; }
       var fd=new FormData(interestForm);
       var submit=interestForm.querySelector('.form-submit');
-      if(submit){ submit.disabled=true; submit.textContent='Preparing…'; }
+      if(submit){ if(submit.disabled) return; submit.disabled=true; submit.textContent=FM('preparing'); }
       if(FORM_ENDPOINT){
         fetch(FORM_ENDPOINT,{method:'POST',body:new URLSearchParams(fd)}).then(function(res){return res.json();}).then(function(d){
           if(!d||!d.ok) throw new Error('Submission failed');
-          setFormStatus('Thanks — I’ll follow up directly.'); try{if(window.gtag) gtag('event','quote_request',{page:'home',interest:fd.get('interest')});}catch(e){}
+          setFormStatus(FM('thanks')); try{if(window.gtag) gtag('event','quote_request',{page:'home',interest:fd.get('interest')});}catch(e){}
           interestForm.reset();
         }).catch(function(){
+          try{if(window.gtag) gtag('event','quote_request_error',{page:'home'});}catch(e){}
           var inquiry=buildInquiryText(fd);
           var mailto='mailto:hello@foxfield.studio?subject='+encodeURIComponent('Foxfield.studio — new inquiry')+'&body='+encodeURIComponent(inquiry);
-          copyText(inquiry,function(){ if(formStatus){ formStatus.innerHTML='Couldn’t send automatically — your note is copied. <a href="'+mailto+'" style="color:inherit;text-decoration:underline">Email it to hello@foxfield.studio →</a>'; } });
-        }).finally(function(){ if(submit){ submit.disabled=false; submit.textContent=root.getAttribute('lang')==='es'?'Iniciar conversación →':'Start the conversation →'; } });
+          copyText(inquiry,function(){ if(formStatus){ formStatus.innerHTML=FM('failed')+' <a href="'+mailto+'" style="color:inherit;text-decoration:underline">'+FM('emailIt')+'</a>'; } });
+        }).finally(function(){ if(submit){ submit.disabled=false; submit.textContent=FM('submit'); } });
       }else{
         copyText(buildInquiryText(fd),function(){
-          setFormStatus('Preview mode: inquiry copied. Email it to hello@foxfield.studio.');
-          if(submit){ submit.disabled=false; submit.textContent=root.getAttribute('lang')==='es'?'Iniciar conversación →':'Start the conversation →'; }
+          setFormStatus(FM('preview'));
+          if(submit){ submit.disabled=false; submit.textContent=FM('submit'); }
         });
       }
     });
