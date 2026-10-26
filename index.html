@@ -257,6 +257,11 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
 .story-band:hover .card-go .arr{transform:translateX(4px)}
 .story-band:focus-visible{outline:2px solid var(--of);outline-offset:3px}
 @media(max-width:560px){.nav-link{display:none}}
+.tw.armed .c{opacity:0}
+.tw.run .c{animation:twIn .16s ease-out forwards;animation-delay:var(--d)}
+.tw .w{white-space:nowrap}
+@keyframes twIn{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.tw.armed .c{opacity:1}.tw.run .c{animation:none}}
 </style>
 </head>
 <body>
@@ -498,6 +503,19 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
     'foot':['Working demos · sample nursery data · built on the floor · © 2026 Foxfield Studio','Demos funcionales · datos de muestra · hecho desde el día a día · © 2026 Foxfield Studio']
   };
   var en=document.getElementById('langEn'), es=document.getElementById('langEs');
+  function typeAccent(start){
+    var el=document.querySelector('h1[data-i18n="headline"] .accent'); if(!el) return;
+    if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var text=el.textContent, i=0, STEP=42;
+    el.classList.add('tw'); el.setAttribute('aria-label',text);
+    el.innerHTML=text.split(' ').map(function(w){
+      return '<span class="w" aria-hidden="true">'+w.split('').map(function(ch){
+        return '<span class="c" style="--d:'+(start+(i++)*STEP)+'ms">'+ch+'</span>';
+      }).join('')+'</span>';
+    }).join(' ');
+    el.classList.add('armed');
+    requestAnimationFrame(function(){requestAnimationFrame(function(){el.classList.add('run');});});
+  }
   function setLang(l){
     document.querySelectorAll('[data-i18n]').forEach(function(el){
       var p=D[el.getAttribute('data-i18n')]; if(!p)return;
@@ -509,9 +527,9 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
     try{localStorage.setItem(LK,l);}catch(e){}
   }
   var sl='en';try{var s=localStorage.getItem(LK); if(s==='es'||s==='en') sl=s;}catch(e){}
-  en.addEventListener('click',function(){setLang('en');});
-  es.addEventListener('click',function(){setLang('es');});
-  setLang(sl);
+  en.addEventListener('click',function(){setLang('en');typeAccent(250);});
+  es.addEventListener('click',function(){setLang('es');typeAccent(250);});
+  setLang(sl); typeAccent(850);
 
   /* credible contact: copy email without navigating away */
   var emailBtn=document.getElementById('copyEmail');
