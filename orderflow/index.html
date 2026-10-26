@@ -539,6 +539,9 @@ body[data-theme="dark"] .lang-toggle b.on{color:#1c1206}
 .order-qr-cap{display:flex;flex-direction:column;gap:4px}
 .order-qr-cap strong{font-weight:800;font-size:15px}
 @media print{ #packetPanel .panel-note{display:none !important} .order-qr{display:none !important} }
+@keyframes rbFlash{0%{box-shadow:0 0 0 3px rgba(232,140,58,.9)}100%{box-shadow:0 0 0 0 rgba(232,140,58,0)}}
+.rb-flash{animation:rbFlash 1.2s ease-out}
+@media (prefers-reduced-motion:reduce){.rb-flash{animation:none}}
 </style>
 
 </head>
@@ -1941,9 +1944,13 @@ function applyReceiveManifest(manifest, freshPass){
   });
   return matched;
 }
-function showReceiveBanner(manifest, n){
+function showReceiveBanner(manifest, n, src){
   const el = document.getElementById('receiveBanner');
   if (!el) return;
+  const es = (document.documentElement.lang || '').indexOf('es') === 0;
+  const lead = el.querySelector('[data-i18n="rb-lead"]');
+  if (lead) lead.textContent = src === 'sample' ? (es ? 'Factura de muestra cargada' : 'Sample invoice loaded') : (es ? 'Carrito recibido por QR' : 'Cart received via QR');
+  el.classList.remove('rb-flash'); void el.offsetWidth; el.classList.add('rb-flash');
   const o = el.querySelector('[data-rb="order"]'); if (o) o.textContent = (manifest && manifest.o) || els.orderId.value || '\u2014';
   const c = el.querySelector('[data-rb="n"]'); if (c) c.textContent = n;
   el.hidden = false;
@@ -1969,13 +1976,13 @@ function scrollToReceiving(){
     catch(e) { window.scrollTo(0, Math.max(0, y)); }
   });
 }
-function receiveFromManifest(manifest){
+function receiveFromManifest(manifest, src){
   const n = applyReceiveManifest(manifest, true);
   if (!n) return false;
   saveState();
   renderAll();
   activatePanel('receivingPanel');
-  showReceiveBanner(manifest, n);
+  showReceiveBanner(manifest, n, src);
   scrollToReceiving();
   return true;
 }
@@ -1992,7 +1999,7 @@ function loadReceiveFromUrl(){
 }
 function loadSampleInvoice(){
   Scan.close();
-  receiveFromManifest(buildReceiveManifest());
+  receiveFromManifest(buildReceiveManifest(), 'sample');
 }
 const Scan = (function(){
   let stream = null, raf = null, detector = null, video = null, running = false;
