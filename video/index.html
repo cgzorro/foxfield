@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Foxfield Studio — Product Storytelling & Launch Video</title>
-<meta name="description" content="Launch videos, product explainers, pitch visuals, brand stories, and garden-center promos from Foxfield Studio. I tell the product story, then I build the product.">
+<meta name="description" content="Launch videos, product explainers, pitch visuals, brand stories, and garden-center promos from Foxfield Studio. Product stories, told by a product builder.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://foxfield.studio/video/">
 <meta property="og:type" content="website">
@@ -255,6 +255,17 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
 .reel{position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);background:#0b0805;max-width:440px;width:100%;justify-self:center}
 .reel::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--wf),var(--of),var(--pc));z-index:2}
 .reel video{display:block;width:100%;height:auto;aspect-ratio:4/5;background:#0b0805}
+.pkg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:18px 0 12px;align-items:stretch}
+.pkg{position:relative;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,var(--card),var(--card-2));border:1px solid var(--line);border-radius:16px;padding:22px 20px 20px;box-shadow:var(--shadow)}
+.pkg.rec{border:2px solid var(--of)}
+.pkg .tag{position:absolute;top:-11px;left:18px;font-family:"Spline Sans Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;background:var(--of);color:#1a1107;padding:4px 9px;border-radius:999px}
+.pkg h3{font-family:"Archivo",sans-serif;font-weight:800;font-size:1.15rem}
+.pkg .price{font-family:"Archivo",sans-serif;font-weight:800;font-size:2.1rem;line-height:1}
+.pkg p{color:var(--muted);font-size:.95rem;line-height:1.5}
+.pkg ul{list-style:none;display:flex;flex-direction:column;gap:6px;font-size:.9rem;border-top:1px solid var(--line);padding-top:12px;margin-top:auto}
+.pkg li::before{content:"\2713";color:var(--wf);font-weight:800;margin-right:8px}
+.pkg-note{color:var(--muted);font-size:.9rem;max-width:72ch;margin-bottom:clamp(30px,5vh,52px)}
+.pkg-note a{color:var(--of)}
 .reel-cap{font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-align:center;margin-top:10px}
 .sec-h{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(1.35rem,2.4vw,1.8rem);letter-spacing:-.01em;margin-bottom:6px}
 .sec-sub{color:var(--muted);margin-bottom:18px;max-width:62ch}
@@ -331,7 +342,7 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
           <source src="/video/reel.mp4" type="video/mp4">
         </video>
       </div>
-      <div class="reel-cap">57-second reel · sound on</div>
+      <div class="reel-cap">Reel · sound on</div>
     </div>
   </section>
 
@@ -354,6 +365,15 @@ html[data-theme="light"] .form-field input,html[data-theme="light"] .form-field 
   </div>
   <div class="more"><a class="cta" href="https://www.canva.com/design/DAGvguGee48/X513VDbUOcjcBXgMn0-evA/watch" target="_blank" rel="noopener" id="portfolioLink">Watch the full 6-minute portfolio →</a></div>
   <p class="honest">Made with AI production tools, including Sora. Every piece is written, directed, and edited by me.</p>
+
+  <h2 class="sec-h" id="packages">Packages</h2>
+  <p class="sec-sub">One fixed price per project. 2026 rates, no hourly billing.</p>
+  <div class="pkg-grid">
+  <div class="pkg"><h3>Finish</h3><div class="price">$950</div><p>A 15–20 sec spot from your logo, your claims and one clear message.</p><ul><li>16:9 and 9:16</li><li>Licensed music and captions</li><li>1 round of changes</li><li>5 business days</li></ul></div>
+  <div class="pkg rec"><span class="tag">Recommended</span><h3>Launch</h3><div class="price">$2,800</div><p>A 30–45 sec spot written from your messaging, with shots matched to your product and customers.</p><ul><li>16:9, 9:16, 1:1 + a 15-sec cutdown</li><li>Licensed music and voiceover</li><li>2 rounds of changes</li><li>7 business days</li></ul></div>
+  <div class="pkg"><h3>Campaign</h3><div class="price">$4,800</div><p>Everything in Launch, plus a 60-sec explainer and three short social cuts.</p><ul><li>Every format + caption files</li><li>Three 6–15 sec social cuts</li><li>3 rounds of changes</li><li>15 business days</li></ul></div>
+  </div>
+  <p class="pkg-note">Bigger or ongoing work? <a href="#contact">Let's talk.</a> 50% to start, 50% on delivery. You approve every product claim, and you own the final files.</p>
 
   <h2 class="sec-h">How it works</h2>
   <div class="steps">
